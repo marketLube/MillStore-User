@@ -1,0 +1,444 @@
+import React, { useEffect, useRef, useState } from "react";
+import Card from "../../components/Card";
+import {
+  FiChevronLeft,
+  FiChevronRight,
+  FiShare2,
+  FiHeart,
+} from "react-icons/fi";
+import { useProductById, useProducts } from "../../hooks/queries/products";
+import { useParams } from "react-router-dom";
+import LoadingSpinner from "../../components/LoadingSpinner";
+import { ErrorBoundary } from "react-error-boundary";
+import ErrorFallback from "../../components/error/ErrorFallback";
+import { useAddToCart } from "../../hooks/queries/cart";
+
+const CalculateDiscount = (price, offerPrice) => {
+  const discount = ((price - offerPrice) / price) * 100;
+  return Number.isInteger(discount) ? discount : discount.toFixed(2);
+};
+
+function ProductDetailsContent() {
+  const sliderRef = useRef(null);
+  const [showAllReviews, setShowAllReviews] = useState(false);
+  const [selectedVariant, setSelectedVariant] = useState(null);
+  const { id } = useParams();
+
+  //api calls
+  const { data: product, isLoading, error } = useProductById(id);
+  const {
+    data: response,
+    isLoading: isLoadingProduct,
+    error: errorProducts,
+  } = useProducts();
+
+  const { mutate: addToCart, isLoading: isAddingToCart } = useAddToCart();
+
+  useEffect(() => {
+    setSelectedVariant(null);
+
+    if (product?.variants?.length > 0) {
+      setSelectedVariant(product.variants[0]);
+    }
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, [product, id]);
+
+  if (isLoading) return <LoadingSpinner />;
+  if (error) return <div>Error: {error.message}</div>;
+
+  const scroll = (direction) => {
+    if (sliderRef.current) {
+      const scrollAmount = 300;
+      sliderRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  const reviews = product.ratings;
+  console.log(reviews);
+
+  // console.log();
+
+  const visibleReviews = showAllReviews ? reviews : reviews.slice(0, 2);
+
+  const handleAddToCart = () => {
+    const productToAdd = {
+      productId: product._id,
+      variantId: selectedVariant?._id || null,
+      quantity: 1,
+    };
+
+    addToCart(productToAdd);
+  };
+
+  return (
+    <div className="product-details">
+      <div className="breadcrumb">
+        <span>All products</span>
+        <span>/</span>
+        <span> {product?.category?.name} </span>
+      </div>
+
+      <div className="product-container">
+        <div className="product-images">
+          <div className="main-image">
+            {/* <button className="wishlist-btn">
+              <FiHeart />
+            </button> */}
+            <img
+              src={
+                selectedVariant ? selectedVariant.images[0] : product?.images[0]
+              }
+              alt={product?.name}
+            />
+          </div>
+          <div className="thumbnail-images">
+            {!selectedVariant?.images[0]
+              ? product?.images.map(
+                  (image, index) =>
+                    index > 0 && <img src={image} alt={product?.name} />
+                )
+              : selectedVariant?.images.map(
+                  (image, index) =>
+                    index > 0 && <img src={image} alt={product?.name} />
+                )}
+          </div>
+        </div>
+
+        <div className="product-info">
+          <div className="header">
+            <div className="brand">
+              <img
+                src={product?.brand?.image}
+                alt={product?.brand?.name}
+                className="brand-logo"
+              />
+              <span>{product?.brand?.name}</span>
+            </div>
+            <div className="actions">
+              <span className="product-id"># {product?._id}</span>
+              <button className="share-btn">
+                <FiShare2 />
+              </button>
+            </div>
+          </div>
+
+          <h1 className="product-title">
+            {selectedVariant
+              ? selectedVariant?.attributes?.title
+              : product?.name}
+          </h1>
+
+          <div className="rating-summary">
+            <div className="stars">
+              {"★".repeat(Math.floor(product?.averageRating))}
+              {"☆".repeat(5 - Math.floor(product?.averageRating))}
+            </div>
+            <span className="rating">{product?.averageRating}</span>
+            <span className="reviews">({product?.totalRatings} reviews)</span>
+          </div>
+
+          <div className="section description">
+            <h3>Description</h3>
+            <p>
+              {selectedVariant
+                ? selectedVariant?.attributes?.description
+                : product?.description}
+              {/* <button className="read-more">Read more</button> */}
+            </p>
+          </div>
+
+          {/* <div className="section material">
+            <h3>Material</h3>
+            <div className="color-options">
+              <button className="color-btn black"></button>
+              <button className="color-btn brown"></button>
+              <button className="color-btn beige"></button>
+            </div>
+          </div> */}
+
+          {product?.variants.length > 0 && (
+            <div className="section variants">
+              <h3>Variants</h3>
+              <div className="type-buttons">
+                {product?.variants.map((variant) => (
+                  <button
+                    key={variant._id}
+                    className={`type-btn ${
+                      selectedVariant?._id === variant._id ? "active" : ""
+                    }`}
+                    onClick={() => setSelectedVariant(variant)}
+                  >
+                    <div className="variant-image">
+                      <img src={variant.images[0]} alt={variant.name} />
+                    </div>
+                    <div className="light-info">
+                      <span>
+                        {variant.attributes.title.slice(0, 10)}
+                        {variant.attributes.title.length > 10 && "..."}
+                      </span>
+                      <span className="temp">₹{variant.offerPrice}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="section price">
+            <div className="price-info">
+              <span className="current">
+                ₹
+                {selectedVariant
+                  ? selectedVariant?.offerPrice
+                  : product?.offerPrice}
+              </span>
+              <span className="original">
+                ₹{selectedVariant ? selectedVariant?.price : product?.price}
+              </span>
+              <span className="discount">
+                {CalculateDiscount(
+                  selectedVariant ? selectedVariant?.price : product?.price,
+                  selectedVariant
+                    ? selectedVariant?.offerPrice
+                    : product?.offerPrice
+                )}
+                % off
+              </span>
+            </div>
+            <div className="buy-buttons">
+              <button className="buy-now">Buy Now</button>
+              <button
+                className="add-cart"
+                onClick={handleAddToCart}
+                disabled={isAddingToCart}
+              >
+                {isAddingToCart ? "Adding..." : "Add To Cart"}
+              </button>
+            </div>
+          </div>
+
+          <div className="section specifications">
+            <h3>Product Specification</h3>
+            <ul>
+              <li>Uses only 10W power</li>
+              <li>Brightness of 800 lumens</li>
+              <li>Adjustable color temperature (3000K-6500K)</li>
+              <li>Long lifespan of up to 50,000 hours</li>
+              <li>Fits E27 base sockets</li>
+            </ul>
+          </div>
+
+          {product?.totalRatings > 0 && (
+            <div className="section reviews">
+              <div className="reviews-header">
+                <h3>Ratings & Reviews</h3>
+                <button className="rate-btn">Rate Product</button>
+              </div>
+
+              <div className="average-rating">
+                <div className="rating-value">
+                  <span className="number">{product?.averageRating}</span>
+                  <div className="stars">
+                    {"★".repeat(Math.floor(product?.averageRating))}
+                  </div>
+                </div>
+                <span className="total-reviews">
+                  Based on {product?.totalRatings} reviews
+                </span>
+              </div>
+
+              <div className="rating-stats">
+                <div className="rating-bar">
+                  <span>5★</span>
+                  <div className="bar">
+                    <div
+                      className="fill"
+                      style={{
+                        width: `${
+                          (product?.ratingDistribution[5] /
+                            product?.totalRatings) *
+                          100
+                        }%`,
+                      }}
+                    ></div>
+                  </div>
+                  <span>({product?.ratingDistribution[5]})</span>
+                </div>
+                <div className="rating-bar">
+                  <span>4★</span>
+                  <div className="bar">
+                    <div
+                      className="fill"
+                      style={{
+                        width: `${
+                          (product?.ratingDistribution[4] /
+                            product?.totalRatings) *
+                          100
+                        }%`,
+                      }}
+                    ></div>
+                  </div>
+                  <span>({product?.ratingDistribution[4]})</span>
+                </div>
+                <div className="rating-bar">
+                  <span>3★</span>
+                  <div className="bar">
+                    <div
+                      className="fill"
+                      style={{
+                        width: `${
+                          (product?.ratingDistribution[3] /
+                            product?.totalRatings) *
+                          100
+                        }%`,
+                      }}
+                    ></div>
+                  </div>
+                  <span>({product?.ratingDistribution[3]})</span>
+                </div>
+                <div className="rating-bar">
+                  <span>2★</span>
+                  <div className="bar">
+                    <div
+                      className="fill"
+                      style={{
+                        width: `${
+                          (product?.ratingDistribution[2] /
+                            product?.totalRatings) *
+                          100
+                        }%`,
+                      }}
+                    ></div>
+                  </div>
+                  <span>({product?.ratingDistribution[2]})</span>
+                </div>
+                <div className="rating-bar">
+                  <span>1★</span>
+                  <div className="bar">
+                    <div
+                      className="fill"
+                      style={{
+                        width: `${
+                          (product?.ratingDistribution[1] /
+                            product?.totalRatings) *
+                          100
+                        }%`,
+                      }}
+                    ></div>
+                  </div>
+                  <span>({product?.ratingDistribution[1]})</span>
+                </div>
+              </div>
+
+              <div className="reviews-list">
+                {visibleReviews.map((review) => (
+                  <div key={review.id} className="review-item">
+                    <div className="review-header">
+                      <div className="user-info">
+                        <img
+                          src={
+                            review.userId.image
+                              ? review.userId.image
+                              : "/images/user/profilepicture.jpg"
+                          }
+                          alt={review.userId?.username}
+                          className="user-avatar"
+                        />
+                        <div className="user-details">
+                          <span className="username">
+                            {review.userId?.username}
+                          </span>
+                          <span className="date">
+                            {new Date(review.createdAt).toLocaleDateString()}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="review-rating">
+                        {"★".repeat(review.rating)}
+                        {"☆".repeat(5 - review.rating)}
+                      </div>
+                    </div>
+                    <p className="review-comment">{review.review}</p>
+                  </div>
+                ))}
+                {reviews.length > 2 && (
+                  <button
+                    className="show-more"
+                    onClick={() => setShowAllReviews(!showAllReviews)}
+                  >
+                    {showAllReviews ? "Show Less" : "Show More"}
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Top Picks Section */}
+      <div className="top-picks-section" data-aos="fade-up">
+        <div className="section-header">
+          <h2>
+            Top Picks <span>For You</span>
+          </h2>
+          <div className="view-controls">
+            <span className="view-all">View all</span>
+            <div className="navigation-buttons">
+              <button className="nav-btn prev" onClick={() => scroll("left")}>
+                <FiChevronLeft />
+              </button>
+              <button className="nav-btn next" onClick={() => scroll("right")}>
+                <FiChevronRight />
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="products-slider" ref={sliderRef}>
+          {response?.data?.products?.map((product) => (
+            <Card key={product._id} product={product} />
+          ))}
+        </div>
+      </div>
+
+      <div className="mobile-fixed-buttons">
+        <div className="buy-buttons">
+          <button
+            className="add-cart"
+            onClick={handleAddToCart}
+            disabled={isAddingToCart}
+          >
+            {isAddingToCart ? "Adding..." : "Add To Cart"}
+          </button>
+          <button className="buy-now">Buy Now</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ProductDetails() {
+  return (
+    <ErrorBoundary
+      FallbackComponent={ErrorFallback}
+      onReset={() => {
+        // Reset the state of your app here
+        window.location.reload();
+      }}
+      onError={(error, info) => {
+        // Log the error
+        console.error("Error caught by boundary:", error, info);
+      }}
+    >
+      <ProductDetailsContent />
+    </ErrorBoundary>
+  );
+}
+
+export default ProductDetails;

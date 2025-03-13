@@ -1,0 +1,67 @@
+@use "../../abstract/variables" as var;
+@use "../../base/responive" as responsive;
+
+.trending-container {
+  padding: var.$default-padding;
+  background: #fff;
+  margin: 2rem 0;
+  @media screen and (max-width: 768px) {
+    padding: 1rem;
+  }
+  .trending-header {
+    margin-bottom: 2rem;
+
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 0;
+
+      span {
+        color: var.$color-primary;
+      }
+    }
+  }
+
+  .trending-grid {
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    @media screen and (max-width: 768px) {
+      grid-template-columns: repeat(1, auto);
+    }
+
+    @media screen and (min-width: 768px) and (max-width: 992px) {
+      grid-template-columns: repeat(2, auto);
+      gap: 1rem;
+    }
+    @media screen and (min-width: 780px) and (max-width: 1200px) {
+      //   grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .trending-footer {
+    text-align: center;
+
+    p {
+      color: #666;
+      margin-bottom: 0.5rem;
+    }
+
+    a {
+      color: var.$color-primary;
+      text-decoration: none;
+      font-weight: 500;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.mobile-view-all {
+  display: none;
+  justify-content: center;
+  margin-top: 1.5rem;
+}

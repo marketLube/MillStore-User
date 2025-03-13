@@ -1,0 +1,144 @@
+@use "../../abstract/variables" as var;
+@use "../../base/responive" as responsive;
+
+.offer-container {
+  margin: 2rem 0;
+
+  .offer-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    background: linear-gradient(135deg, #ffb347 0%, #ffaa33 100%);
+    overflow: hidden;
+
+    .offer-text {
+      padding: 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      h2 {
+        font-size: 2.5rem;
+        font-weight: 600;
+        color: white;
+        margin-bottom: 0.5rem;
+      }
+
+      h3 {
+        font-size: 1.5rem;
+        font-weight: 500;
+        color: white;
+        margin-bottom: 1.5rem;
+        position: relative;
+        display: inline-block;
+
+        &::after {
+          content: "";
+          position: absolute;
+          bottom: -4px;
+          left: 0;
+          width: 60%;
+          height: 2px;
+          background-color: white;
+        }
+      }
+
+      p {
+        color: white;
+        line-height: 1.6;
+        margin-bottom: 2rem;
+        max-width: 90%;
+      }
+
+      .offer-tags {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+
+        span {
+          border-radius: 4px;
+          font-size: 0.875rem;
+          font-weight: 500;
+
+          &.discount {
+            // background-color: white;
+            color: white;
+          }
+
+          &.limited {
+            // background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+          }
+        }
+      }
+
+      .explore-btn {
+        align-self: flex-start;
+        padding: 0.75rem 2rem;
+        background-color: white;
+        color: var.$color-primary;
+        border: none;
+        border-radius: 4px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background-color: white;
+          transform: translateY(-2px);
+        }
+      }
+    }
+
+    .offer-image {
+      height: 100%;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    padding: 1rem;
+
+    .offer-content {
+      grid-template-columns: 1fr;
+
+      .offer-text {
+        padding: 2rem;
+
+        h2 {
+          font-size: 2rem;
+        }
+
+        h3 {
+          font-size: 1.25rem;
+        }
+
+        p {
+          max-width: 100%;
+        }
+
+        .offer-tags {
+          flex-direction: column;
+
+          span {
+            text-align: lef;
+          }
+        }
+
+        .explore-btn {
+          width: 100%;
+        }
+      }
+
+      .offer-image {
+        order: -1; // Move image to top on mobile
+        height: 300px;
+      }
+    }
+  }
+}
