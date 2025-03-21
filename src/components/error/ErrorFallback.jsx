@@ -3,6 +3,7 @@ import { FiAlertTriangle, FiHome, FiRefreshCcw } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
 function ErrorFallback({ error, resetErrorBoundary, showHomeButton = true }) {
+  console.log(error);
   return (
     <div className="error-container">
       <div className="error-content">

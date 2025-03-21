@@ -7,25 +7,41 @@ import {
   MdOutlineHeadphones,
 } from "react-icons/md";
 import { BiLogOut } from "react-icons/bi";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { logout } from "../redux/features/user/userSlice";
+import { useDispatch } from "react-redux";
 export default function Header() {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.user);
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  console.log("user", user);
+  console.log("isLoggedIn", isLoggedIn);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const userMenuRef = useRef(null);
+  const navigate = useNavigate();
 
   const toggleSearch = () => {
     setIsSearchOpen(!isSearchOpen);
   };
 
   const toggleUserMenu = () => {
-    console.log("toggleUserMenu");
-    setIsUserMenuOpen(!isUserMenuOpen);
+    if (isLoggedIn) {
+      setIsUserMenuOpen(!isUserMenuOpen);
+    } else {
+      navigate("/login");
+    }
   };
 
-  const handleMenuItemClick = () => {
+  const handleMenuItemClick = (item) => {
     setIsUserMenuOpen(false);
+    if (item === "logout") {
+      localStorage.removeItem("user-auth-token");
+      dispatch(logout());
+      navigate("/login");
+    }
   };
 
   // Close menu when clicking outside
@@ -88,28 +104,28 @@ export default function Header() {
           <div className="header-actions-item mobile-search-icon">
             <FiSearch className="icon" onClick={toggleSearch} />
           </div>
-          <div className="header-actions-item">
+          {/* <div className="header-actions-item">
             <FiHeart className="icon" />
-          </div>
+          </div> */}
           <div
             className="header-actions-item user-menu-container"
             ref={userMenuRef}
           >
             <FiUser className="icon" onClick={toggleUserMenu} />
 
-            {isUserMenuOpen && (
+            {isUserMenuOpen && isLoggedIn && (
               <div className={`user-menu ${isUserMenuOpen ? "active" : ""}`}>
                 <Link
                   to="/profile?tab=personal-info"
                   className="user-menu-header"
-                  onClick={handleMenuItemClick}
+                  onClick={() => handleMenuItemClick("profile")}
                 >
                   <div className="user-avatar">
                     <img src="/images/user/profilepicture.jpg" alt="User" />
                   </div>
                   <div className="user-info">
-                    <h4>Sophia Williams</h4>
-                    <p>sophia@abcd.com</p>
+                    <h4>{user.username}</h4>
+                    <p>{user.email}</p>
                   </div>
                   <IoIosArrowForward className="arrow-icon" />
                 </Link>
@@ -118,7 +134,7 @@ export default function Header() {
                   <Link
                     to="/profile?tab=saved-address"
                     className="menu-item"
-                    onClick={handleMenuItemClick}
+                    onClick={() => handleMenuItemClick("saved-address")}
                   >
                     <MdOutlineLocationOn className="menu-icon" />
                     <span>Saved Address</span>
@@ -126,7 +142,7 @@ export default function Header() {
                   <Link
                     to="/profile?tab=order-history"
                     className="menu-item"
-                    onClick={handleMenuItemClick}
+                    onClick={() => handleMenuItemClick("order-history")}
                   >
                     <MdOutlineLocalShipping className="menu-icon" />
                     <span>Order status</span>
@@ -134,7 +150,7 @@ export default function Header() {
                   <Link
                     to="/profile?tab=help-support"
                     className="menu-item"
-                    onClick={handleMenuItemClick}
+                    onClick={() => handleMenuItemClick("help-support")}
                   >
                     <MdOutlineHeadphones className="menu-icon" />
                     <span>Help & support</span>
@@ -142,7 +158,7 @@ export default function Header() {
                   <Link
                     to="/login"
                     className="menu-item logout"
-                    onClick={handleMenuItemClick}
+                    onClick={() => handleMenuItemClick("logout")}
                   >
                     <BiLogOut className="menu-icon" />
                     <span>Logout</span>

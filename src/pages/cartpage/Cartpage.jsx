@@ -14,76 +14,31 @@ import {
 } from "../../hooks/queries/cart";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { toast } from "sonner";
+import ConfirmationModal from "../../components/confirmationModal";
+import { useNavigate } from "react-router-dom";
+import { useApplyCoupon, useGetCoupons } from "../../hooks/queries/coupon";
 
 // Add this array of coupons
-const availableCoupons = [
-  {
-    id: "MILL20",
-    code: "MILL20",
-    description: "Flat 20% off on ₹1999 and above.",
-    terms: "Grab the deal now!",
-    isHighlighted: true,
-  },
-  {
-    id: "FREESHIP",
-    code: "FREESHIP",
-    description: "Free shipping on ₹799 and above.",
-    terms: "Enjoy the savings!",
-    isHighlighted: false,
-  },
-  {
-    id: "FIRST50",
-    code: "FIRST50",
-    description: "₹50 off on your first order.",
-    terms: "New users only!",
-    isHighlighted: false,
-  },
-  {
-    id: "TOOLS25",
-    code: "TOOLS25",
-    description: "25% off on all power tools.",
-    terms: "Limited time offer!",
-    isHighlighted: false,
-  },
-  {
-    id: "EXTRA10",
-    code: "EXTRA10",
-    description: "Extra 10% off on orders above ₹2499.",
-    terms: "T&C Apply",
-    isHighlighted: false,
-  },
-  {
-    id: "EXTRA10",
-    code: "EXTRA10",
-    description: "Extra 10% off on orders above ₹2499.",
-    terms: "T&C Apply",
-    isHighlighted: false,
-  },
-  {
-    id: "EXTRA10",
-    code: "EXTRA10",
-    description: "Extra 10% off on orders above ₹2499.",
-    terms: "T&C Apply",
-    isHighlighted: false,
-  },
-  {
-    id: "EXTRA10",
-    code: "EXTRA10",
-    description: "Extra 10% off on orders above ₹2499.",
-    terms: "T&C Apply",
-    isHighlighted: false,
-  },
-];
 
 function Cartpage() {
   const [couponCode, setCouponCode] = useState("");
   const [showCoupons, setShowCoupons] = useState(false);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [itemToRemove, setItemToRemove] = useState(null);
+  const [selectedCoupon, setSelectedCoupon] = useState(null);
 
+  const navigate = useNavigate();
   const { data: cartData, isLoading, error } = useCart();
   const { mutate: updateQuantity, isLoading: isUpdating } =
     useUpdateCartQuantity();
   const { mutate: removeFromCart, isLoading: isRemoving } = useRemoveFromCart();
+  const { mutate: applyCoupon, isLoading: isApplyingCoupon } = useApplyCoupon();
+  const {
+    data: couponsData,
+    isLoading: isCouponsLoading,
+    error: couponsError,
+  } = useGetCoupons();
 
   useEffect(() => {
     window.scrollTo({
@@ -93,7 +48,7 @@ function Cartpage() {
   }, []);
 
   // Handle loading state
-  if (isLoading) return <LoadingSpinner />;
+  if (isLoading || isCouponsLoading) return <LoadingSpinner />;
 
   // Handle error state
   if (error) {
@@ -101,7 +56,7 @@ function Cartpage() {
   }
 
   // Handle empty cart data
-  if (!cartData?.data?.items.length) {
+  if (!cartData?.data?.formattedCart?.items?.length) {
     return (
       <div className="cart-page">
         <div className="breadcrumb">
@@ -115,18 +70,29 @@ function Cartpage() {
     );
   }
 
-  const cart = cartData.data.items;
+  const cart = cartData.data.formattedCart.items;
+  const couponDetails = cartData.data.formattedCart.couponDetails;
+  const availableCoupons = couponsData.coupons;
 
-  const subtotal = cart.reduce(
-    (sum, item) => sum + item.offerPrice * item.quantity,
-    0
-  );
+  const subtotal = cartData.data.formattedCart.totalPrice;
   const deliveryCharges = 0;
   const gst = 0;
-  const total = subtotal + deliveryCharges + Number(gst);
+  // const total = cartData.data.formattedCart.couponDetails
+  //   ? cartData.data.formattedCart.couponDetails.finalAmount
+  //   : subtotal;
+
+  const total = cartData.data.finalAmount;
 
   // Add handlers for quantity updates
   const handleQuantityUpdate = (productId, variantId, action) => {
+    if (
+      action === "decrement" &&
+      cart.find((item) => item.product._id === productId).quantity === 1
+    ) {
+      setItemToRemove({ productId, variantId });
+      setShowConfirmModal(true);
+      return;
+    }
     updateQuantity(
       {
         productId,
@@ -145,9 +111,18 @@ function Cartpage() {
 
   // Add handler for item removal
   const handleRemoveItem = (productId, variantId) => {
-    if (window.confirm("Are you sure you want to remove this item?")) {
+    setItemToRemove({ productId, variantId });
+    setShowConfirmModal(true);
+  };
+
+  // Add this function to handle the actual removal
+  const confirmRemoveItem = () => {
+    if (itemToRemove) {
       removeFromCart(
-        { productId, variantId },
+        {
+          productId: itemToRemove.productId,
+          variantId: itemToRemove.variantId,
+        },
         {
           onError: (error) => {
             toast.error(
@@ -157,6 +132,22 @@ function Cartpage() {
         }
       );
     }
+  };
+
+  // Add handler for coupon selection
+  const handleCouponSelect = (coupon) => {
+    setSelectedCoupon(coupon);
+    setCouponCode(coupon.code);
+  };
+
+  const handleApplyCoupon = () => {
+    console.log("applied");
+
+    if (!selectedCoupon || selectedCoupon == null) {
+      toast.error("Please select a coupon");
+      return;
+    }
+    applyCoupon(selectedCoupon._id);
   };
 
   return (
@@ -173,7 +164,10 @@ function Cartpage() {
         <div className="cart-items">
           {cart.map((item) => (
             <div key={item.product._id} className="cart-item">
-              <div className="item-image">
+              <div
+                className="item-image"
+                onClick={() => navigate(`/products/${item.product._id}`)}
+              >
                 <img src={item.product.mainImage} alt={item.product.name} />
               </div>
 
@@ -232,28 +226,59 @@ function Cartpage() {
               <span>Subtotal</span>
               <span>₹ {subtotal}</span>
             </div>
-            <div className="summary-row discount">
-              <span>Discount</span>
-              <span className="orange-text">- ₹ 0</span>
-            </div>
+
+            {couponDetails && (
+              <div className="summary-row discount">
+                <span>Discount</span>
+                <span className="orange-text">
+                  - ₹ {couponDetails.discountAmount}
+                  {couponDetails.discountType === "percentage" && (
+                    <span className="discount-percentage">
+                      (
+                      {(
+                        (couponDetails.discountAmount /
+                          couponDetails.originalAmount) *
+                        100
+                      ).toFixed(0)}
+                      %)
+                    </span>
+                  )}
+                </span>
+              </div>
+            )}
+
             <div className="summary-row">
               <span>Delivery Charges</span>
-              <span>0</span>
+              <span>
+                {deliveryCharges === 0 ? "Free" : `₹ ${deliveryCharges}`}
+              </span>
             </div>
+
             <div className="summary-row">
               <span>GST</span>
-              <span>+ ₹ {0}</span>
+              <span>+ ₹ {gst}</span>
             </div>
-            <div className="summary-row coupon-applied">
-              <span>
-                Coupon Discount <span className="coupon-code"></span>
-              </span>
-              <span className="orange-text">- ₹ 0</span>
-            </div>
+
+            {couponDetails && (
+              <div className="summary-row coupon-applied">
+                <span>
+                  Coupon Applied{" "}
+                  <span className="coupon-code">({couponDetails.code})</span>
+                </span>
+                <div className="coupon-info">
+                  <span className="savings">
+                    You saved ₹{couponDetails.savings}
+                  </span>
+                  <p className="description">{couponDetails.description}</p>
+                </div>
+              </div>
+            )}
+
             <div className="summary-row total">
               <span>Total</span>
               <span>₹ {total}</span>
             </div>
+
             <button
               className="proceed-btn"
               onClick={() => setIsAddressModalOpen(true)}
@@ -269,9 +294,29 @@ function Cartpage() {
                 type="text"
                 placeholder="Enter coupon code..."
                 value={couponCode}
-                onChange={(e) => setCouponCode(e.target.value)}
+                onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                disabled={couponDetails}
               />
-              <button className="apply-btn">Apply</button>
+              {couponDetails ? (
+                <button
+                  className="remove-btn"
+                  onClick={() => {
+                    setSelectedCoupon(null);
+                    setCouponCode("");
+                    // Add removeCoupon mutation here if needed
+                  }}
+                >
+                  Remove
+                </button>
+              ) : (
+                <button
+                  className="apply-btn"
+                  onClick={handleApplyCoupon}
+                  disabled={isApplyingCoupon || !couponCode}
+                >
+                  {isApplyingCoupon ? "Applying..." : "Apply"}
+                </button>
+              )}
             </div>
           </div>
 
@@ -288,11 +333,21 @@ function Cartpage() {
               )}
             </div>
             <div className={`coupon-list ${showCoupons ? "show" : ""}`}>
-              {availableCoupons.map((coupon) => (
-                <div className="coupon-item" key={coupon.id}>
-                  <label htmlFor={coupon.id}>
+              {availableCoupons?.map((coupon) => (
+                <div
+                  className="coupon-item"
+                  key={coupon._id}
+                  onClick={() => handleCouponSelect(coupon)}
+                >
+                  <label htmlFor={coupon._id}>
                     <div className="coupon-header">
-                      <input type="radio" name="coupon" id={coupon.id} />
+                      <input
+                        type="radio"
+                        name="coupon"
+                        id={coupon._id}
+                        checked={selectedCoupon?._id === coupon._id}
+                        onChange={() => handleCouponSelect(coupon)}
+                      />
                       <strong>{coupon.code}</strong>
                     </div>
                     <p>{coupon.description}</p>
@@ -308,6 +363,17 @@ function Cartpage() {
       <AddressModal
         isOpen={isAddressModalOpen}
         onClose={() => setIsAddressModalOpen(false)}
+      />
+
+      <ConfirmationModal
+        isOpen={showConfirmModal}
+        onClose={() => setShowConfirmModal(false)}
+        onConfirm={confirmRemoveItem}
+        title="Remove Item"
+        message="Are you sure you want to remove this item from your cart?"
+        confirmText="Remove"
+        cancelText="Keep"
+        type="danger"
       />
     </div>
   );

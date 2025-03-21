@@ -1,4 +1,5 @@
 import axios from "axios";
+import { NetworkError } from "../utils/errors.js";
 
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -22,5 +23,23 @@ apiClient.interceptors.request.use((config) => {
 //     return Promise.reject(error);
 //   }
 // );
+
+// Add a response interceptor
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (!error.response) {
+      // Network error or server not responding
+      throw new NetworkError(
+        "Unable to connect to server. Please check your internet connection."
+      );
+    }
+    if (error.response.status === 401) {
+      localStorage.removeItem("user-auth-token");
+      // window.location.href = "/login";
+    }
+    throw error;
+  }
+);
 
 export default apiClient;
