@@ -10,7 +10,7 @@
 }
 
 // Separate rule for hiding scrollbars
-*:not(.coupon-list) {
+*:not(.coupon-list, .clearance-products) {
   @include mixins.removeScrollbar;
 }
 

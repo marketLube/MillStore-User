@@ -18,7 +18,7 @@ function ProtectedRoute({ children }) {
     return <LoadingSpinner />;
   }
   if (error) {
-    if (error.response.status === 401) {
+    if (error?.response?.status === 401) {
       localStorage.removeItem("user-auth-token");
       return <Navigate to="/login" replace />;
     }

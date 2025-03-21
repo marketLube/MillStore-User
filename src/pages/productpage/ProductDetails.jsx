@@ -61,9 +61,6 @@ function ProductDetailsContent() {
   };
 
   const reviews = product.ratings;
-  console.log(reviews);
-
-  // console.log();
 
   const visibleReviews = showAllReviews ? reviews : reviews.slice(0, 2);
 

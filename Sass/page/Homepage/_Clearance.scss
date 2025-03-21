@@ -85,32 +85,23 @@
     overflow-x: auto;
     padding: 1rem 0;
     -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
     scroll-behavior: smooth;
     scroll-snap-type: x mandatory;
 
     &::-webkit-scrollbar {
       display: none;
     }
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 
     .product-card {
-      flex: 0 0 calc((100% - 3rem) / 3);
-      min-width: calc((100% - 3rem) / 3);
+      flex: 0 0 calc((100% - 4.5rem) / 4.5);
+      min-width: calc((100% - 4.5rem) / 4.5);
       scroll-snap-align: start;
     }
 
     & > *:last-child {
       padding-right: var.$default-padding;
-    }
-  }
-
-  @media screen and (max-width: 768px) {
-    .clearance-products {
-      .product-card {
-        flex: 0 0 calc((100% - 1.5rem) / 2);
-        min-width: calc((100% - 1.5rem) / 2);
-      }
     }
   }
 
@@ -133,35 +124,46 @@
       display: flex;
     }
 
-    .scroll-button {
-      display: none;
-    }
-
     .clearance-products {
-      gap: 0;
+      gap: 1rem;
       padding: 1rem var.$default-padding;
+      overflow-x: scroll !important;
+      -webkit-overflow-scrolling: touch;
 
-      .product-card {
-        flex: 0 0 100%;
-        min-width: 100%;
-        margin-right: var.$default-padding;
+      &::-webkit-scrollbar {
+        display: block !important;
+        height: 4px;
+        -webkit-appearance: none;
+      }
 
-        &:last-child {
-          margin-right: 0;
+      &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+        visibility: visible;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 10px;
+        visibility: visible;
+
+        &:hover {
+          background: #555;
         }
       }
-    }
-  }
 
-  @media screen and (max-width: 768px) {
+      scrollbar-width: thin !important;
+      -ms-overflow-style: scrollbar !important;
+
+      .product-card {
+        flex: 0 0 calc(50% - 0.5rem);
+        min-width: calc(50% - 0.5rem);
+        margin-right: 0;
+      }
+    }
+
     .clearance-products-wrapper .scroll-button {
       display: none;
-    }
-    .clearance-products {
-      .product-card {
-        flex: 0 0 100%;
-        min-width: 100%;
-      }
     }
   }
 }

@@ -173,7 +173,6 @@ function AllProductsContent() {
   };
 
   const toggleSection = (section) => {
-    console.log(section);
     setOpenSections((prev) => ({
       ...prev,
       [section]: !prev[section],

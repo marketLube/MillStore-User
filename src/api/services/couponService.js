@@ -14,4 +14,8 @@ export const couponService = {
     const response = await apiClient.post("/coupon/apply", { couponId });
     return response.data;
   },
+  removeCoupon: async () => {
+    const response = await apiClient.patch("/coupon");
+    return response.data;
+  },
 };

@@ -8,7 +8,12 @@ import ErrorFallback from "./components/error/ErrorFallback";
 
 function App() {
   useEffect(() => {
-    Aos.init();
+    Aos.init({
+      offset: 50,
+      // duration: 1000,
+      // easing: "ease-in-sine",
+      // delay: 100,
+    });
   }, []);
 
   return (

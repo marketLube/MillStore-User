@@ -16,8 +16,6 @@ export const useLogin = () => {
       navigate("/");
     },
     onError: (error) => {
-      console.log(error);
-
       toast.error(error.response?.data?.message || "Failed to login");
     },
   });
@@ -29,8 +27,6 @@ export const useCheckAuth = () => {
     queryFn: () => authService.checkAuth(),
     retry: 1,
     onError: (error) => {
-      console.log(error);
-
       toast.error(error.response?.data?.message || "Failed to check auth");
     },
   });

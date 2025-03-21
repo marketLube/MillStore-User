@@ -3,14 +3,15 @@ import { Link, useSearchParams } from "react-router-dom";
 import SavedAddress from "./SavedAddress";
 import OrderHistory from "./OrderHistory";
 import HelpandSupport from "./HelpandSupport";
-
+import { useSelector } from "react-redux";
 const Profile = () => {
+  const user = useSelector((state) => state.user.user);
   const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState("personal-info");
   const [formData, setFormData] = useState({
-    name: "Sophia Williams",
-    phone: "+91 9995553331",
-    email: "sophia@abcd.com",
+    name: user?.username,
+    phone: user?.phonenumber,
+    email: user?.email,
   });
 
   // Update active tab when URL parameter changes
@@ -32,7 +33,7 @@ const Profile = () => {
         return (
           <>
             <h2>
-              Welcome, <span className="username">User_name !</span>
+              Welcome, <span className="username">{user?.username}</span>
             </h2>
 
             <div className="profile-picture-section">
@@ -67,9 +68,6 @@ const Profile = () => {
                     setFormData({ ...formData, phone: e.target.value })
                   }
                 />
-                <small className="whatsapp-note">
-                  Ensure the number provided is linked to WhatsApp to proceed
-                </small>
               </div>
 
               <div className="form-group">

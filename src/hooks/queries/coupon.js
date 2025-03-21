@@ -20,3 +20,16 @@ export const useApplyCoupon = () => {
     },
   });
 };
+
+// Remove coupon mutation
+export const useRemoveCoupon = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => couponService.removeCoupon(),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["cart"]); // Refresh cart data
+      toast.success("Coupon removed successfully!");
+    },
+  });
+};

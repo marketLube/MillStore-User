@@ -15,8 +15,6 @@ export default function Header() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
-  console.log("user", user);
-  console.log("isLoggedIn", isLoggedIn);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);

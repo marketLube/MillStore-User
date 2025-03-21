@@ -16,7 +16,12 @@ import LoadingSpinner from "../../components/LoadingSpinner";
 import { toast } from "sonner";
 import ConfirmationModal from "../../components/confirmationModal";
 import { useNavigate } from "react-router-dom";
-import { useApplyCoupon, useGetCoupons } from "../../hooks/queries/coupon";
+import {
+  useApplyCoupon,
+  useGetCoupons,
+  useRemoveCoupon,
+} from "../../hooks/queries/coupon";
+import axios from "axios";
 
 // Add this array of coupons
 
@@ -34,6 +39,9 @@ function Cartpage() {
     useUpdateCartQuantity();
   const { mutate: removeFromCart, isLoading: isRemoving } = useRemoveFromCart();
   const { mutate: applyCoupon, isLoading: isApplyingCoupon } = useApplyCoupon();
+  const { mutate: removeCoupon, isLoading: isRemovingCoupon } =
+    useRemoveCoupon();
+
   const {
     data: couponsData,
     isLoading: isCouponsLoading,
@@ -47,43 +55,29 @@ function Cartpage() {
     });
   }, []);
 
-  // Handle loading state
+  useEffect(() => {
+    if (cartData?.data?.couponDetails) {
+      setSelectedCoupon(cartData.data.couponDetails);
+      setCouponCode(cartData.data.couponDetails.code);
+    }
+  }, [cartData?.data?.couponDetails]);
+
   if (isLoading || isCouponsLoading) return <LoadingSpinner />;
 
-  // Handle error state
   if (error) {
-    throw error; // This will be caught by the ErrorBoundary in App.jsx
+    throw error;
   }
 
-  // Handle empty cart data
-  if (!cartData?.data?.formattedCart?.items?.length) {
-    return (
-      <div className="cart-page">
-        <div className="breadcrumb">
-          <span>Home</span> / <span>Cart</span>
-        </div>
-        <div className="empty-cart">
-          <h2>Your cart is empty</h2>
-          <p>Add items to your cart to continue shopping</p>
-        </div>
-      </div>
-    );
-  }
-
-  const cart = cartData.data.formattedCart.items;
-  const couponDetails = cartData.data.formattedCart.couponDetails;
-  const availableCoupons = couponsData.coupons;
-
-  const subtotal = cartData.data.formattedCart.totalPrice;
+  const cart = cartData?.data?.formattedCart?.items;
+  const couponDetails = cartData?.data?.couponDetails;
+  const availableCoupons = couponsData?.coupons;
+  const subtotal = cartData?.data?.formattedCart?.totalPrice;
   const deliveryCharges = 0;
   const gst = 0;
-  // const total = cartData.data.formattedCart.couponDetails
-  //   ? cartData.data.formattedCart.couponDetails.finalAmount
-  //   : subtotal;
+  const total = cartData?.data?.finalAmount
+    ? cartData?.data?.finalAmount
+    : cartData?.data?.formattedCart?.totalPrice;
 
-  const total = cartData.data.finalAmount;
-
-  // Add handlers for quantity updates
   const handleQuantityUpdate = (productId, variantId, action) => {
     if (
       action === "decrement" &&
@@ -134,14 +128,16 @@ function Cartpage() {
     }
   };
 
-  // Add handler for coupon selection
+  // Update the handleCouponSelect function
   const handleCouponSelect = (coupon) => {
-    setSelectedCoupon(coupon);
-    setCouponCode(coupon.code);
+    // Only allow selection if no coupon is applied
+    if (!Object.keys(couponDetails || {}).length) {
+      setSelectedCoupon(coupon);
+      setCouponCode(coupon.code);
+    }
   };
 
   const handleApplyCoupon = () => {
-    console.log("applied");
 
     if (!selectedCoupon || selectedCoupon == null) {
       toast.error("Please select a coupon");
@@ -150,6 +146,25 @@ function Cartpage() {
     applyCoupon(selectedCoupon._id);
   };
 
+  const handleRemoveCoupon = () => {
+    setSelectedCoupon(null);
+    setCouponCode("");
+    removeCoupon();
+  };
+
+  if (!cartData?.data?.formattedCart?.items?.length) {
+    return (
+      <div className="cart-page">
+        <div className="breadcrumb">
+          <span>Home</span> / <span>Cart</span>
+        </div>
+        <div className="empty-cart">
+          <h2>Your cart is empty</h2>
+          <p>Add items to your cart to continue shopping</p>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="cart-page">
       <div className="breadcrumb">
@@ -227,7 +242,7 @@ function Cartpage() {
               <span>₹ {subtotal}</span>
             </div>
 
-            {couponDetails && (
+            {Object.keys(couponDetails).length > 0 && (
               <div className="summary-row discount">
                 <span>Discount</span>
                 <span className="orange-text">
@@ -259,7 +274,7 @@ function Cartpage() {
               <span>+ ₹ {gst}</span>
             </div>
 
-            {couponDetails && (
+            {Object.keys(couponDetails).length > 0 && (
               <div className="summary-row coupon-applied">
                 <span>
                   Coupon Applied{" "}
@@ -269,7 +284,6 @@ function Cartpage() {
                   <span className="savings">
                     You saved ₹{couponDetails.savings}
                   </span>
-                  <p className="description">{couponDetails.description}</p>
                 </div>
               </div>
             )}
@@ -287,76 +301,94 @@ function Cartpage() {
             </button>
           </div>
 
-          <div className="coupon-section">
-            <h3>Apply Coupons & Save</h3>
-            <div className="coupon-input">
-              <input
-                type="text"
-                placeholder="Enter coupon code..."
-                value={couponCode}
-                onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-                disabled={couponDetails}
-              />
-              {couponDetails ? (
-                <button
-                  className="remove-btn"
-                  onClick={() => {
-                    setSelectedCoupon(null);
-                    setCouponCode("");
-                    // Add removeCoupon mutation here if needed
-                  }}
-                >
-                  Remove
-                </button>
-              ) : (
-                <button
-                  className="apply-btn"
-                  onClick={handleApplyCoupon}
-                  disabled={isApplyingCoupon || !couponCode}
-                >
-                  {isApplyingCoupon ? "Applying..." : "Apply"}
-                </button>
-              )}
+          {availableCoupons.length > 0 && (
+            <div className="coupon-section">
+              <h3>Apply Coupons & Save</h3>
+              <div className="coupon-input">
+                <input
+                  type="text"
+                  placeholder="Enter coupon code..."
+                  value={couponCode}
+                  onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                  disabled={couponDetails}
+                />
+                {Object.keys(couponDetails).length > 0 ? (
+                  <button className="apply-btn" onClick={handleRemoveCoupon}>
+                    Remove
+                  </button>
+                ) : (
+                  <button
+                    className="apply-btn"
+                    onClick={handleApplyCoupon}
+                    disabled={isApplyingCoupon || !couponCode}
+                  >
+                    {isApplyingCoupon ? "Applying..." : "Apply"}
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
+          )}
 
-          <div className="available-coupons">
-            <div
-              className="coupon-header"
-              onClick={() => setShowCoupons(!showCoupons)}
-            >
-              <h3>Available Coupons</h3>
-              {showCoupons ? (
-                <FiChevronUp className="mobile-icon" />
-              ) : (
-                <FiChevronDown className="mobile-icon" />
-              )}
+          {availableCoupons.length > 0 && (
+            <div className="available-coupons">
+              <div
+                className="coupon-header"
+                onClick={() => setShowCoupons(!showCoupons)}
+              >
+                <h3>Available Coupons</h3>
+                {showCoupons ? (
+                  <FiChevronUp className="mobile-icon" />
+                ) : (
+                  <FiChevronDown className="mobile-icon" />
+                )}
+              </div>
+              <div className={`coupon-list ${showCoupons ? "show" : ""}`}>
+                {availableCoupons?.map((coupon) => (
+                  <div
+                    className={`coupon-item ${
+                      couponDetails?._id === coupon._id ? "applied" : ""
+                    }`}
+                    key={coupon._id}
+                    onClick={() => handleCouponSelect(coupon)}
+                    style={{
+                      opacity:
+                        Object.keys(couponDetails || {}).length > 0 &&
+                        couponDetails?._id !== coupon._id
+                          ? 0.5
+                          : 1,
+                      cursor:
+                        Object.keys(couponDetails || {}).length > 0 &&
+                        couponDetails?._id !== coupon._id
+                          ? "not-allowed"
+                          : "pointer",
+                    }}
+                  >
+                    <label htmlFor={coupon._id}>
+                      <div className="coupon-header">
+                        <input
+                          type="radio"
+                          name="coupon"
+                          id={coupon._id}
+                          checked={selectedCoupon?._id === coupon._id}
+                          onChange={() => handleCouponSelect(coupon)}
+                          disabled={
+                            Object.keys(couponDetails || {}).length > 0 &&
+                            couponDetails?._id !== coupon._id
+                          }
+                        />
+                        <strong>{coupon.code}</strong>
+                        {couponDetails?._id === coupon._id && (
+                          <span className="applied-tag">Applied</span>
+                        )}
+                      </div>
+                      <p>{coupon.description}</p>
+                      <p className="terms">{coupon.terms}</p>
+                    </label>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className={`coupon-list ${showCoupons ? "show" : ""}`}>
-              {availableCoupons?.map((coupon) => (
-                <div
-                  className="coupon-item"
-                  key={coupon._id}
-                  onClick={() => handleCouponSelect(coupon)}
-                >
-                  <label htmlFor={coupon._id}>
-                    <div className="coupon-header">
-                      <input
-                        type="radio"
-                        name="coupon"
-                        id={coupon._id}
-                        checked={selectedCoupon?._id === coupon._id}
-                        onChange={() => handleCouponSelect(coupon)}
-                      />
-                      <strong>{coupon.code}</strong>
-                    </div>
-                    <p>{coupon.description}</p>
-                    <p className="terms">{coupon.terms}</p>
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
+          )}
         </div>
       </div>
 

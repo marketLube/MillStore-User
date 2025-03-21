@@ -49,10 +49,19 @@
 
     .bestseller-image-wrapper {
       position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f8f8f8;
     }
 
     .bestseller-image {
       position: relative;
+      width: 100%;
+      height: 500px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
       .tag {
         position: absolute;
@@ -63,12 +72,14 @@
         padding: 0.5rem 1rem;
         border-radius: 4px;
         font-size: 0.875rem;
+        z-index: 1;
       }
 
       img {
         width: 100%;
-        height: auto;
-        object-fit: cover;
+        height: 100%;
+        object-fit: contain;
+        padding: 2rem;
       }
 
       img.fade-image {
@@ -209,17 +220,13 @@
 
       .bestseller-image-wrapper {
         .bestseller-image {
-          img {
-            height: 300px;
-            width: 100%;
-            object-fit: cover;
-          }
+          height: 350px;
 
-          .tag {
-            top: 10px;
-            right: 10px;
-            font-size: 0.75rem;
-            padding: 0.35rem 0.75rem;
+          img {
+            padding: 1rem;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
           }
         }
       }

@@ -47,66 +47,6 @@ function Clearance() {
     }
   };
 
-  // const products = [
-  //   {
-  //     image: "/images/carousel/carousel-1.jpg",
-  //     category: "Power & Hand Tools",
-  //     title: "PowerPro X1 Cordless Drill",
-  //     currentPrice: "1,999",
-  //     originalPrice: "2,999",
-  //     rating: 4,
-  //   },
-  //   {
-  //     image: "/images/carousel/carousel-1.jpg",
-  //     category: "Home Improvement",
-  //     title: "SmoothCoat Pro Paint Roller",
-  //     currentPrice: "1,999",
-  //     originalPrice: "2,999",
-  //     rating: 4,
-  //   },
-  //   {
-  //     image: "/images/carousel/carousel-1.jpg",
-  //     category: "Stationery",
-  //     title: "RainbowScript Vibrant Pen Set",
-  //     currentPrice: "1,999",
-  //     originalPrice: "2,999",
-  //     rating: 4,
-  //   },
-  //   {
-  //     image: "/images/carousel/carousel-1.jpg",
-  //     category: "Stationery",
-  //     title: "RainbowScript Vibrant Pen Set",
-  //     currentPrice: "1,999",
-  //     originalPrice: "2,999",
-  //     rating: 4,
-  //   },
-  //   {
-  //     image: "/images/carousel/carousel-1.jpg",
-  //     category: "Stationery",
-  //     title: "RainbowScript Vibrant Pen Set",
-  //     currentPrice: "1,999",
-  //     originalPrice: "2,999",
-  //     rating: 4,
-  //   },
-  //   {
-  //     image: "/images/carousel/carousel-1.jpg",
-  //     category: "Stationery",
-  //     title: "RainbowScript Vibrant Pen Set",
-  //     currentPrice: "1,999",
-  //     originalPrice: "2,999",
-  //     rating: 4,
-  //   },
-  //   {
-  //     image: "/images/carousel/carousel-1.jpg",
-  //     category: "Stationery",
-  //     title: "RainbowScript Vibrant Pen Set",
-  //     currentPrice: "1,999",
-  //     originalPrice: "2,999",
-  //     rating: 4,
-  //   },
-  //   // Add more products for scrolling effect
-  // ];
-
   return (
     <div className="clearance-container" data-aos="fade-up">
       <div className="clearance-header">

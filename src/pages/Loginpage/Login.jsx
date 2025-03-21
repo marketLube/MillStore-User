@@ -20,7 +20,6 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("formData", formData);
     loginMutation(formData);
     // Handle login logic here
   };
