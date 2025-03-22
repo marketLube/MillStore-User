@@ -175,12 +175,12 @@ function Cartpage() {
       </div>
 
       <h1>
-        Shopping Cart <span>({cart.length})</span>
+        Shopping Cart <span>({cart?.length})</span>
       </h1>
 
       <div className="cart-container" data-aos="fade-up">
         <div className="cart-items">
-          {cart.map((item) => (
+          {cart?.map((item) => (
             <div key={item.product._id} className="cart-item">
               <div
                 className="item-image"
