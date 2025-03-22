@@ -159,7 +159,7 @@ export default function Header() {
                     alt={product.name}
                   />
                   <span>{product.name}</span>
-                  <span>{product.category.name}</span>
+                  {/* <span>{product.category.name}</span> */}
                 </div>
               ))}
             </div>
