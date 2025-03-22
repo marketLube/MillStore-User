@@ -199,7 +199,7 @@
       border-radius: 100px;
       background: #f8f8f8;
       padding: 0 1.25rem;
-      font-size: 0.95rem;
+      font-size: 1rem;
 
       &:focus {
         outline: none;
@@ -231,21 +231,21 @@
 
       .search-container {
         .category-dropdown {
-          display: none; // Hide category dropdown on mobile
+          display: none;
         }
       }
     }
 
     .desktop-search {
-      display: none; // Hide desktop search on mobile
+      display: none;
     }
 
     .mobile-search-icon {
-      display: block; // Show search icon on mobile
+      display: block;
     }
 
     .mobile-search-overlay {
-      display: block; // Enable overlay on mobile
+      display: block;
     }
   }
 }
