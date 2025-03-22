@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { FiX } from "react-icons/fi";
 import { FaWhatsapp } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import { useUpdateUser } from "../../hooks/queries/user";
+import { usePlaceOrder } from "../../hooks/queries/order";
+import ButtonLoading from "../ButtonLoadingSpinners";
+import { toast } from "sonner";
 
 const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
+  const user = useSelector((state) => state.user.user);
   const [selectedAddress, setSelectedAddress] = useState("");
   const [formData, setFormData] = useState({
-    fullName: "",
+    fullName: user?.username,
     building: "",
     street: "",
     landmark: "",
@@ -14,20 +20,9 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
     pincode: "",
   });
 
-  const savedAddresses = [
-    {
-      id: 1,
-      name: "Michael Philip",
-      address:
-        "Greenview Residency, Flat 302, XID Road, Koramangala, Near Forum Mall, Bengaluru, Karnataka - 560095",
-    },
-    {
-      id: 2,
-      name: "Michael Philip",
-      address:
-        "Bluewater Villa, House No. 12, Sector 45, Golf Course Road, Gurgaon, Haryana - 122003",
-    },
-  ];
+  const { mutate: updateUser, isPending } = useUpdateUser();
+  const { mutate: placeOrder, isPending: isOrderPending } = usePlaceOrder();
+  const savedAddresses = user?.address;
 
   useEffect(() => {
     if (isOpen) {
@@ -36,7 +31,6 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
       document.body.classList.remove("modal-open");
     }
 
-    // Cleanup on unmount
     return () => {
       document.body.classList.remove("modal-open");
     };
@@ -52,33 +46,42 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle address saving logic here
+    console.log(formData, "formData");
+    const updatedUser = {
+      ...user,
+      address: formData,
+    };
+    updateUser(updatedUser);
+    setFormData({
+      fullName: user?.username,
+      building: "",
+      street: "",
+      landmark: "",
+      city: "",
+      state: "",
+      pincode: "",
+    });
     onClose();
   };
 
-  const handleWhatsAppRedirect = () => {
-    // Get the selected or manually entered address
-    const deliveryAddress = selectedAddress
-      ? savedAddresses.find((addr) => addr.id === selectedAddress)?.address
-      : `${formData.building}, ${formData.street}, ${formData.landmark}, ${formData.city}, ${formData.state} - ${formData.pincode}`;
+  const handlePlaceOrder = () => {
+    const { fullName, building, street, city, state, pincode } = formData;
 
-    // Format the message
-    const message = `
-    *New Order*
-    ------------------
-    *Delivery Address:*
-    ${deliveryAddress}`;
-
-    const encodedMessage = encodeURIComponent(message);
-
-    // Replace with your business phone number
-    const phoneNumber = "918714441727"; // Format: country code + phone number
-
-    // Create WhatsApp URL
-    const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-
-    // Open WhatsApp in a new tab
-    window.open(whatsappURL, "_blank");
+    if (
+      selectedAddress ||
+      (fullName && building && street && city && state && pincode)
+    ) {
+      const address = selectedAddress ? selectedAddress : formData;
+      console.log(address, "address");
+      placeOrder(address);
+    } else {
+      toast.warning(
+        "Please select an address or fill in all required fields.",
+        {
+          position: "top-right",
+        }
+      );
+    }
   };
 
   return (
@@ -101,17 +104,21 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
               </p>
 
               {savedAddresses.map((addr) => (
-                <label key={addr.id} className="address-option">
+                <label key={addr._id} className="address-option">
                   <input
                     type="radio"
                     name="address"
-                    value={addr.id}
-                    checked={selectedAddress === addr.id}
-                    onChange={() => setSelectedAddress(addr.id)}
+                    value={addr._id}
+                    checked={selectedAddress === addr._id}
+                    onChange={() => setSelectedAddress(addr._id)}
                   />
                   <div className="address-details">
-                    <strong>{addr.name}</strong>
-                    <p>{addr.address}</p>
+                    <strong>{addr?.fullName}</strong>
+                    <p>{addr?.street}</p>
+                    <p>{addr?.city}</p>
+                    <p>{addr?.state}</p>
+                    <p>{addr?.landmark}</p>
+                    <p>{addr?.pincode}</p>
                   </div>
                 </label>
               ))}
@@ -191,13 +198,13 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
               <input type="checkbox" />
               Save this address for future purchases
             </label>
-            <button className="proceed-btn" onClick={handleWhatsAppRedirect}>
-              <FaWhatsapp />
-              Place Order
+            <button
+              className="proceed-btn"
+              disabled={isOrderPending}
+              onClick={handlePlaceOrder}
+            >
+              {isOrderPending ? <ButtonLoading /> : <span>Place Order</span>}
             </button>
-            <p className="terms">
-              You will be notified via SMS/WhatsApp to confirm your purchase
-            </p>
           </div>
         ) : (
           <div className="modal-footer">

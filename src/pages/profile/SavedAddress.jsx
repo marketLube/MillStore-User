@@ -1,20 +1,12 @@
 import React, { useState } from "react";
 import { FiTrash2 } from "react-icons/fi";
 import AddressModal from "../../components/cart/Addressmodal";
+import { useSelector } from "react-redux";
 
 const SavedAddress = () => {
+  const user = useSelector((state) => state.user.user);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
-  const addresses = [
-    {
-      id: 1,
-      label: "Address 1",
-      name: "Michael Philip",
-      address: "Greenview Residency, Flat 302, MG Road,",
-      area: "Koramangala, Near Forum Mall, Bengaluru,",
-      state: "Karnataka",
-      pincode: "560095",
-    },
-  ];
+  const addresses = user?.address;
 
   return (
     <div className="saved-address-section">
@@ -25,8 +17,8 @@ const SavedAddress = () => {
       </p>
 
       <div className="addresses-grid">
-        {addresses.map((addr) => (
-          <div key={addr.id} className="address-card">
+        {addresses?.map((addr, index) => (
+          <div key={index} className="address-card">
             <div className="card-header">
               <span className="address-label">{addr.label}</span>
               <button className="delete-btn">
@@ -34,12 +26,12 @@ const SavedAddress = () => {
               </button>
             </div>
             <div className="address-info">
-              <h3>{addr.name}</h3>
-              <p>{addr.address}</p>
-              <p>{addr.area}</p>
-              <p>
-                {addr.state} - {addr.pincode}
-              </p>
+              <h3>{addr?.fullName}</h3>
+              <h3>{addr?.street}</h3>
+              <p>{addr?.city}</p>
+              <p>{addr?.state}</p>
+              <p>{addr?.landmark}</p>
+              <p>{addr?.pincode}</p>
             </div>
           </div>
         ))}
