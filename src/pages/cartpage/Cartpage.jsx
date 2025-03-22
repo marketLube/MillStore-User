@@ -32,7 +32,7 @@ function Cartpage() {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [itemToRemove, setItemToRemove] = useState(null);
   const [selectedCoupon, setSelectedCoupon] = useState(null);
-
+  const [isMobile, setIsMobile] = useState(false);
   const navigate = useNavigate();
   const { data: cartData, isLoading, error } = useCart();
   const { mutate: updateQuantity, isLoading: isUpdating } =
@@ -47,6 +47,10 @@ function Cartpage() {
     isLoading: isCouponsLoading,
     error: couponsError,
   } = useGetCoupons();
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+  }, [window.innerWidth]);
 
   useEffect(() => {
     window.scrollTo({
@@ -138,7 +142,6 @@ function Cartpage() {
   };
 
   const handleApplyCoupon = () => {
-
     if (!selectedCoupon || selectedCoupon == null) {
       toast.error("Please select a coupon");
       return;
@@ -343,49 +346,94 @@ function Cartpage() {
                 )}
               </div>
               <div className={`coupon-list ${showCoupons ? "show" : ""}`}>
-                {availableCoupons?.map((coupon) => (
-                  <div
-                    className={`coupon-item ${
-                      couponDetails?._id === coupon._id ? "applied" : ""
-                    }`}
-                    key={coupon._id}
-                    onClick={() => handleCouponSelect(coupon)}
-                    style={{
-                      opacity:
-                        Object.keys(couponDetails || {}).length > 0 &&
-                        couponDetails?._id !== coupon._id
-                          ? 0.5
-                          : 1,
-                      cursor:
-                        Object.keys(couponDetails || {}).length > 0 &&
-                        couponDetails?._id !== coupon._id
-                          ? "not-allowed"
-                          : "pointer",
-                    }}
-                  >
-                    <label htmlFor={coupon._id}>
-                      <div className="coupon-header">
-                        <input
-                          type="radio"
-                          name="coupon"
-                          id={coupon._id}
-                          checked={selectedCoupon?._id === coupon._id}
-                          onChange={() => handleCouponSelect(coupon)}
-                          disabled={
+                {isMobile
+                  ? showCoupons &&
+                    availableCoupons?.map((coupon) => (
+                      <div
+                        className={`coupon-item ${
+                          couponDetails?._id === coupon._id ? "applied" : ""
+                        }`}
+                        key={coupon._id}
+                        onClick={() => handleCouponSelect(coupon)}
+                        style={{
+                          opacity:
                             Object.keys(couponDetails || {}).length > 0 &&
                             couponDetails?._id !== coupon._id
-                          }
-                        />
-                        <strong>{coupon.code}</strong>
-                        {couponDetails?._id === coupon._id && (
-                          <span className="applied-tag">Applied</span>
-                        )}
+                              ? 0.5
+                              : 1,
+                          cursor:
+                            Object.keys(couponDetails || {}).length > 0 &&
+                            couponDetails?._id !== coupon._id
+                              ? "not-allowed"
+                              : "pointer",
+                        }}
+                      >
+                        <label htmlFor={coupon._id}>
+                          <div className="coupon-header">
+                            <input
+                              type="radio"
+                              name="coupon"
+                              id={coupon._id}
+                              checked={selectedCoupon?._id === coupon._id}
+                              onChange={() => handleCouponSelect(coupon)}
+                              disabled={
+                                Object.keys(couponDetails || {}).length > 0 &&
+                                couponDetails?._id !== coupon._id
+                              }
+                            />
+                            <strong>{coupon.code}</strong>
+                            {couponDetails?._id === coupon._id && (
+                              <span className="applied-tag">Applied</span>
+                            )}
+                          </div>
+                          <p>{coupon.description}</p>
+                          <p className="terms">{coupon.terms}</p>
+                        </label>
                       </div>
-                      <p>{coupon.description}</p>
-                      <p className="terms">{coupon.terms}</p>
-                    </label>
-                  </div>
-                ))}
+                    ))
+                  : availableCoupons?.map((coupon) => (
+                      <div
+                        className={`coupon-item ${
+                          couponDetails?._id === coupon._id ? "applied" : ""
+                        }`}
+                        key={coupon._id}
+                        onClick={() => handleCouponSelect(coupon)}
+                        style={{
+                          opacity:
+                            Object.keys(couponDetails || {}).length > 0 &&
+                            couponDetails?._id !== coupon._id
+                              ? 0.5
+                              : 1,
+                          cursor:
+                            Object.keys(couponDetails || {}).length > 0 &&
+                            couponDetails?._id !== coupon._id
+                              ? "not-allowed"
+                              : "pointer",
+                        }}
+                      >
+                        <label htmlFor={coupon._id}>
+                          <div className="coupon-header">
+                            <input
+                              type="radio"
+                              name="coupon"
+                              id={coupon._id}
+                              checked={selectedCoupon?._id === coupon._id}
+                              onChange={() => handleCouponSelect(coupon)}
+                              disabled={
+                                Object.keys(couponDetails || {}).length > 0 &&
+                                couponDetails?._id !== coupon._id
+                              }
+                            />
+                            <strong>{coupon.code}</strong>
+                            {couponDetails?._id === coupon._id && (
+                              <span className="applied-tag">Applied</span>
+                            )}
+                          </div>
+                          <p>{coupon.description}</p>
+                          <p className="terms">{coupon.terms}</p>
+                        </label>
+                      </div>
+                    ))}
               </div>
             </div>
           )}

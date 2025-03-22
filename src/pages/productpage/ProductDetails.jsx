@@ -431,12 +431,14 @@ function ProductDetailsContent() {
         <div className="buy-buttons">
           <button
             className="add-cart"
-            onClick={handleAddToCart}
+            onClick={() => handleAddToCart("add")}
             disabled={loadingAction !== null}
           >
-            {loadingAction === "cart" ? "Adding..." : "Add To Cart"}
+            {loadingAction === "add" ? <ButtonLoadingSpinner /> : "Add To Cart"}
           </button>
-          <button className="buy-now">Buy Now</button>
+          <button className="buy-now" onClick={() => handleAddToCart("buy")}>
+            {loadingAction === "buy" ? <ButtonLoadingSpinner /> : "Buy Now"}
+          </button>
         </div>
       </div>
     </div>

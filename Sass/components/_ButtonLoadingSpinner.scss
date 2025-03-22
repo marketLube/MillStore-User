@@ -11,6 +11,10 @@
   width: 20px;
   height: 20px;
   animation: spin 1s linear infinite;
+  @media (max-width: 768px) {
+    width: 15px;
+    height: 15px;
+  }
 }
 
 @keyframes spin {
