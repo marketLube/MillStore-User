@@ -7,23 +7,23 @@ import {
   FiHeart,
 } from "react-icons/fi";
 import { useProductById, useProducts } from "../../hooks/queries/products";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "../../components/error/ErrorFallback";
 import { useAddToCart } from "../../hooks/queries/cart";
-
+import ButtonLoadingSpinner from "../../components/ButtonLoadingSpinners";
 const CalculateDiscount = (price, offerPrice) => {
   const discount = ((price - offerPrice) / price) * 100;
   return Number.isInteger(discount) ? discount : discount.toFixed(2);
 };
 
 function ProductDetailsContent() {
+  const navigate = useNavigate();
   const sliderRef = useRef(null);
   const [showAllReviews, setShowAllReviews] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const { id } = useParams();
-
   //api calls
   const { data: product, isLoading, error } = useProductById(id);
   const {
@@ -33,6 +33,9 @@ function ProductDetailsContent() {
   } = useProducts();
 
   const { mutate: addToCart, isLoading: isAddingToCart } = useAddToCart();
+
+  // Local state to track which button is loading
+  const [loadingAction, setLoadingAction] = useState(null); // "buy" or "cart"
 
   useEffect(() => {
     setSelectedVariant(null);
@@ -64,14 +67,24 @@ function ProductDetailsContent() {
 
   const visibleReviews = showAllReviews ? reviews : reviews.slice(0, 2);
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (type) => {
     const productToAdd = {
       productId: product._id,
       variantId: selectedVariant?._id || null,
       quantity: 1,
     };
 
-    addToCart(productToAdd);
+    setLoadingAction(type);
+    addToCart(productToAdd, {
+      onSuccess: () => {
+        if (type === "buy") {
+          navigate("/cart");
+        }
+      },
+      onSettled: () => {
+        setLoadingAction(null);
+      },
+    });
   };
 
   return (
@@ -210,13 +223,23 @@ function ProductDetailsContent() {
               </span>
             </div>
             <div className="buy-buttons">
-              <button className="buy-now">Buy Now</button>
+              <button
+                className="buy-now"
+                onClick={() => handleAddToCart("buy")}
+                disabled={loadingAction !== null}
+              >
+                {loadingAction === "buy" ? <ButtonLoadingSpinner /> : "Buy Now"}
+              </button>
               <button
                 className="add-cart"
-                onClick={handleAddToCart}
-                disabled={isAddingToCart}
+                onClick={() => handleAddToCart("cart")}
+                disabled={loadingAction !== null}
               >
-                {isAddingToCart ? "Adding..." : "Add To Cart"}
+                {loadingAction === "cart" ? (
+                  <ButtonLoadingSpinner />
+                ) : (
+                  "Add To Cart"
+                )}
               </button>
             </div>
           </div>
@@ -336,7 +359,7 @@ function ProductDetailsContent() {
 
               <div className="reviews-list">
                 {visibleReviews.map((review) => (
-                  <div key={review.id} className="review-item">
+                  <div key={review._id} className="review-item">
                     <div className="review-header">
                       <div className="user-info">
                         <img
@@ -409,9 +432,9 @@ function ProductDetailsContent() {
           <button
             className="add-cart"
             onClick={handleAddToCart}
-            disabled={isAddingToCart}
+            disabled={loadingAction !== null}
           >
-            {isAddingToCart ? "Adding..." : "Add To Cart"}
+            {loadingAction === "cart" ? "Adding..." : "Add To Cart"}
           </button>
           <button className="buy-now">Buy Now</button>
         </div>

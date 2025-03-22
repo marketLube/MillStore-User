@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import cartService from "../../api/services/cartService";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 // Get cart items
 export const useCart = () => {
@@ -12,6 +13,7 @@ export const useCart = () => {
 
 // Add to cart mutation
 export const useAddToCart = () => {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -24,6 +26,7 @@ export const useAddToCart = () => {
     onError: (error) => {
       if (error.status === 401) {
         toast.error("Please login to add item to cart");
+        navigate("/login", { state: { from: location.pathname } });
       } else {
         toast.error(
           error.response?.data?.message || "Failed to add item to cart"

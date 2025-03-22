@@ -16,6 +16,7 @@ import debounce from "lodash/debounce";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "../../components/error/ErrorFallback";
 import { useLabels } from "../../hooks/queries/labels";
+import { useLocation } from "react-router-dom";
 
 const data = [
   {
@@ -40,37 +41,9 @@ const data = [
   },
 ];
 
-// const categories = [
-//   {
-//     name: "All",
-//     count: 1162,
-//     isActive: true,
-//   },
-//   {
-//     name: "Home Essentials",
-//     count: 445,
-//     subcategories: [
-//       { name: "Kitchen", count: 120 },
-//       { name: "Bathroom", count: 85 },
-//       { name: "Bedroom", count: 140 },
-//       { name: "Living Room", count: 100 },
-//     ],
-//   },
-//   {
-//     name: "Tools & auto",
-//     count: 190,
-//     subcategories: [
-//       { name: "Power Tools", count: 45 },
-//       { name: "Hand Tools", count: 65 },
-//       { name: "Auto Parts", count: 80 },
-//     ],
-//   },
-//   // ... other categories
-// ];
-
 // Separate the content into a new component
 function AllProductsContent() {
-  // 1. Group all useState hooks together at the top
+  const location = useLocation();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [openSections, setOpenSections] = useState({
     categories: true,
@@ -101,7 +74,6 @@ function AllProductsContent() {
 
   const MAX_PRICE_VALUE = 999999999;
 
-  // 2. Group all API query hooks
   const {
     data: response,
     isLoading,
@@ -130,7 +102,6 @@ function AllProductsContent() {
     error: labelsError,
   } = useLabels();
 
-  // 3. Group all useCallback hooks
   const debouncedUpdateFilters = useCallback(
     debounce((newRange) => {
       setSelectedFilters((prev) => ({
@@ -141,7 +112,6 @@ function AllProductsContent() {
     []
   );
 
-  // 4. Group all useEffect hooks
   useEffect(() => {
     window.scrollTo({
       top: 0,
@@ -155,14 +125,27 @@ function AllProductsContent() {
     };
   }, [debouncedUpdateFilters]);
 
-  // 5. Handle loading and error states after all hooks
+  useEffect(() => {
+    const categoryFromHeader = location.state?.selectedCategory;
+    if (categoryFromHeader) {
+      setSelectedFilters((prev) => ({
+        ...prev,
+        categoryId: categoryFromHeader.id,
+      }));
+      setSelectedNames((prev) => ({
+        ...prev,
+        categoryName: categoryFromHeader.name,
+      }));
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
+
   if (isLoading || categoriesLoading || labelsLoading)
     return <LoadingSpinner />;
   if (error || categoriesError) {
     throw error || categoriesError;
   }
 
-  // 6. Define derived values
   const products = response?.data?.products || [];
   const categories = categoriesData?.envelop?.data || [];
   const labels = labelsData?.envelop?.data || [];
@@ -376,8 +359,7 @@ function AllProductsContent() {
     return active;
   };
 
-  // Add these constants at the top of your component
-  const SLIDER_MAX = 10000; // More reasonable max for slider
+  const SLIDER_MAX = 10000;
 
   // Update the getTrackStyle function
   const getTrackStyle = () => {

@@ -11,6 +11,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { logout } from "../redux/features/user/userSlice";
 import { useDispatch } from "react-redux";
+import { useCategories } from "../hooks/queries/categories";
+import { useProducts } from "../hooks/queries/products";
+
 export default function Header() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
@@ -20,6 +23,32 @@ export default function Header() {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const userMenuRef = useRef(null);
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const searchRef = useRef(null);
+
+  const {
+    data,
+    isLoading: categoriesLoading,
+    error: categoriesError,
+  } = useCategories();
+
+  const { data: products, isLoading } = useProducts();
+
+  useEffect(() => {
+    if (searchQuery) {
+      const filteredProducts = products?.data?.products.filter(
+        (product) =>
+          product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          product.category.name
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase())
+      );
+      setSearchResults(filteredProducts);
+    } else {
+      setSearchResults([]);
+    }
+  }, [searchQuery, products]);
 
   const toggleSearch = () => {
     setIsSearchOpen(!isSearchOpen);
@@ -54,6 +83,25 @@ export default function Header() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const categories = data?.envelop?.data || [];
+
+  const handleCategoryClick = (category) => {
+    navigate("/products", {
+      state: {
+        selectedCategory: {
+          id: category._id,
+          name: category.name,
+        },
+      },
+    });
+  };
+
+  const handleProductClick = (productId) => {
+    navigate(`/products/${productId}`);
+    setSearchQuery("");
+    setSearchResults([]);
+  };
+
   return (
     <>
       <header className="header">
@@ -70,31 +118,52 @@ export default function Header() {
         {/* Desktop Search */}
         <div className="header-search desktop-search">
           <div className="search-container">
-            <div className="category-dropdown">
+            {/* <div className="category-dropdown">
               <IoIosArrowDown className="dropdown-icon" />
-              <select
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                value={selectedCategory}
-              >
-                <option>All Categories</option>
-                <option>Power & Hand Tools</option>
-                <option>Gardening</option>
-                <option>Home Care</option>
-                <option>Home improvement</option>
-                <option>Kitchen & Dining</option>
-                <option>Car care</option>
-                <option>Stationery</option>
+              <select>
+                <option value="all">All Categories</option>
+                {categories?.map((category) => (
+                  <option
+                    key={category._id}
+                    value={category.name}
+                    onClick={() => handleCategoryClick(category)}
+                  >
+                    {category.name}
+                  </option>
+                ))}
               </select>
-            </div>
+            </div> */}
             <input
               type="text"
               placeholder="What are you looking for?"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              ref={searchRef}
               className="search-input"
             />
             <button className="search-button">
               <FiSearch className="search-icon" />
             </button>
           </div>
+          {searchResults.length > 0 && (
+            <div className="search-results">
+              {searchResults.map((product) => (
+                <div
+                  key={product._id}
+                  className="search-result-item"
+                  onClick={() => handleProductClick(product._id)}
+                >
+                  <img
+                    className="search-result-image"
+                    src={product.mainImage}
+                    alt={product.name}
+                  />
+                  <span>{product.name}</span>
+                  <span>{product.category.name}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="header-actions">
@@ -187,15 +256,19 @@ export default function Header() {
           </div>
         </div>
       </header>
-      <ul className="header-cat">
-        <li>Power & Hand Tools</li>
-        <li>Gardening</li>
-        <li>Home Care</li>
-        <li>Home improvement</li>
-        <li>Kitchen & Dining</li>
-        <li>Car care</li>
-        <li>Stationery</li>
-      </ul>
+      {categories && (
+        <ul className="header-cat">
+          {categories?.map((category) => (
+            <li
+              key={category._id}
+              onClick={() => handleCategoryClick(category)}
+              style={{ cursor: "pointer" }}
+            >
+              {category.name}
+            </li>
+          ))}
+        </ul>
+      )}
     </>
   );
 }

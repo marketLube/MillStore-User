@@ -7,6 +7,8 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { useProducts } from "../../../hooks/queries/products";
 import { useAddToCart } from "../../../hooks/queries/cart";
+import ButtonLoadingSpinner from "../../../components/ButtonLoadingSpinners";
+
 function Bestseller() {
   // const bestsellerProducts = [
   //   {
@@ -37,7 +39,10 @@ function Bestseller() {
   const navigate = useNavigate();
   const [currentProduct, setCurrentProduct] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const { mutate: addToCart, isLoading: isAddingToCart } = useAddToCart();
+  const { mutate: addToCart, isPending: isAddingToCart } = useAddToCart();
+
+  // Local state to track which button is loading
+  const [loadingAction, setLoadingAction] = useState(null); // "buy" or "add"
 
   const { data, isLoading, error } = useProducts({
     labelId: "67dd34fd6b3c047b3082abb5",
@@ -63,14 +68,22 @@ function Bestseller() {
     }
   };
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (type) => {
     const productToAdd = {
       productId: currentProduct._id,
       variantId: currentProduct?.variants?.[0]?._id || null,
       quantity: 1,
     };
 
-    addToCart(productToAdd);
+    setLoadingAction(type);
+    addToCart(productToAdd, {
+      onSettled: () => {
+        setLoadingAction(null);
+        if (type === "buy") {
+          navigate("/cart");
+        }
+      },
+    });
   };
 
   return (
@@ -114,16 +127,21 @@ function Bestseller() {
           <div className="buttons">
             <button
               className="add-to-cart"
-              onClick={handleAddToCart}
-              disabled={isAddingToCart}
+              onClick={() => handleAddToCart("add")}
+              disabled={loadingAction !== null}
             >
-              {isAddingToCart ? "Adding..." : "Add To Cart"}
+              {loadingAction === "add" ? (
+                <ButtonLoadingSpinner />
+              ) : (
+                "Add To Cart"
+              )}
             </button>
             <button
-              onClick={() => navigate(`/products/${currentProduct?._id}`)}
+              onClick={() => handleAddToCart("buy")}
               className="buy-now"
+              disabled={loadingAction !== null}
             >
-              Buy Now
+              {loadingAction === "buy" ? <ButtonLoadingSpinner /> : "Buy Now"}
             </button>
           </div>
         </div>
