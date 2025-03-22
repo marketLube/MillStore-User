@@ -384,14 +384,14 @@
 
   .search-results {
     position: absolute;
-    top: 100%; // Position below the input
+    top: 100%;
     left: 0;
     right: 0;
     background: white;
     border: 1px solid #ddd;
-    z-index: 1000; // Ensure it appears above other elements
-    max-height: 200px; // Limit height
-    overflow-y: auto; // Scroll if too many results
+    z-index: 1000;
+    max-height: 200px;
+    overflow-y: auto;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
     .search-result-item {
@@ -400,8 +400,15 @@
       display: flex;
       align-items: center;
       gap: 1rem;
+
       &:hover {
-        background-color: #f0f0f0; // Highlight on hover
+        background-color: #f0f0f0;
+      }
+
+      .search-result-image {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
       }
     }
   }
@@ -409,5 +416,41 @@
     width: 50px;
     height: 50px;
     object-fit: cover;
+
+    @media (max-width: 768px) {
+      width: 30px;
+      height: 30px;
+    }
+  }
+}
+
+.mobile-search-results {
+  position: absolute;
+  top: 100%; // Position below the input
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  z-index: 1000; // Ensure it appears above other elements
+  max-height: 200px; // Limit height
+  overflow-y: auto; // Scroll if too many results
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  .mobile-result-item {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    &:hover {
+      background-color: #f0f0f0; // Highlight on hover
+    }
+
+    .mobile-result-image {
+      width: 40px; // Adjust width for mobile
+      height: 40px; // Adjust height for mobile
+      object-fit: cover; // Maintain aspect ratio
+    }
   }
 }

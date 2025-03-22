@@ -98,8 +98,13 @@ export default function Header() {
 
   const handleProductClick = (productId) => {
     navigate(`/products/${productId}`);
+    setIsSearchOpen(false);
     setSearchQuery("");
     setSearchResults([]);
+  };
+
+  const handleMobileSearchInputChange = (e) => {
+    setSearchQuery(e.target.value);
   };
 
   return (
@@ -241,6 +246,7 @@ export default function Header() {
           </div>
         </div>
 
+        {/* Mobile Search Overlay */}
         <div
           className={`mobile-search-overlay ${isSearchOpen ? "active" : ""}`}
         >
@@ -249,11 +255,31 @@ export default function Header() {
               type="text"
               placeholder="What are you looking for?"
               className="mobile-search-input"
+              value={searchQuery}
+              onChange={handleMobileSearchInputChange}
             />
             <button className="mobile-search-close" onClick={toggleSearch}>
               <FiX className="icon" />
             </button>
           </div>
+          {searchResults.length > 0 && (
+            <div className="mobile-search-results">
+              {searchResults.map((product) => (
+                <div
+                  key={product._id}
+                  className="search-result-item mobile-result-item"
+                  onClick={() => handleProductClick(product._id)}
+                >
+                  <img
+                    className="search-result-image mobile-result-image"
+                    src={product.mainImage}
+                    alt={product.name}
+                  />
+                  <span>{product.name}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </header>
       {categories && (

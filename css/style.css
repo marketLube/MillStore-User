@@ -397,9 +397,48 @@ select {
 .header-search .search-results .search-result-item:hover {
   background-color: #f0f0f0;
 }
+.header-search .search-results .search-result-item .search-result-image {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+}
 .header-search .search-result-image {
   width: 50px;
   height: 50px;
+  object-fit: cover;
+}
+@media (max-width: 768px) {
+  .header-search .search-result-image {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+.mobile-search-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  z-index: 1000;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.mobile-search-results .mobile-result-item {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.mobile-search-results .mobile-result-item:hover {
+  background-color: #f0f0f0;
+}
+.mobile-search-results .mobile-result-item .mobile-result-image {
+  width: 40px;
+  height: 40px;
   object-fit: cover;
 }
 
