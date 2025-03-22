@@ -181,23 +181,23 @@ function Cartpage() {
       <div className="cart-container" data-aos="fade-up">
         <div className="cart-items">
           {cart?.map((item) => (
-            <div key={item.product._id} className="cart-item">
+            <div key={item?.product?._id} className="cart-item">
               <div
                 className="item-image"
-                onClick={() => navigate(`/products/${item.product._id}`)}
+                onClick={() => navigate(`/products/${item?.product?._id}`)}
               >
-                <img src={item.product.mainImage} alt={item.product.name} />
+                <img src={item?.product?.mainImage} alt={item?.product?.name} />
               </div>
 
               <div className="item-details">
-                <h3>{item.product.name}</h3>
-                <div className="product-id">#{item.product._id}</div>
+                <h3>{item?.product?.name}</h3>
+                <div className="product-id">#{item?.product?._id}</div>
                 <div className="quantity-controls">
                   <button
                     onClick={() =>
                       handleQuantityUpdate(
-                        item.product._id,
-                        item.variant?._id,
+                        item?.product?._id,
+                        item?.variant?._id,
                         "decrement"
                       )
                     }
@@ -205,12 +205,12 @@ function Cartpage() {
                   >
                     <FiMinus size={14} />
                   </button>
-                  <span>{item.quantity}</span>
+                  <span>{item?.quantity}</span>
                   <button
                     onClick={() =>
                       handleQuantityUpdate(
-                        item.product._id,
-                        item.variant?._id,
+                        item?.product?._id,
+                        item?.variant?._id,
                         "increment"
                       )
                     }
@@ -222,11 +222,11 @@ function Cartpage() {
               </div>
 
               <div className="price-actions">
-                <div className="item-price">₹ {item.offerPrice}</div>
+                <div className="item-price">₹ {item?.offerPrice}</div>
                 <button
                   className="remove-item"
                   onClick={() =>
-                    handleRemoveItem(item.product._id, item.variant?._id)
+                    handleRemoveItem(item?.product?._id, item?.variant?._id)
                   }
                   disabled={isRemoving}
                 >
@@ -245,17 +245,17 @@ function Cartpage() {
               <span>₹ {subtotal}</span>
             </div>
 
-            {Object.keys(couponDetails).length > 0 && (
+            {Object.keys(couponDetails)?.length > 0 && (
               <div className="summary-row discount">
                 <span>Discount</span>
                 <span className="orange-text">
-                  - ₹ {couponDetails.discountAmount}
-                  {couponDetails.discountType === "percentage" && (
+                  - ₹ {couponDetails?.discountAmount}
+                  {couponDetails?.discountType === "percentage" && (
                     <span className="discount-percentage">
                       (
                       {(
-                        (couponDetails.discountAmount /
-                          couponDetails.originalAmount) *
+                        (couponDetails?.discountAmount /
+                          couponDetails?.originalAmount) *
                         100
                       ).toFixed(0)}
                       %)
@@ -277,15 +277,15 @@ function Cartpage() {
               <span>+ ₹ {gst}</span>
             </div>
 
-            {Object.keys(couponDetails).length > 0 && (
+            {Object.keys(couponDetails)?.length > 0 && (
               <div className="summary-row coupon-applied">
                 <span>
                   Coupon Applied{" "}
-                  <span className="coupon-code">({couponDetails.code})</span>
+                  <span className="coupon-code">({couponDetails?.code})</span>
                 </span>
                 <div className="coupon-info">
                   <span className="savings">
-                    You saved ₹{couponDetails.savings}
+                    You saved ₹{couponDetails?.savings}
                   </span>
                 </div>
               </div>
@@ -315,7 +315,7 @@ function Cartpage() {
                   onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                   disabled={couponDetails}
                 />
-                {Object.keys(couponDetails).length > 0 ? (
+                {Object.keys(couponDetails)?.length > 0 ? (
                   <button className="apply-btn" onClick={handleRemoveCoupon}>
                     Remove
                   </button>
@@ -351,38 +351,38 @@ function Cartpage() {
                     availableCoupons?.map((coupon) => (
                       <div
                         className={`coupon-item ${
-                          couponDetails?._id === coupon._id ? "applied" : ""
+                          couponDetails?._id === coupon?._id ? "applied" : ""
                         }`}
-                        key={coupon._id}
+                        key={coupon?._id}
                         onClick={() => handleCouponSelect(coupon)}
                         style={{
                           opacity:
                             Object.keys(couponDetails || {}).length > 0 &&
-                            couponDetails?._id !== coupon._id
+                            couponDetails?._id !== coupon?._id
                               ? 0.5
                               : 1,
                           cursor:
                             Object.keys(couponDetails || {}).length > 0 &&
-                            couponDetails?._id !== coupon._id
+                            couponDetails?._id !== coupon?._id
                               ? "not-allowed"
                               : "pointer",
                         }}
                       >
-                        <label htmlFor={coupon._id}>
+                        <label htmlFor={coupon?._id}>
                           <div className="coupon-header">
                             <input
                               type="radio"
                               name="coupon"
-                              id={coupon._id}
-                              checked={selectedCoupon?._id === coupon._id}
+                              id={coupon?._id}
+                              checked={selectedCoupon?._id === coupon?._id}
                               onChange={() => handleCouponSelect(coupon)}
                               disabled={
                                 Object.keys(couponDetails || {}).length > 0 &&
-                                couponDetails?._id !== coupon._id
+                                couponDetails?._id !== coupon?._id
                               }
                             />
-                            <strong>{coupon.code}</strong>
-                            {couponDetails?._id === coupon._id && (
+                            <strong>{coupon?.code}</strong>
+                            {couponDetails?._id === coupon?._id && (
                               <span className="applied-tag">Applied</span>
                             )}
                           </div>
@@ -394,9 +394,9 @@ function Cartpage() {
                   : availableCoupons?.map((coupon) => (
                       <div
                         className={`coupon-item ${
-                          couponDetails?._id === coupon._id ? "applied" : ""
+                          couponDetails?._id === coupon?._id ? "applied" : ""
                         }`}
-                        key={coupon._id}
+                        key={coupon?._id}
                         onClick={() => handleCouponSelect(coupon)}
                         style={{
                           opacity:
@@ -411,26 +411,26 @@ function Cartpage() {
                               : "pointer",
                         }}
                       >
-                        <label htmlFor={coupon._id}>
+                        <label htmlFor={coupon?._id}>
                           <div className="coupon-header">
                             <input
                               type="radio"
                               name="coupon"
-                              id={coupon._id}
-                              checked={selectedCoupon?._id === coupon._id}
+                              id={coupon?._id}
+                              checked={selectedCoupon?._id === coupon?._id}
                               onChange={() => handleCouponSelect(coupon)}
                               disabled={
                                 Object.keys(couponDetails || {}).length > 0 &&
                                 couponDetails?._id !== coupon._id
                               }
                             />
-                            <strong>{coupon.code}</strong>
-                            {couponDetails?._id === coupon._id && (
+                            <strong>{coupon?.code}</strong>
+                            {couponDetails?._id === coupon?._id && (
                               <span className="applied-tag">Applied</span>
                             )}
                           </div>
-                          <p>{coupon.description}</p>
-                          <p className="terms">{coupon.terms}</p>
+                          <p>{coupon?.description}</p>
+                          <p className="terms">{coupon?.terms}</p>
                         </label>
                       </div>
                     ))}
