@@ -110,7 +110,7 @@ function ProductDetailsContent() {
           </div>
           <div className="thumbnail-images">
             {!selectedVariant?.images[0]
-              ? product?.images.map(
+              ? product?.images?.map(
                   (image, index) =>
                     index > 0 && <img src={image} alt={product?.name} />
                 )
@@ -186,14 +186,14 @@ function ProductDetailsContent() {
                     onClick={() => setSelectedVariant(variant)}
                   >
                     <div className="variant-image">
-                      <img src={variant.images[0]} alt={variant.name} />
+                      <img src={variant?.images[0]} alt={variant?.name} />
                     </div>
                     <div className="light-info">
                       <span>
-                        {variant.attributes.title.slice(0, 10)}
-                        {variant.attributes.title.length > 10 && "..."}
+                        {variant?.attributes?.title?.slice(0, 10)}
+                        {variant?.attributes?.title?.length > 10 && "..."}
                       </span>
-                      <span className="temp">₹{variant.offerPrice}</span>
+                      <span className="temp">₹{variant?.offerPrice}</span>
                     </div>
                   </button>
                 ))}

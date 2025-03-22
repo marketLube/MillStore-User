@@ -18,6 +18,7 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
     city: "",
     state: "",
     pincode: "",
+    saveAddress: false,
   });
 
   const { mutate: updateUser, isPending } = useUpdateUser();
@@ -37,16 +38,26 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
   }, [isOpen]);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: name === "saveAddress" ? checked : value,
     }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData, "formData");
+    if (
+      formData.building === "" ||
+      formData.street === "" ||
+      formData.city === "" ||
+      formData.state === "" ||
+      formData.pincode === ""
+    ) {
+      toast.warning("Please fill all the fields");
+      return;
+    }
+
     const updatedUser = {
       ...user,
       address: formData,
@@ -60,6 +71,7 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
       city: "",
       state: "",
       pincode: "",
+      saveAddress: false,
     });
     onClose();
   };
@@ -72,7 +84,6 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
       (fullName && building && street && city && state && pincode)
     ) {
       const address = selectedAddress ? selectedAddress : formData;
-      console.log(address, "address");
       placeOrder(address);
     } else {
       toast.warning(
@@ -103,14 +114,14 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
                 timely delivery.
               </p>
 
-              {savedAddresses.map((addr) => (
-                <label key={addr._id} className="address-option">
+              {savedAddresses?.map((addr) => (
+                <label key={addr?._id} className="address-option">
                   <input
                     type="radio"
                     name="address"
-                    value={addr._id}
-                    checked={selectedAddress === addr._id}
-                    onChange={() => setSelectedAddress(addr._id)}
+                    value={addr?._id}
+                    checked={selectedAddress === addr?._id}
+                    onChange={() => setSelectedAddress(addr?._id)}
                   />
                   <div className="address-details">
                     <strong>{addr?.fullName}</strong>
@@ -195,7 +206,12 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
         {mode === "cart" ? (
           <div className="modal-footer">
             <label className="save-address">
-              <input type="checkbox" />
+              <input
+                type="checkbox"
+                name="saveAddress"
+                checked={formData.saveAddress}
+                onChange={handleInputChange}
+              />
               Save this address for future purchases
             </label>
             <button
@@ -208,8 +224,12 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
           </div>
         ) : (
           <div className="modal-footer">
-            <button className="save-btn" onClick={handleSubmit}>
-              Save Address
+            <button
+              className="save-btn"
+              onClick={handleSubmit}
+              disabled={isPending}
+            >
+              {isPending ? <ButtonLoading /> : <span>Save Address</span>}
             </button>
           </div>
         )}

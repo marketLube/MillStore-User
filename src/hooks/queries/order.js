@@ -9,7 +9,7 @@ export const usePlaceOrder = () => {
     mutationFn: (address) => orderService.placeOrder(address),
     onSuccess: () => {
       toast.success("Order placed successfully");
-      navigate("/profile?tab=order-history");
+      navigate("/profile");
     },
     onError: (error) => {
       toast.error(error.response?.data?.message || "Failed to place order");

@@ -22,7 +22,7 @@ function Trending() {
 
       <div className="trending-grid">
         {trendingProducts?.slice(0, 4).map((product) => (
-          <Card key={product._id} product={product} />
+          <Card key={product?._id} product={product} />
         ))}
       </div>
 

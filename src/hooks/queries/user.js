@@ -12,13 +12,11 @@ export const useUpdateUser = () => {
     onSuccess: (response) => {
       toast.success("User updated successfully");
       if (response) {
-        console.log(response, "response");
         dispatch(setUser(response));
         dispatch(setIsLoggedIn(true));
       }
     },
     onError: (error) => {
-      console.log(error, "error");
       toast.error(error.message);
     },
   });

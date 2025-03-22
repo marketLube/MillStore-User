@@ -22,10 +22,15 @@ export const useLogin = () => {
 };
 
 export const useCheckAuth = () => {
+  const dispatch = useDispatch();
   return useQuery({
     queryKey: ["check-auth"],
     queryFn: () => authService.checkAuth(),
     retry: 1,
+    onSuccess: (data) => {
+      dispatch(setUser(data.user));
+      dispatch(setIsLoggedIn(true));
+    },
     onError: (error) => {
       toast.error(error.response?.data?.message || "Failed to check auth");
     },

@@ -5,7 +5,6 @@ import LoadingSpinner from "../../components/LoadingSpinner";
 
 const OrderHistory = () => {
   const { data, isLoading } = useGetOrderHistory();
-  console.log(data);
   const orders = data?.orders;
 
   return (

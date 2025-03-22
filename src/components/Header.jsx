@@ -150,20 +150,20 @@ export default function Header() {
               <FiSearch className="search-icon" />
             </button>
           </div>
-          {searchResults.length > 0 && (
+          {searchResults?.length > 0 && (
             <div className="search-results">
-              {searchResults.map((product) => (
+              {searchResults?.map((product) => (
                 <div
-                  key={product._id}
+                  key={product?._id}
                   className="search-result-item"
-                  onClick={() => handleProductClick(product._id)}
+                  onClick={() => handleProductClick(product?._id)}
                 >
                   <img
                     className="search-result-image"
-                    src={product.mainImage}
-                    alt={product.name}
+                    src={product?.mainImage}
+                    alt={product?.name}
                   />
-                  <span>{product.name}</span>
+                  <span>{product?.name}</span>
                   {/* <span>{product.category.name}</span> */}
                 </div>
               ))}
@@ -196,8 +196,8 @@ export default function Header() {
                     <img src="/images/user/profilepicture.jpg" alt="User" />
                   </div>
                   <div className="user-info">
-                    <h4>{user.username}</h4>
-                    <p>{user.email}</p>
+                    <h4>{user?.username}</h4>
+                    <p>{user?.email}</p>
                   </div>
                   <IoIosArrowForward className="arrow-icon" />
                 </Link>
@@ -262,20 +262,20 @@ export default function Header() {
               <FiX className="icon" />
             </button>
           </div>
-          {searchResults.length > 0 && (
+          {searchResults?.length > 0 && (
             <div className="mobile-search-results">
-              {searchResults.map((product) => (
+              {searchResults?.map((product) => (
                 <div
-                  key={product._id}
+                  key={product?._id}
                   className="search-result-item mobile-result-item"
-                  onClick={() => handleProductClick(product._id)}
+                  onClick={() => handleProductClick(product?._id)}
                 >
                   <img
                     className="search-result-image mobile-result-image"
-                    src={product.mainImage}
-                    alt={product.name}
+                    src={product?.mainImage}
+                    alt={product?.name}
                   />
-                  <span>{product.name}</span>
+                  <span>{product?.name}</span>
                 </div>
               ))}
             </div>
@@ -286,11 +286,11 @@ export default function Header() {
         <ul className="header-cat">
           {categories?.map((category) => (
             <li
-              key={category._id}
+              key={category?._id}
               onClick={() => handleCategoryClick(category)}
               style={{ cursor: "pointer" }}
             >
-              {category.name}
+              {category?.name}
             </li>
           ))}
         </ul>

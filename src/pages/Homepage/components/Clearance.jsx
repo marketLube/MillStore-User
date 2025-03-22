@@ -70,7 +70,7 @@ function Clearance() {
           <FiArrowLeft />
         </button>
         <div className="clearance-products" ref={scrollContainerRef}>
-          {products.map((product, index) => (
+          {products?.map((product, index) => (
             <ProductCard key={index} product={product} />
           ))}
         </div>
