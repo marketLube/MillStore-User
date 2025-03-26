@@ -90,6 +90,16 @@
         background-color: var.$color-primary;
       }
     }
+    .error-message {
+      color: #ff3333;
+      font-size: 0.8rem;
+      margin-top: 4px;
+      margin-left: 4px;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
 
     .terms-text {
       text-align: center;
@@ -106,6 +116,40 @@
         }
       }
     }
+
+    .password-input {
+      position: relative;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #666;
+    }
+
+    .password-input input {
+      padding-right: 35px;
+    }
+
+@media screen and (max-width: 480px) {
+  .signup-container {
+    padding: 16px;
+  }
+.password-input input {
+  padding-right: 25px;
+}
+.password-toggle {
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #666;
+margin-bottom: 10px;
+}
+}
 
     .login-link {
       text-align: center;

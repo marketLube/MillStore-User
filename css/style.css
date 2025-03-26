@@ -4236,6 +4236,15 @@ body.modal-open {
 .signup-container .signup-card .signup-button:hover {
   background-color: #ffb64a;
 }
+.signup-container .signup-card .error-message {
+  color: #ff3333;
+  font-size: 0.8rem;
+  margin-top: 4px;
+  margin-left: 4px;
+}
+.signup-container .signup-card .form-group {
+  margin-bottom: 1rem;
+}
 .signup-container .signup-card .terms-text {
   text-align: center;
   font-size: 12px;
@@ -4248,6 +4257,36 @@ body.modal-open {
 }
 .signup-container .signup-card .terms-text a:hover {
   text-decoration: underline;
+}
+.signup-container .signup-card .password-input {
+  position: relative;
+}
+.signup-container .signup-card .password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #666;
+}
+.signup-container .signup-card .password-input input {
+  padding-right: 35px;
+}
+@media screen and (max-width: 480px) {
+  .signup-container .signup-card .signup-container {
+    padding: 16px;
+  }
+  .signup-container .signup-card .password-input input {
+    padding-right: 25px;
+  }
+  .signup-container .signup-card .password-toggle {
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #666;
+    margin-bottom: 10px;
+  }
 }
 .signup-container .signup-card .login-link {
   text-align: center;

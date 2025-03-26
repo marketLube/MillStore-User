@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { authService } from "../../api/services/authService";
+import { toast } from "sonner";
+import { useSignup } from "../../hooks/queries/auth";
+import ButtonLoadingSpinner from "../../components/ButtonLoadingSpinners";
 
 function Signup() {
 
@@ -8,6 +13,10 @@ const[phonenumber,setphonenumber]=useState("");
 const[email,setemail]=useState("");
 const[password,setpassword]=useState("");
 const[confirmPassword,setconfirmPassword]=useState("");
+const[showPassword,setshowPassword]=useState(false);
+const[showConfirmPassword,setshowConfirmPassword]=useState(false);
+const navigate = useNavigate();
+const { mutate: signupMutation, isLoading } = useSignup();
 
 // Add error states
 const [errors, setErrors] = useState({
@@ -99,7 +108,7 @@ const handleConfirmPassword = (e) => {
   }));
 };
 
-const handleSubmit = (e) => {
+const handleSubmit = async(e) => {
   e.preventDefault();
 
   // Validate all fields
@@ -118,6 +127,16 @@ const handleSubmit = (e) => {
     console.log(fullname, phonenumber, email, password, confirmPassword);
     reset();
   }
+
+try {
+  signupMutation({username:fullname, phonenumber, email,password});
+  reset();
+  toast.success("Signup successful");
+} catch (error) {
+  toast.error(error.response?.data?.message || "Failed to signup");
+}
+
+
 };
 
   return (
@@ -134,7 +153,7 @@ const handleSubmit = (e) => {
               value={fullname}
               onChange={handleFullName}
               placeholder="Full name *"
-              required
+
             />
             {errors.fullname && <div className="error-message">{errors.fullname}</div>}
           </div>
@@ -149,10 +168,11 @@ const handleSubmit = (e) => {
               value={phonenumber}
               onChange={handlePhone}
               placeholder="Phone Number *"
-              required
             />
-            {errors.phonenumber && <div className="error-message">{errors.phonenumber}</div>}
+
+
           </div>
+            {errors.phonenumber && <div className="error-message" style={{color:"red" ,fontSize:"12px" }}>{errors.phonenumber}</div>}
 
           <div className="form-group">
             <input
@@ -165,32 +185,42 @@ const handleSubmit = (e) => {
             {errors.email && <div className="error-message">{errors.email}</div>}
           </div>
 
-          <div className="form-group">
+          <div className="form-group password-input">
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               value={password}
               onChange={handlePassword}
               placeholder="Password *"
-              required
             />
+            <span
+              className="password-toggle"
+              onClick={() => setshowPassword(!showPassword)}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
             {errors.password && <div className="error-message">{errors.password}</div>}
           </div>
 
-          <div className="form-group">
+          <div className="form-group password-input">
             <input
-              type="password"
+              type={showConfirmPassword ? "text" : "password"}
               name="confirmPassword"
               value={confirmPassword}
               onChange={handleConfirmPassword}
               placeholder="Confirm Password *"
-              required
             />
+            <span
+              className="password-toggle"
+              onClick={() => setshowConfirmPassword(!showConfirmPassword)}
+            >
+              {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
             {errors.confirmPassword && <div className="error-message">{errors.confirmPassword}</div>}
           </div>
 
           <button type="submit" className="signup-button">
-            Continue
+            {isLoading ? <ButtonLoadingSpinner /> : "Continue"}
           </button>
 
           <div className="terms-text">

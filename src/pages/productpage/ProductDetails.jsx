@@ -289,99 +289,105 @@ function ProductDetailsContent() {
               </button>
             </div>
 
-            <div className="average-rating">
-              <div className="rating-value">
-                <span className="number">{product?.averageRating}</span>
-                <div className="stars">
-                  {"★".repeat(Math.floor(product?.averageRating))}
+            <div className="rating-container">
+              {product?.totalRatings > 0 && (
+                <div className="average-rating">
+                  <div className="rating-value">
+                    <span className="number">{product?.averageRating}</span>
+                    <div className="stars">
+                      {"★".repeat(Math.floor(product?.averageRating))}
+                    </div>
+                  </div>
+                  <span className="total-reviews">
+                    Based on {product?.totalRatings} reviews
+                  </span>
                 </div>
-              </div>
-              <span className="total-reviews">
-                Based on {product?.totalRatings} reviews
-              </span>
-            </div>
+              )}
 
-            <div className="rating-stats">
-              <div className="rating-bar">
-                <span>5★</span>
-                <div className="bar">
-                  <div
-                    className="fill"
-                    style={{
-                      width: `${
-                        (product?.ratingDistribution[5] /
-                          product?.totalRatings) *
-                          100 || 0
-                      }%`,
-                    }}
-                  ></div>
+              {product?.totalRatings > 0 && (
+                <div className="rating-stats">
+                  <div className="rating-bar">
+                    <span>5★</span>
+                    <div className="bar">
+                      <div
+                        className="fill"
+                        style={{
+                          width: `${
+                            (product?.ratingDistribution[5] /
+                              product?.totalRatings) *
+                            100 || 0
+                          }%`,
+                        }}
+                      ></div>
+                    </div>
+                    <span>({product?.ratingDistribution[5]})</span>
+                  </div>
+                  <div className="rating-bar">
+                    <span>4★</span>
+                    <div className="bar">
+                      <div
+                        className="fill"
+                        style={{
+                          width: `${
+                            (product?.ratingDistribution[4] /
+                              product?.totalRatings) *
+                            100
+                          }%`,
+                        }}
+                      ></div>
+                    </div>
+                    <span>({product?.ratingDistribution[4]})</span>
+                  </div>
+                  <div className="rating-bar">
+                    <span>3★</span>
+                    <div className="bar">
+                      <div
+                        className="fill"
+                        style={{
+                          width: `${
+                            (product?.ratingDistribution[3] /
+                              product?.totalRatings) *
+                            100
+                          }%`,
+                        }}
+                      ></div>
+                    </div>
+                    <span>({product?.ratingDistribution[3]})</span>
+                  </div>
+                  <div className="rating-bar">
+                    <span>2★</span>
+                    <div className="bar">
+                      <div
+                        className="fill"
+                        style={{
+                          width: `${
+                            (product?.ratingDistribution[2] /
+                              product?.totalRatings) *
+                            100
+                          }%`,
+                        }}
+                      ></div>
+                    </div>
+                    <span>({product?.ratingDistribution[2]})</span>
+                  </div>
+                  <div className="rating-bar">
+                    <span>1★</span>
+                    <div className="bar">
+                      <div
+                        className="fill"
+                        style={{
+                          width: `${
+                            (product?.ratingDistribution[1] /
+                              product?.totalRatings) *
+                            100
+                          }%`,
+                        }}
+                      ></div>
+                    </div>
+                    <span>({product?.ratingDistribution[1]})</span>
+                  </div>
                 </div>
-                <span>({product?.ratingDistribution[5]})</span>
-              </div>
-              <div className="rating-bar">
-                <span>4★</span>
-                <div className="bar">
-                  <div
-                    className="fill"
-                    style={{
-                      width: `${
-                        (product?.ratingDistribution[4] /
-                          product?.totalRatings) *
-                        100
-                      }%`,
-                    }}
-                  ></div>
-                </div>
-                <span>({product?.ratingDistribution[4]})</span>
-              </div>
-              <div className="rating-bar">
-                <span>3★</span>
-                <div className="bar">
-                  <div
-                    className="fill"
-                    style={{
-                      width: `${
-                        (product?.ratingDistribution[3] /
-                          product?.totalRatings) *
-                        100
-                      }%`,
-                    }}
-                  ></div>
-                </div>
-                <span>({product?.ratingDistribution[3]})</span>
-              </div>
-              <div className="rating-bar">
-                <span>2★</span>
-                <div className="bar">
-                  <div
-                    className="fill"
-                    style={{
-                      width: `${
-                        (product?.ratingDistribution[2] /
-                          product?.totalRatings) *
-                        100
-                      }%`,
-                    }}
-                  ></div>
-                </div>
-                <span>({product?.ratingDistribution[2]})</span>
-              </div>
-              <div className="rating-bar">
-                <span>1★</span>
-                <div className="bar">
-                  <div
-                    className="fill"
-                    style={{
-                      width: `${
-                        (product?.ratingDistribution[1] /
-                          product?.totalRatings) *
-                        100
-                      }%`,
-                    }}
-                  ></div>
-                </div>
-                <span>({product?.ratingDistribution[1]})</span>
-              </div>
+              )}
             </div>
 
             {product?.totalRatings > 0 && (

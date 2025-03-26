@@ -36,3 +36,20 @@ export const useCheckAuth = () => {
     },
   });
 };
+
+export const useSignup = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  return useMutation({
+    mutationFn: (user) => authService.signup(user),
+    onSuccess: (data) => {
+      localStorage.setItem("user-auth-token", data.token);
+      dispatch(setUser(data.user));
+      dispatch(setIsLoggedIn(true));
+      navigate("/");
+    },
+    onError: (error) => {
+      toast.error(error.response?.data?.message || "Failed to signup");
+    },
+  });
+};

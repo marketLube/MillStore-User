@@ -17,4 +17,9 @@ export const authService = {
     const response = await apiClient.post("/user/login", { email, password });
     return response.data;
   },
+
+  signup: async (user) => {
+    const response = await apiClient.post("/user/register", user);
+    return response.data;
+  },
 };

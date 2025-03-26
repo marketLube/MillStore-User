@@ -86,7 +86,7 @@ const RatingModal = ({ isOpen, onClose, onSubmit, productId }) => {
             className="media-upload-button"
             onClick={() => document.getElementById('media-upload').click()}
           >
-            📷 Attach Photo or Video
+            📷 Attach Photo
           </button>
           <input
             id="media-upload"

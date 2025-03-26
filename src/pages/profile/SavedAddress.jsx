@@ -1,12 +1,30 @@
 import React, { useState } from "react";
 import { FiTrash2 } from "react-icons/fi";
 import AddressModal from "../../components/cart/Addressmodal";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { toast } from "sonner";
+import userService from "../../api/services/userService";
 
 const SavedAddress = () => {
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
-  const addresses = user?.address;
+
+  const handleDeleteAddress = async (id) => {
+    try {
+      const updatedAddresses = user.address.filter(addr => addr._id !== id);
+      const response = await userService.updateUser({ address: updatedAddresses });
+
+      dispatch({
+        type: 'SET_USER',
+        payload: response
+      });
+
+      toast.success("Address deleted successfully");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to delete address");
+    }
+  };
 
   return (
     <div className="saved-address-section">
@@ -17,11 +35,11 @@ const SavedAddress = () => {
       </p>
 
       <div className="addresses-grid">
-        {addresses?.map((addr, index) => (
+        {user?.address?.map((addr, index) => (
           <div key={index} className="address-card">
             <div className="card-header">
               <span className="address-label">{addr.label}</span>
-              <button className="delete-btn">
+              <button className="delete-btn" onClick={() => handleDeleteAddress(addr._id)}>
                 <FiTrash2 />
               </button>
             </div>

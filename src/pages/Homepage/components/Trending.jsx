@@ -6,7 +6,9 @@ import { useProducts } from "../../../hooks/queries/products";
 import LoadingSpinner from "../../../components/LoadingSpinner";
 
 function Trending() {
-  const { data: response, isLoading, error } = useProducts();
+  const { data: response, isLoading, error } = useProducts({
+    labelId: "67e3f8b437db8d10f8e5f341",
+  });
   if (isLoading) return <LoadingSpinner />;
   if (error) return <div>Error: {error.message}</div>;
 
