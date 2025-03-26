@@ -16,6 +16,7 @@
     "aos": "^2.3.4",
     "axios": "^1.8.2",
     "concurrently": "^9.1.2",
+    "razorpay": "^2.9.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-error-boundary": "^5.0.0",

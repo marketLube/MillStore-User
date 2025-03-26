@@ -13,6 +13,9 @@ import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "../../components/error/ErrorFallback";
 import { useAddToCart } from "../../hooks/queries/cart";
 import ButtonLoadingSpinner from "../../components/ButtonLoadingSpinners";
+import RatingModal from "./RatingModal";
+import { reviewService } from "../../api/services/reviewService";
+
 const CalculateDiscount = (price, offerPrice) => {
   const discount = ((price - offerPrice) / price) * 100;
   return Number.isInteger(discount) ? discount : discount.toFixed(2);
@@ -25,7 +28,7 @@ function ProductDetailsContent() {
   const [selectedVariant, setSelectedVariant] = useState(null);
   const { id } = useParams();
   //api calls
-  const { data: product, isLoading, error } = useProductById(id);
+  const { data: product, isLoading, error, refetch } = useProductById(id);
   const {
     data: response,
     isLoading: isLoadingProduct,
@@ -36,6 +39,7 @@ function ProductDetailsContent() {
 
   // Local state to track which button is loading
   const [loadingAction, setLoadingAction] = useState(null); // "buy" or "cart"
+  const [isRatingModalOpen, setIsRatingModalOpen] = useState(false);
 
   useEffect(() => {
     setSelectedVariant(null);
@@ -65,7 +69,8 @@ function ProductDetailsContent() {
 
   const reviews = product.ratings;
 
-  const visibleReviews = showAllReviews ? reviews : reviews.slice(0, 2);
+  // const visibleReviews = showAllReviews ? reviews : reviews.slice(0, 2);
+  const visibleReviews = reviews;
 
   const handleAddToCart = (type) => {
     const productToAdd = {
@@ -85,6 +90,24 @@ function ProductDetailsContent() {
         setLoadingAction(null);
       },
     });
+  };
+
+  const handleSubmitReview = async (reviewData) => {
+    console.log("Submitting review:", reviewData);
+    const formData = new FormData();
+    formData.append("rating", reviewData.rating);
+    formData.append("review", reviewData.review);
+    formData.append("image", reviewData.media);
+    formData.append("productId", reviewData.productId);
+    try {
+      const response = await reviewService.createReview(formData);
+      console.log(response);
+      setIsRatingModalOpen(false);
+      refetch();
+
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -255,108 +278,113 @@ function ProductDetailsContent() {
             </ul>
           </div>
 
-          {product?.totalRatings > 0 && (
-            <div className="section reviews">
-              <div className="reviews-header">
-                <h3>Ratings & Reviews</h3>
-                <button className="rate-btn">Rate Product</button>
-              </div>
+          <div className="section reviews">
+            <div className="reviews-header">
+              <h3>Ratings & Reviews</h3>
+              <button
+                className="rate-btn"
+                onClick={() => setIsRatingModalOpen(true)}
+              >
+                Rate Product
+              </button>
+            </div>
 
-              <div className="average-rating">
-                <div className="rating-value">
-                  <span className="number">{product?.averageRating}</span>
-                  <div className="stars">
-                    {"★".repeat(Math.floor(product?.averageRating))}
-                  </div>
-                </div>
-                <span className="total-reviews">
-                  Based on {product?.totalRatings} reviews
-                </span>
-              </div>
-
-              <div className="rating-stats">
-                <div className="rating-bar">
-                  <span>5★</span>
-                  <div className="bar">
-                    <div
-                      className="fill"
-                      style={{
-                        width: `${
-                          (product?.ratingDistribution[5] /
-                            product?.totalRatings) *
-                          100
-                        }%`,
-                      }}
-                    ></div>
-                  </div>
-                  <span>({product?.ratingDistribution[5]})</span>
-                </div>
-                <div className="rating-bar">
-                  <span>4★</span>
-                  <div className="bar">
-                    <div
-                      className="fill"
-                      style={{
-                        width: `${
-                          (product?.ratingDistribution[4] /
-                            product?.totalRatings) *
-                          100
-                        }%`,
-                      }}
-                    ></div>
-                  </div>
-                  <span>({product?.ratingDistribution[4]})</span>
-                </div>
-                <div className="rating-bar">
-                  <span>3★</span>
-                  <div className="bar">
-                    <div
-                      className="fill"
-                      style={{
-                        width: `${
-                          (product?.ratingDistribution[3] /
-                            product?.totalRatings) *
-                          100
-                        }%`,
-                      }}
-                    ></div>
-                  </div>
-                  <span>({product?.ratingDistribution[3]})</span>
-                </div>
-                <div className="rating-bar">
-                  <span>2★</span>
-                  <div className="bar">
-                    <div
-                      className="fill"
-                      style={{
-                        width: `${
-                          (product?.ratingDistribution[2] /
-                            product?.totalRatings) *
-                          100
-                        }%`,
-                      }}
-                    ></div>
-                  </div>
-                  <span>({product?.ratingDistribution[2]})</span>
-                </div>
-                <div className="rating-bar">
-                  <span>1★</span>
-                  <div className="bar">
-                    <div
-                      className="fill"
-                      style={{
-                        width: `${
-                          (product?.ratingDistribution[1] /
-                            product?.totalRatings) *
-                          100
-                        }%`,
-                      }}
-                    ></div>
-                  </div>
-                  <span>({product?.ratingDistribution[1]})</span>
+            <div className="average-rating">
+              <div className="rating-value">
+                <span className="number">{product?.averageRating}</span>
+                <div className="stars">
+                  {"★".repeat(Math.floor(product?.averageRating))}
                 </div>
               </div>
+              <span className="total-reviews">
+                Based on {product?.totalRatings} reviews
+              </span>
+            </div>
 
+            <div className="rating-stats">
+              <div className="rating-bar">
+                <span>5★</span>
+                <div className="bar">
+                  <div
+                    className="fill"
+                    style={{
+                      width: `${
+                        (product?.ratingDistribution[5] /
+                          product?.totalRatings) *
+                          100 || 0
+                      }%`,
+                    }}
+                  ></div>
+                </div>
+                <span>({product?.ratingDistribution[5]})</span>
+              </div>
+              <div className="rating-bar">
+                <span>4★</span>
+                <div className="bar">
+                  <div
+                    className="fill"
+                    style={{
+                      width: `${
+                        (product?.ratingDistribution[4] /
+                          product?.totalRatings) *
+                        100
+                      }%`,
+                    }}
+                  ></div>
+                </div>
+                <span>({product?.ratingDistribution[4]})</span>
+              </div>
+              <div className="rating-bar">
+                <span>3★</span>
+                <div className="bar">
+                  <div
+                    className="fill"
+                    style={{
+                      width: `${
+                        (product?.ratingDistribution[3] /
+                          product?.totalRatings) *
+                        100
+                      }%`,
+                    }}
+                  ></div>
+                </div>
+                <span>({product?.ratingDistribution[3]})</span>
+              </div>
+              <div className="rating-bar">
+                <span>2★</span>
+                <div className="bar">
+                  <div
+                    className="fill"
+                    style={{
+                      width: `${
+                        (product?.ratingDistribution[2] /
+                          product?.totalRatings) *
+                        100
+                      }%`,
+                    }}
+                  ></div>
+                </div>
+                <span>({product?.ratingDistribution[2]})</span>
+              </div>
+              <div className="rating-bar">
+                <span>1★</span>
+                <div className="bar">
+                  <div
+                    className="fill"
+                    style={{
+                      width: `${
+                        (product?.ratingDistribution[1] /
+                          product?.totalRatings) *
+                        100
+                      }%`,
+                    }}
+                  ></div>
+                </div>
+                <span>({product?.ratingDistribution[1]})</span>
+              </div>
+            </div>
+
+            {product?.totalRatings > 0 && (
               <div className="reviews-list">
                 {visibleReviews.map((review) => (
                   <div key={review._id} className="review-item">
@@ -385,6 +413,19 @@ function ProductDetailsContent() {
                         {"☆".repeat(5 - review.rating)}
                       </div>
                     </div>
+                    <div className="review-image">
+                      {review.image && (
+                        <img
+                          src={review.image}
+                          alt={review.review}
+                          style={{
+                            width: "20%",
+                            height: "20%",
+                            objectFit: "cover",
+                          }}
+                        />
+                      )}
+                    </div>
                     <p className="review-comment">{review.review}</p>
                   </div>
                 ))}
@@ -397,8 +438,8 @@ function ProductDetailsContent() {
                   </button>
                 )}
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
 
@@ -441,6 +482,13 @@ function ProductDetailsContent() {
           </button>
         </div>
       </div>
+
+      <RatingModal
+        isOpen={isRatingModalOpen}
+        onClose={() => setIsRatingModalOpen(false)}
+        onSubmit={handleSubmitReview}
+        productId={product?._id}
+      />
     </div>
   );
 }

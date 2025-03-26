@@ -7,7 +7,7 @@ import { usePlaceOrder } from "../../hooks/queries/order";
 import ButtonLoading from "../ButtonLoadingSpinners";
 import { toast } from "sonner";
 
-const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
+const AddressModal = ({ isOpen, onClose, mode = "cart", onSubmit }) => {
   const user = useSelector((state) => state.user.user);
   const [selectedAddress, setSelectedAddress] = useState("");
   const [formData, setFormData] = useState({
@@ -47,22 +47,26 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    console.log(selectedAddress);
     if (
-      formData.building === "" ||
-      formData.street === "" ||
-      formData.city === "" ||
-      formData.state === "" ||
-      formData.pincode === ""
+      !selectedAddress &&
+      (formData.building === "" ||
+        formData.street === "" ||
+        formData.city === "" ||
+        formData.state === "" ||
+        formData.pincode === "")
     ) {
       toast.warning("Please fill all the fields");
       return;
     }
+    onSubmit(selectedAddress);
 
-    const updatedUser = {
-      ...user,
-      address: formData,
-    };
-    updateUser(updatedUser);
+    // const updatedUser = {
+    //   ...user,
+    //   address: formData,
+    // };
+    // updateUser(updatedUser);
     setFormData({
       fullName: user?.username,
       building: "",
@@ -73,7 +77,6 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
       pincode: "",
       saveAddress: false,
     });
-    onClose();
   };
 
   const handlePlaceOrder = () => {
@@ -217,7 +220,7 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
             <button
               className="proceed-btn"
               disabled={isOrderPending}
-              onClick={handlePlaceOrder}
+              onClick={handleSubmit}
             >
               {isOrderPending ? <ButtonLoading /> : <span>Place Order</span>}
             </button>

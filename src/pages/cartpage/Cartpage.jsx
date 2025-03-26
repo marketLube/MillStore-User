@@ -7,6 +7,7 @@ import {
   FiChevronUp,
 } from "react-icons/fi";
 import AddressModal from "../../components/cart/Addressmodal";
+import RenderRazorpay from "../../components/Razorpay/RenderRazorpay";
 import {
   useCart,
   useUpdateCartQuantity,
@@ -22,6 +23,7 @@ import {
   useRemoveCoupon,
 } from "../../hooks/queries/coupon";
 import axios from "axios";
+import apiClient from "../../api/client";
 
 // Add this array of coupons
 
@@ -33,6 +35,14 @@ function Cartpage() {
   const [itemToRemove, setItemToRemove] = useState(null);
   const [selectedCoupon, setSelectedCoupon] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [address, setAddress] = useState(null);
+  const [orderDetails, setOrderDetails] = useState({
+    orderId: null,
+    currency: null,
+    amount: null,
+  });
+  const [displayRazorpay, setDisplayRazorpay] = useState(false);
+
   const navigate = useNavigate();
   const { data: cartData, isLoading, error } = useCart();
   const { mutate: updateQuantity, isLoading: isUpdating } =
@@ -153,6 +163,28 @@ function Cartpage() {
     setSelectedCoupon(null);
     setCouponCode("");
     removeCoupon();
+  };
+
+  const handleSubmit = async (selectedAddress, paymentMethod = "razorpay") => {
+    setAddress(selectedAddress);
+    if (paymentMethod === "razorpay") {
+      const response = await apiClient.post(`/order/paymentIntent`);
+      if (response && response.order_id) {
+        setOrderDetails({
+          orderId: response.order_id,
+          currency: response.currency,
+          amount: response.amount,
+        });
+        setDisplayRazorpay(true);
+      }
+    } else {
+      const response = await apiClient.post(`/order/placeOrder`, {
+        selectedAddress,
+        paymentMethod,
+      });
+      console.log(response);
+    }
+    setIsAddressModalOpen(false);
   };
 
   if (!cartData?.data?.formattedCart?.items?.length) {
@@ -443,6 +475,7 @@ function Cartpage() {
       <AddressModal
         isOpen={isAddressModalOpen}
         onClose={() => setIsAddressModalOpen(false)}
+        onSubmit={handleSubmit}
       />
 
       <ConfirmationModal
@@ -455,8 +488,8 @@ function Cartpage() {
         cancelText="Keep"
         type="danger"
       />
+      {displayRazorpay && <RenderRazorpay orderId={orderDetails.orderId} keyId={process.env.REACT_APP_RAZORPAY_KEY_ID} keySecret={process.env.REACT_APP_RAZORPAY_KEY_SECRET} currency={orderDetails.currency} amount={orderDetails.amount} address={address} />}
     </div>
   );
 }
-
 export default Cartpage;

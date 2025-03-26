@@ -52,8 +52,9 @@ async function getProducts(filters) {
 }
 
 export const useProductById = (id) => {
-  return useQuery({
+  const { data, isLoading, error , refetch} = useQuery({
     queryKey: ["product", id],
     queryFn: () => productService.getProductById(id),
   });
+  return { data, isLoading, error, refetch };
 };

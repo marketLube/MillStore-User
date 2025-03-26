@@ -10,31 +10,7 @@ import { useAddToCart } from "../../../hooks/queries/cart";
 import ButtonLoadingSpinner from "../../../components/ButtonLoadingSpinners";
 
 function Bestseller() {
-  // const bestsellerProducts = [
-  //   {
-  //     id: 1,
-  //     tag: "#1 Best Seller",
-  //     title: "NoteMates Premium Spiral Notebook",
-  //     description:
-  //       "Premium quality, clean lines, and all-day comfort for an immersive learning experience.",
-  //     image: "/images/bestseller/bestseller.png",
-  //   },
-  //   {
-  //     id: 2,
-  //     tag: "#2 Best Seller",
-  //     title: "Professional Tool Kit",
-  //     description:
-  //       "Complete set of professional-grade tools for all your DIY needs.",
-  //     image: "/images/bestseller/bestseller.png",
-  //   },
-  //   {
-  //     id: 3,
-  //     tag: "#3 Best Seller",
-  //     title: "Garden Essential Set",
-  //     description: "Everything you need for perfect garden maintenance.",
-  //     image: "/images/bestseller/bestseller.png",
-  //   },
-  // ];
+
 
   const navigate = useNavigate();
   const [currentProduct, setCurrentProduct] = useState(null);
