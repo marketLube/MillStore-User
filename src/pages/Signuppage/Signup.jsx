@@ -131,7 +131,7 @@ const handleSubmit = async(e) => {
 try {
   signupMutation({username:fullname, phonenumber, email,password});
   reset();
-  toast.success("Signup successful");
+
 } catch (error) {
   toast.error(error.response?.data?.message || "Failed to signup");
 }

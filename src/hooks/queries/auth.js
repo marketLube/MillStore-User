@@ -46,6 +46,7 @@ export const useSignup = () => {
       localStorage.setItem("user-auth-token", data.token);
       dispatch(setUser(data.user));
       dispatch(setIsLoggedIn(true));
+      toast.success("Signup successful");
       navigate("/");
     },
     onError: (error) => {

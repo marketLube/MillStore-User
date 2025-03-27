@@ -48,7 +48,6 @@ const AddressModal = ({ isOpen, onClose, mode = "cart", onSubmit }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log(selectedAddress);
     if (
       !selectedAddress &&
       (formData.building === "" ||
@@ -61,12 +60,23 @@ const AddressModal = ({ isOpen, onClose, mode = "cart", onSubmit }) => {
       return;
     }
     // onSubmit(selectedAddress);
-
-    const updatedUser = {
-      ...user,
-      address: formData,
-    };
-    updateUser(updatedUser);
+    if (mode === "cart") {
+      if (selectedAddress) {
+        handlePlaceOrder();
+      } else {
+        const updatedUser = {
+          ...user,
+          address: formData,
+        };
+        updateUser(updatedUser);
+      }
+    } else {
+      const updatedUser = {
+        ...user,
+        address: formData,
+      };
+      updateUser(updatedUser);
+    }
     setFormData({
       fullName: user?.username,
       building: "",
@@ -77,6 +87,7 @@ const AddressModal = ({ isOpen, onClose, mode = "cart", onSubmit }) => {
       pincode: "",
       saveAddress: false,
     });
+    onClose();
   };
 
   const handlePlaceOrder = () => {

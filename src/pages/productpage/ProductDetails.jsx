@@ -15,6 +15,7 @@ import { useAddToCart } from "../../hooks/queries/cart";
 import ButtonLoadingSpinner from "../../components/ButtonLoadingSpinners";
 import RatingModal from "./RatingModal";
 import { reviewService } from "../../api/services/reviewService";
+import { toast } from "sonner";
 
 const CalculateDiscount = (price, offerPrice) => {
   const discount = ((price - offerPrice) / price) * 100;
@@ -104,7 +105,7 @@ function ProductDetailsContent() {
       console.log(response);
       setIsRatingModalOpen(false);
       refetch();
-
+      toast.success("Review submitted successfully");
     } catch (error) {
       console.log(error);
     }
@@ -315,7 +316,7 @@ function ProductDetailsContent() {
                           width: `${
                             (product?.ratingDistribution[5] /
                               product?.totalRatings) *
-                            100 || 0
+                              100 || 0
                           }%`,
                         }}
                       ></div>
