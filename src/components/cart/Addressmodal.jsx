@@ -2,14 +2,17 @@
 import React, { useState, useEffect } from "react";
 import { FiX } from "react-icons/fi";
 import { FaWhatsapp } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useUpdateUser } from "../../hooks/queries/user";
 import { usePlaceOrder } from "../../hooks/queries/order";
 import ButtonLoading from "../ButtonLoadingSpinners";
 import { toast } from "sonner";
+import userService from "../../api/services/userService";
+import { setUser } from "../../redux/features/user/userSlice";
 
 const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
   const user = useSelector((state) => state.user.user);
+const dispatch = useDispatch();
   const [selectedAddress, setSelectedAddress] = useState("");
   const [formData, setFormData] = useState({
     fullName: user?.username,
@@ -21,6 +24,15 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
     pincode: "",
     saveAddress: false,
   });
+
+useEffect(()=>{
+updatedUser();
+},[])
+
+const updatedUser = async()=>{
+  const response = await userService.getAuthUser();
+  dispatch(setUser(response.user));
+}
 
   const { mutate: updateUser, isPending } = useUpdateUser();
   const { mutate: placeOrder, isPending: isOrderPending } = usePlaceOrder();

@@ -76,7 +76,7 @@ function Cartpage() {
     }
   }, [cartData?.data?.couponDetails]);
 
-  if (isLoading || isCouponsLoading) return <LoadingSpinner />;
+  if (isLoading || isCouponsLoading || isUpdating || isRemoving || isApplyingCoupon || isRemovingCoupon) return <LoadingSpinner />;
 
   if (error) {
     throw error;
