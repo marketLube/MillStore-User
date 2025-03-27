@@ -88,9 +88,8 @@ function Cartpage() {
   const subtotal = cartData?.data?.formattedCart?.totalPrice;
   const deliveryCharges = 0;
   const gst = 0;
-  const total = cartData?.data?.finalAmount
-    ? cartData?.data?.finalAmount
-    : cartData?.data?.formattedCart?.totalPrice;
+  const total = cartData?.data?.finalAmount? cartData?.data?.finalAmount: cartData?.data?.formattedCart?.totalPrice;
+
 
   const handleQuantityUpdate = (productId, variantId, action) => {
     if (
@@ -336,7 +335,7 @@ function Cartpage() {
             </button>
           </div>
 
-          {availableCoupons.length > 0 && (
+          {  availableCoupons.length > 0 && (
             <div className="coupon-section">
               <h3>Apply Coupons & Save</h3>
               <div className="coupon-input">

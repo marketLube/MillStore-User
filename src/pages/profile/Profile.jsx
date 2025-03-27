@@ -6,6 +6,7 @@ import HelpandSupport from "./HelpandSupport";
 import { useDispatch, useSelector } from "react-redux";
 import userService from "../../api/services/userService";
 import { setUser } from "../../redux/features/user/userSlice";
+import { toast } from "sonner";
 const Profile = () => {
   const user = useSelector((state) => state.user.user);
   const [searchParams] = useSearchParams();
@@ -34,9 +35,28 @@ const Profile = () => {
     console.log(response.user);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission
+    if (
+      formData.name.trim() === user?.username &&
+      formData.phone.trim() === user?.phonenumber
+    ) {
+      toast.error("No changes made");
+      return;
+    }
+    try {
+      e.preventDefault();
+      const user = await userService.updateUser({
+        username: formData.name,
+        phonenumber: formData.phone,
+      });
+      console.log(user);
+      toast.success("Profile updated successfully");
+      dispatch(setUser(user));
+      // Handle form submission
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const renderTabContent = () => {
@@ -48,12 +68,12 @@ const Profile = () => {
               Welcome, <span className="username">{user?.username}</span>
             </h2>
 
-            <div className="profile-picture-section">
+            {/* <div className="profile-picture-section">
               <div className="profile-picture">
                 <img src="/images/user/profilepicture.jpg" alt="Profile" />
               </div>
               <button className="upload-btn">Upload new picture</button>
-            </div>
+            </div> */}
 
             <form onSubmit={handleSubmit}>
               <div className="form-group">
@@ -82,7 +102,7 @@ const Profile = () => {
                 />
               </div>
 
-              <div className="form-group">
+              {/* <div className="form-group">
                 <label>Email Address</label>
                 <input
                   type="email"
@@ -91,10 +111,20 @@ const Profile = () => {
                     setFormData({ ...formData, email: e.target.value })
                   }
                 />
-              </div>
+              </div> */}
 
               <div className="form-footer">
-                <button type="button" className="cancel-btn">
+                <button
+                  type="button"
+                  className="cancel-btn"
+                  onClick={() => {
+                    setFormData({
+                      ...formData,
+                      name: user?.username,
+                      phone: user?.phonenumber,
+                    });
+                  }}
+                >
                   Cancel
                 </button>
                 <button type="submit" className="save-btn">
