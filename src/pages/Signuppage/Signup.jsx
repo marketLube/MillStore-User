@@ -16,7 +16,7 @@ const[confirmPassword,setconfirmPassword]=useState("");
 const[showPassword,setshowPassword]=useState(false);
 const[showConfirmPassword,setshowConfirmPassword]=useState(false);
 const navigate = useNavigate();
-const { mutate: signupMutation, isLoading } = useSignup();
+const { mutate: signupMutation, isLoading ,error} = useSignup();
 
 // Add error states
 const [errors, setErrors] = useState({
@@ -123,20 +123,28 @@ const handleSubmit = async(e) => {
   setErrors(newErrors);
 
   // Check if there are any errors
-  if (Object.values(newErrors).every(error => error === "")) {
-    console.log(fullname, phonenumber, email, password, confirmPassword);
-    reset();
+  if (Object.values(newErrors).some(error => error !== "")) {
+    return;
   }
 
-try {
-  signupMutation({username:fullname, phonenumber, email,password});
-  reset();
-
-} catch (error) {
-  toast.error(error.response?.data?.message || "Failed to signup");
-}
-
-
+  // Call signupMutation with proper error handling
+  signupMutation(
+    { username: fullname, phonenumber, email, password },
+    {
+      onSuccess: () => {
+        reset();
+      },
+      onError: (error) => {
+        const errorMessage = error.response?.data?.message || "Signup failed";
+        toast.error(errorMessage);
+        // Optionally set server-side error in the errors state
+        setErrors(prev => ({
+          ...prev,
+          server: errorMessage
+        }));
+      }
+    }
+  );
 };
 
   return (

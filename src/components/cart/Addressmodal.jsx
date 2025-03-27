@@ -212,8 +212,9 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
                 name="saveAddress"
                 checked={formData.saveAddress}
                 onChange={handleInputChange}
+                disabled={user?.address?.length >=3 }
               />
-              Save this address for future purchases
+              {user?.address?.length >=3 ? "You can only save 3 addresses go to profile to delete some" : "Save this address for future purchases"}
             </label>
             <button
               className="proceed-btn"

@@ -50,7 +50,8 @@ export const useSignup = () => {
       navigate("/");
     },
     onError: (error) => {
-      toast.error(error.response?.data?.message || "Failed to signup");
+      // toast.error(error.response?.data?.message || "Failed to signup");
+return error.response?.data?.message;
     },
   });
 };

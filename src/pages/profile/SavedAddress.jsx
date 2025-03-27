@@ -4,6 +4,7 @@ import AddressModal from "../../components/cart/Addressmodal";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "sonner";
 import userService from "../../api/services/userService";
+import { setUser } from "../../redux/features/user/userSlice";
 
 const SavedAddress = () => {
   const dispatch = useDispatch();
@@ -12,43 +13,11 @@ const SavedAddress = () => {
 
   const handleDeleteAddress = async (id) => {
     try {
-      console.log('Current addresses:', user.address);
-      console.log('Trying to delete address with ID:', id);
-
-      // Make sure we're working with the correct ID format
-      const addressId = typeof id === 'string' ? id : id.toString();
-
-      const updatedAddresses = user.address.filter(addr =>
-        addr._id.toString() !== addressId
-      );
-      console.log('Filtered addresses:', updatedAddresses);
-
-      // Ensure we're sending the complete address objects
-      const response = await userService.updateUser({
-        address: updatedAddresses.map(addr => ({
-          fullName: addr.fullName,
-          houseApartmentName: addr.houseApartmentName,
-          street: addr.street,
-          landmark: addr.landmark,
-          city: addr.city,
-          state: addr.state,
-          pincode: addr.pincode,
-          _id: addr._id
-        }))
-      });
-
-      console.log('API Response:', response);
-
-      if (response) {
-        dispatch({
-          type: 'SET_USER',
-          payload: response
-        });
-        toast.success("Address deleted successfully");
-      }
+      const response = await userService.deleteAddress(id);
+      dispatch(setUser(response?.data));
+      toast.success("Address deleted successfully");
     } catch (error) {
-      console.error('Error details:', error);
-      toast.error(error.response?.data?.message || "Failed to delete address");
+      toast.error("Failed to delete address");
     }
   };
 
