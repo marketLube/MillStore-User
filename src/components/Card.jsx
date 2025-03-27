@@ -19,6 +19,9 @@ function Card({ product }) {
   } = product;
 
   const navigate = useNavigate();
+
+if(!mainImage || !name || !category || !offerPrice || !price || !averageRating) return null;
+
   return (
     <div className="product-card" onClick={() => navigate(`/products/${_id}`)}>
       <div className="product-card_image">
