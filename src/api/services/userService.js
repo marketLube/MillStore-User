@@ -5,6 +5,10 @@ const userService = {
     const response = await apiClient.patch("/user/update-user", user);
     return response.data;
   },
+  deleteAddress: async (id) => {
+    const response = await apiClient.patch(`/user/delete-address/${id}`);
+    return response.data;
+  },
 };
 
 export default userService;

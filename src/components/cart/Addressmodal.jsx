@@ -1,3 +1,4 @@
+// export default AddressModal;
 import React, { useState, useEffect } from "react";
 import { FiX } from "react-icons/fi";
 import { FaWhatsapp } from "react-icons/fa";
@@ -7,7 +8,7 @@ import { usePlaceOrder } from "../../hooks/queries/order";
 import ButtonLoading from "../ButtonLoadingSpinners";
 import { toast } from "sonner";
 
-const AddressModal = ({ isOpen, onClose, mode = "cart", onSubmit }) => {
+const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
   const user = useSelector((state) => state.user.user);
   const [selectedAddress, setSelectedAddress] = useState("");
   const [formData, setFormData] = useState({
@@ -47,36 +48,22 @@ const AddressModal = ({ isOpen, onClose, mode = "cart", onSubmit }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     if (
-      !selectedAddress &&
-      (formData.building === "" ||
-        formData.street === "" ||
-        formData.city === "" ||
-        formData.state === "" ||
-        formData.pincode === "")
+      formData.building === "" ||
+      formData.street === "" ||
+      formData.city === "" ||
+      formData.state === "" ||
+      formData.pincode === ""
     ) {
       toast.warning("Please fill all the fields");
       return;
     }
-    // onSubmit(selectedAddress);
-    if (mode === "cart") {
-      if (selectedAddress) {
-        handlePlaceOrder();
-      } else {
-        const updatedUser = {
-          ...user,
-          address: formData,
-        };
-        updateUser(updatedUser);
-      }
-    } else {
-      const updatedUser = {
-        ...user,
-        address: formData,
-      };
-      updateUser(updatedUser);
-    }
+
+    const updatedUser = {
+      ...user,
+      address: formData,
+    };
+    updateUser(updatedUser);
     setFormData({
       fullName: user?.username,
       building: "",
@@ -231,7 +218,7 @@ const AddressModal = ({ isOpen, onClose, mode = "cart", onSubmit }) => {
             <button
               className="proceed-btn"
               disabled={isOrderPending}
-              onClick={handleSubmit}
+              onClick={handlePlaceOrder}
             >
               {isOrderPending ? <ButtonLoading /> : <span>Place Order</span>}
             </button>
