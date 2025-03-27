@@ -3,7 +3,9 @@ import { Link, useSearchParams } from "react-router-dom";
 import SavedAddress from "./SavedAddress";
 import OrderHistory from "./OrderHistory";
 import HelpandSupport from "./HelpandSupport";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import userService from "../../api/services/userService";
+import { setUser } from "../../redux/features/user/userSlice";
 const Profile = () => {
   const user = useSelector((state) => state.user.user);
   const [searchParams] = useSearchParams();
@@ -13,7 +15,11 @@ const Profile = () => {
     phone: user?.phonenumber,
     email: user?.email,
   });
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+    updatedUser();
+  }, []);
   // Update active tab when URL parameter changes
   useEffect(() => {
     const tabFromUrl = searchParams.get("tab");
@@ -21,6 +27,12 @@ const Profile = () => {
       setActiveTab(tabFromUrl);
     }
   }, [searchParams]);
+
+  const updatedUser = async () => {
+    const response = await userService.getAuthUser();
+    dispatch(setUser(response.user));
+    console.log(response.user);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();

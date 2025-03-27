@@ -39,6 +39,7 @@
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { Link } from "react-router-dom";
 
 function Carousel({ data, maxHeight, width, isBrand = false }) {
   const settings = {
@@ -72,7 +73,7 @@ function Carousel({ data, maxHeight, width, isBrand = false }) {
                   {item?.description ||
                     "Lorem ipsum dolor sit amet, consectetur adipiscing elit."}
                 </p>
-                <button className="carousel-button">Shop Now</button>
+                <Link style={{textDecoration:"none"}} className="carousel-button" to={"/products"}>Shop Now</Link>
               </div>
             )}
           </div>

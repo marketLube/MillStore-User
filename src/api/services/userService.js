@@ -9,6 +9,10 @@ const userService = {
     const response = await apiClient.patch(`/user/delete-address/${id}`);
     return response.data;
   },
+  getAuthUser: async () => {
+    const response = await apiClient.get("/user/check-user");
+    return response.data;
+  },
 };
 
 export default userService;

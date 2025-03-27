@@ -27,10 +27,10 @@ async function getProducts(filters) {
         params.append("sort", "-createdAt");
         break;
       case "price-low":
-        params.append("sort", "price");
+        params.append("sort", "price-low");
         break;
       case "price-high":
-        params.append("sort", "-price");
+        params.append("sort", "price-high");
         break;
       default:
         params.append("sort", "-createdAt");
@@ -40,6 +40,7 @@ async function getProducts(filters) {
   try {
     const url = `/product/get-products?${params.toString()}`;
     const response = await apiClient.get(url);
+console.log(response);
     return response.data;
   } catch (error) {
     if (error.response?.status === 500) {

@@ -46,6 +46,19 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
     }));
   };
 
+  const resetForm = () => {
+    setFormData({
+      fullName: user?.username,
+      building: "",
+      street: "",
+      landmark: "",
+      city: "",
+      state: "",
+      pincode: "",
+      saveAddress: false,
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (
@@ -122,7 +135,7 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
                     name="address"
                     value={addr?._id}
                     checked={selectedAddress === addr?._id}
-                    onChange={() => setSelectedAddress(addr?._id)}
+                    onChange={() => { resetForm();setSelectedAddress(addr?._id)}}
                   />
                   <div className="address-details">
                     <strong>{addr?.fullName}</strong>

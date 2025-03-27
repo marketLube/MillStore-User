@@ -457,7 +457,7 @@ function ProductDetailsContent() {
             Top Picks <span>For You</span>
           </h2>
           <div className="view-controls">
-            <span className="view-all">View all</span>
+            <span className="view-all" onClick={()=>navigate("/products")}>View all</span>
             <div className="navigation-buttons">
               <button className="nav-btn prev" onClick={() => scroll("left")}>
                 <FiChevronLeft />

@@ -7,6 +7,8 @@ const OrderHistory = () => {
   const { data, isLoading } = useGetOrderHistory();
   const orders = data?.orders;
 
+console.log(orders);
+
   return (
     <>
       {isLoading ? (
