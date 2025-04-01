@@ -36,7 +36,7 @@ function Homepage() {
   console.log(allBanners);
   return (
     <div>
-      <Carousel data={allBanners?.filter((banner) => banner?.bannerFor === "hero")} />
+      <Carousel data={allBanners?.filter((banner) => banner?.bannerFor === "hero")} isLoading={isLoading}  />
       <Clearance />
       <Bestseller />
       {/* <ProductBanner banners={allBanners?.filter((banner) => banner?.bannerFor === "product") } /> */}

@@ -10,6 +10,8 @@ const SavedAddress = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+  const addresses = user?.address;
+
 
   const handleDeleteAddress = async (id) => {
     try {
@@ -49,12 +51,13 @@ const SavedAddress = () => {
           </div>
         ))}
 
-        <button
+<button
           className="add-address-card"
           onClick={() => setIsAddressModalOpen(true)}
+          disabled={addresses?.length >= 3}
         >
-          <div className="plus-icon">+</div>
-          <span>Add new address</span>
+          <div className={`${addresses?.length >= 3 ? "plus-icon-removed" : "plus-icon"}`}>+</div>
+          <span className={`${addresses?.length >= 3 ? "plus-icon-span-removed" : ""}`} >{addresses?.length >= 3 ? "Remove address to add new" : "Add new address"}</span>
         </button>
       </div>
 

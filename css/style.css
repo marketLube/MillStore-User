@@ -3763,6 +3763,21 @@ body.modal-open {
   font-size: 1.5rem;
   margin-bottom: 0.25rem;
 }
+.saved-address-section .add-address-card .plus-icon-removed {
+  width: 32px;
+  height: 32px;
+  border: 1px solid gray;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 0.25rem;
+  color: gray;
+}
+.saved-address-section .add-address-card .plus-icon-span-removed {
+  color: gray;
+}
 .saved-address-section .add-address-card span {
   font-size: 0.875rem;
 }
