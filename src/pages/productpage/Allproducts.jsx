@@ -150,6 +150,8 @@ function AllProductsContent() {
   const categories = categoriesData?.envelop?.data || [];
   const labels = labelsData?.envelop?.data || [];
 
+  console.log(products);
+
   const toggleFilter = () => {
     setIsFilterOpen(!isFilterOpen);
     document.body.style.overflow = !isFilterOpen ? "hidden" : "auto";
@@ -700,9 +702,10 @@ function AllProductsContent() {
 
           {/* Product Grid */}
           <div className="product-grid">
-            {products.map((product) => (
-              <Card key={product._id} product={product} />
-            ))}
+            {products.map((product, index) => {
+              console.log(`Rendering product ${index}:`, product);
+              return <Card key={product._id} product={product} />;
+            })}
           </div>
         </div>
       </div>

@@ -8,7 +8,7 @@ import {
 import { Link } from "react-router-dom";
 import { useProducts } from "../../../hooks/queries/products";
 import LoadingSpinner from "../../../components/LoadingSpinner";
-function Clearance() {
+function  Clearance() {
   const [products, setProducts] = useState([]);
   const scrollContainerRef = useRef(null);
   const { data: response, isLoading, error } = useProducts({
@@ -17,6 +17,7 @@ function Clearance() {
   const productslists = response?.data?.products
     ? response?.data?.products
     : [];
+
 
   useEffect(() => {
     setProducts(productslists);
