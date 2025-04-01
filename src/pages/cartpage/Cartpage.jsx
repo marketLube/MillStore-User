@@ -45,12 +45,12 @@ function Cartpage() {
 
   const navigate = useNavigate();
   const { data: cartData, isLoading, error } = useCart();
-  const { mutate: updateQuantity, isLoading: isUpdating } =
-    useUpdateCartQuantity();
-  const { mutate: removeFromCart, isLoading: isRemoving } = useRemoveFromCart();
-  const { mutate: applyCoupon, isLoading: isApplyingCoupon } = useApplyCoupon();
-  const { mutate: removeCoupon, isLoading: isRemovingCoupon } =
-    useRemoveCoupon();
+  console.log(isLoading, "isLoading");
+  console.log(cartData, "cartData");
+  const { mutate: updateQuantity, isPending: isUpdating } = useUpdateCartQuantity();
+  const { mutate: removeFromCart, isPending: isRemoving } = useRemoveFromCart();
+  const { mutate: applyCoupon, isPending: isApplyingCoupon } = useApplyCoupon();
+  const { mutate: removeCoupon, isPending: isRemovingCoupon } = useRemoveCoupon();
 
   const {
     data: couponsData,
@@ -76,7 +76,7 @@ function Cartpage() {
     }
   }, [cartData?.data?.couponDetails]);
 
-  if (isLoading || isCouponsLoading || isUpdating || isRemoving || isApplyingCoupon || isRemovingCoupon) return <LoadingSpinner />;
+  if (isLoading || isCouponsLoading || isRemoving || isUpdating || isApplyingCoupon || isRemovingCoupon) return <LoadingSpinner />;
 
   if (error) {
     throw error;

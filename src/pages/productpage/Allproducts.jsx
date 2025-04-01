@@ -415,7 +415,7 @@ function AllProductsContent() {
           </div>
           <div className="header-right">
             <div className="sort-section">
-              <span>Sort:</span>
+              {/* <span>Sort:</span> */}
               <select value={selectedFilters.sort} onChange={handleSortChange}>
                 <option value="newest">Newest Arrivals</option>
                 <option value="price-low">Price: Low to High</option>

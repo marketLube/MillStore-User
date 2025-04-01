@@ -20,19 +20,6 @@ function Card({ product }) {
     _id,
   } = product;
 
-
-  if(!mainImage || !name || !category || !offerPrice || !price) {
-    console.log("Product failed validation:", {
-      hasMainImage: !!mainImage,
-      hasName: !!name,
-      hasCategory: !!category,
-      hasOfferPrice: !!offerPrice,
-      hasPrice: !!price,
-      product
-    });
-    return null;
-  }
-
   return (
     <div className="product-card" onClick={() => navigate(`/products/${_id}`)}>
       <div className="product-card_image">

@@ -1541,7 +1541,18 @@ ul {
 }
 @media (max-width: 768px) {
   .product-page .product-section .product-header .header-right .sort-section {
-    display: none;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .product-page .product-section .product-header .header-right .sort-section select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.875rem;
   }
 }
 .product-page .product-section .product-header .header-right .sort-section span {
