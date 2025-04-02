@@ -24,24 +24,26 @@
 
   .trending-grid {
     display: grid;
-    grid-template-columns: repeat(4, auto);
+    grid-template-columns: repeat(4, 1fr);
     gap: 1.5rem;
     margin-bottom: 2rem;
-    @media screen and (max-width: 768px) {
-      grid-template-columns: repeat(2, auto);
+    @media screen and (max-width: 1200px) {
+      grid-template-columns: repeat(3, 1fr);
     }
 
-    @media screen and (min-width: 768px) and (max-width: 992px) {
-      grid-template-columns: repeat(2, auto);
+    @media screen and (max-width: 992px) {
+      grid-template-columns: repeat(2, 1fr);
       gap: 1rem;
     }
-    // @media screen and (min-width: 780px) and (max-width: 1200px) {
-    //   //   grid-template-columns: repeat(3, 1fr);
-    // }
+
+    @media screen and (max-width: 576px) {
+      grid-template-columns: repeat(1, 1fr);
+    }
   }
 
   .trending-footer {
     text-align: center;
+    margin-top: 2rem;
 
     p {
       color: #666;
@@ -52,6 +54,8 @@
       color: var.$color-primary;
       text-decoration: none;
       font-weight: 500;
+      display: inline-block;
+      padding: 0.5rem 1rem;
 
       &:hover {
         text-decoration: underline;
