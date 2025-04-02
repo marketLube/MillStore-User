@@ -189,6 +189,17 @@ export const useRemoveFromCart = () => {
         item => item.product._id !== productId
       );
 
+      // Recalculate total price after removing item
+      newCart.data.formattedCart.totalPrice = newCart.data.formattedCart.items.reduce(
+        (total, item) => total + (item.offerPrice * item.quantity),
+        0
+      );
+
+      // Update final amount if no coupon is applied
+      if (!newCart.data.couponDetails) {
+        newCart.data.finalAmount = newCart.data.formattedCart.totalPrice;
+      }
+
       // Update cart immediately
       queryClient.setQueryData(['cart'], newCart);
     },

@@ -7,7 +7,7 @@ const OrderHistory = () => {
   const { data, isLoading } = useGetOrderHistory();
   const orders = data?.orders;
 
-console.log(orders);
+console.log(orders , "orders");
 
   return (
     <>
@@ -45,30 +45,39 @@ console.log(orders);
               ) : (
                 <>
                   <div className="table-header">
-                    <div className="product-col">Product</div>
+                    <div className="product-col">Products</div>
+                    <div className="total-col">Total Amount</div>
+                    <div className="order-id-col">Order ID</div>
                     <div className="status-col">Status</div>
                     <div className="action-col"></div>
                   </div>
                   <div className="table-body">
                     {orders?.map((order) => (
                       <div key={order._id} className="order-row">
-
                         <div className="product-col">
-                          <div className="product-details">
-                            <img
-                              src={order.products[0].variantId ? order.products[0].variantId.images[0] : order?.products[0]?.productId?.images[0]}
-                              alt={order.products[0].variantId ? order.products[0].variantId.name : order?.products[0]?.productId?.name}
-                            />
-                            <div className="info">
-                              <h3>{order?.products[0]?.productId?.name}</h3>
-                              <div className="order-meta">
-                                Order ID : {order?._id}{" "}
-                                <FiCopy className="copy-icon" />
-                              </div>
-                              <div className="price">
-                                ₹ {order.couponApplied ? order.couponApplied.finalAmount : order?.totalAmount}
+                          {order.products.map((product, index) => (
+                            <div key={index} className="product-details">
+                              <img
+                                src={product.variantId ? product.variantId.images[0] : product?.productId?.images[0]}
+                                alt={product.variantId ? product.variantId.name : product?.productId?.name}
+                              />
+                              <div className="info">
+                                <h3>{product?.productId?.name}</h3>
+                                <div className="product-price">₹ {product.price}</div>
                               </div>
                             </div>
+                          ))}
+                        </div>
+
+                        <div className="total-col" data-label="Total Amount">
+                          <div className="total-amount">
+                            ₹ {order.couponApplied ? order.couponApplied.finalAmount : order?.totalAmount}
+                          </div>
+                        </div>
+
+                        <div className="order-id-col" data-label="Order ID">
+                          <div className="order-id">
+                            {order?._id} <FiCopy className="copy-icon" />
                           </div>
                         </div>
 

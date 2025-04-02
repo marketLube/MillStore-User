@@ -66,7 +66,7 @@
   .orders-table {
     .table-header {
       display: grid;
-      grid-template-columns: 2fr 1fr 120px;
+      grid-template-columns: 2fr 1fr 1.5fr 1fr 120px;
       padding: 0.75rem 0;
       border-bottom: 1px solid #eee;
       color: #666;
@@ -76,14 +76,19 @@
     .table-body {
       .order-row {
         display: grid;
-        grid-template-columns: 2fr 1fr 120px;
+        grid-template-columns: 2fr 1fr 1.5fr 1fr 120px;
         padding: 1.25rem 0;
         border-bottom: 1px solid #eee;
-        align-items: center;
+        align-items: start;
 
         .product-details {
           display: flex;
           gap: 1rem;
+          margin-bottom: 1rem;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
 
           img {
             width: 70px;
@@ -97,32 +102,40 @@
               font-size: 0.95rem;
               font-weight: 500;
               color: #333;
-              margin-bottom: 0.5rem;
+              margin-bottom: 0.25rem;
             }
 
-            .order-meta {
-              display: flex;
-              align-items: center;
-              gap: 0.5rem;
-              color: #666;
+            .product-price {
               font-size: 0.875rem;
-              margin-bottom: 0.5rem;
-
-              .copy-icon {
-                color: #999;
-                cursor: pointer;
-                font-size: 0.875rem;
-
-                &:hover {
-                  color: var.$color-primary;
-                }
-              }
+              color: #666;
             }
+          }
+        }
 
-            .price {
-              font-size: 0.95rem;
-              font-weight: 500;
-              color: #333;
+        .total-col {
+          .total-amount {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #333;
+          }
+        }
+
+        .order-id-col {
+          .order-id {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: #666;
+
+            .copy-icon {
+              color: #999;
+              cursor: pointer;
+              font-size: 0.875rem;
+
+              &:hover {
+                color: var.$color-primary;
+              }
             }
           }
         }
@@ -241,21 +254,51 @@
       .table-body {
         .order-row {
           grid-template-columns: 1fr;
-          gap: 1rem;
+          gap: 1.5rem;
           background: white;
-          padding: 1rem;
+          padding: 1.5rem;
           border-radius: 8px;
           margin-bottom: 1rem;
           border: 1px solid #eee;
 
+          .price-col,
+          .total-col,
+          .order-id-col,
           .status-col,
           .action-col {
-            text-align: left;
+            position: relative;
+            padding-top: 1.25rem;
+
+            &::before {
+              content: attr(data-label);
+              position: absolute;
+              top: 0;
+              left: 0;
+              font-size: 0.75rem;
+              color: #666;
+              text-transform: uppercase;
+            }
+          }
+
+          .price-col {
+            border-top: 1px solid #eee;
+          }
+
+          .total-col {
+            border-top: 1px solid #eee;
+          }
+
+          .order-id-col {
+            border-top: 1px solid #eee;
+          }
+
+          .status-col {
+            border-top: 1px solid #eee;
           }
 
           .action-col {
             border-top: 1px solid #eee;
-            padding-top: 1rem;
+            text-align: left;
           }
         }
       }

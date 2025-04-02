@@ -3848,7 +3848,7 @@ body.modal-open {
 }
 .order-history-section .orders-table .table-header {
   display: grid;
-  grid-template-columns: 2fr 1fr 120px;
+  grid-template-columns: 2fr 1fr 1.5fr 1fr 120px;
   padding: 0.75rem 0;
   border-bottom: 1px solid #eee;
   color: #666;
@@ -3856,14 +3856,18 @@ body.modal-open {
 }
 .order-history-section .orders-table .table-body .order-row {
   display: grid;
-  grid-template-columns: 2fr 1fr 120px;
+  grid-template-columns: 2fr 1fr 1.5fr 1fr 120px;
   padding: 1.25rem 0;
   border-bottom: 1px solid #eee;
-  align-items: center;
+  align-items: start;
 }
 .order-history-section .orders-table .table-body .order-row .product-details {
   display: flex;
   gap: 1rem;
+  margin-bottom: 1rem;
+}
+.order-history-section .orders-table .table-body .order-row .product-details:last-child {
+  margin-bottom: 0;
 }
 .order-history-section .orders-table .table-body .order-row .product-details img {
   width: 70px;
@@ -3875,28 +3879,31 @@ body.modal-open {
   font-size: 0.95rem;
   font-weight: 500;
   color: #333;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
 }
-.order-history-section .orders-table .table-body .order-row .product-details .info .order-meta {
+.order-history-section .orders-table .table-body .order-row .product-details .info .product-price {
+  font-size: 0.875rem;
+  color: #666;
+}
+.order-history-section .orders-table .table-body .order-row .total-col .total-amount {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+}
+.order-history-section .orders-table .table-body .order-row .order-id-col .order-id {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #666;
   font-size: 0.875rem;
-  margin-bottom: 0.5rem;
+  color: #666;
 }
-.order-history-section .orders-table .table-body .order-row .product-details .info .order-meta .copy-icon {
+.order-history-section .orders-table .table-body .order-row .order-id-col .order-id .copy-icon {
   color: #999;
   cursor: pointer;
   font-size: 0.875rem;
 }
-.order-history-section .orders-table .table-body .order-row .product-details .info .order-meta .copy-icon:hover {
+.order-history-section .orders-table .table-body .order-row .order-id-col .order-id .copy-icon:hover {
   color: #ffb64a;
-}
-.order-history-section .orders-table .table-body .order-row .product-details .info .price {
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: #333;
 }
 .order-history-section .orders-table .table-body .order-row .status-col .status-tag {
   display: inline-block;
@@ -3988,20 +3995,49 @@ body.modal-open {
   }
   .order-history-section .orders-table .table-body .order-row {
     grid-template-columns: 1fr;
-    gap: 1rem;
+    gap: 1.5rem;
     background: white;
-    padding: 1rem;
+    padding: 1.5rem;
     border-radius: 8px;
     margin-bottom: 1rem;
     border: 1px solid #eee;
   }
+  .order-history-section .orders-table .table-body .order-row .price-col,
+  .order-history-section .orders-table .table-body .order-row .total-col,
+  .order-history-section .orders-table .table-body .order-row .order-id-col,
   .order-history-section .orders-table .table-body .order-row .status-col,
   .order-history-section .orders-table .table-body .order-row .action-col {
-    text-align: left;
+    position: relative;
+    padding-top: 1.25rem;
+  }
+  .order-history-section .orders-table .table-body .order-row .price-col::before,
+  .order-history-section .orders-table .table-body .order-row .total-col::before,
+  .order-history-section .orders-table .table-body .order-row .order-id-col::before,
+  .order-history-section .orders-table .table-body .order-row .status-col::before,
+  .order-history-section .orders-table .table-body .order-row .action-col::before {
+    content: attr(data-label);
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 0.75rem;
+    color: #666;
+    text-transform: uppercase;
+  }
+  .order-history-section .orders-table .table-body .order-row .price-col {
+    border-top: 1px solid #eee;
+  }
+  .order-history-section .orders-table .table-body .order-row .total-col {
+    border-top: 1px solid #eee;
+  }
+  .order-history-section .orders-table .table-body .order-row .order-id-col {
+    border-top: 1px solid #eee;
+  }
+  .order-history-section .orders-table .table-body .order-row .status-col {
+    border-top: 1px solid #eee;
   }
   .order-history-section .orders-table .table-body .order-row .action-col {
     border-top: 1px solid #eee;
-    padding-top: 1rem;
+    text-align: left;
   }
   .no-orders {
     padding: 2rem 1rem;
