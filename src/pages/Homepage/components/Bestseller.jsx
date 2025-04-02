@@ -10,8 +10,6 @@ import { useAddToCart } from "../../../hooks/queries/cart";
 import ButtonLoadingSpinner from "../../../components/ButtonLoadingSpinners";
 
 function Bestseller() {
-
-
   const navigate = useNavigate();
   const [currentProduct, setCurrentProduct] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);

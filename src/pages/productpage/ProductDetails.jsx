@@ -164,9 +164,10 @@ function ProductDetailsContent() {
           </div>
 
           <h1 className="product-title">
-            {selectedVariant
+            {/* {selectedVariant
               ? selectedVariant?.attributes?.title
-              : product?.name}
+              : product?.name} */}
+            {product?.name }
           </h1>
 
           <div className="rating-summary">

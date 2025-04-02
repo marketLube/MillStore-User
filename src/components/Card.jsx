@@ -28,7 +28,7 @@ function Card({ product }) {
       </div>
       <div className="product-card_content">
         <span className="category">{category.name}</span>
-        <h3 className="title">{name}</h3>
+        <h3 className="title">{name.split("").length > 20 ? name.split("").slice(0, 20).join("") + "..." : name}</h3>
         <div className="price">
           <span className="current-price">₹{offerPrice}</span>
           <span className="original-price">₹{price}</span>

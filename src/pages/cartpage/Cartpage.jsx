@@ -219,11 +219,11 @@ function Cartpage() {
                 className="item-image"
                 onClick={() => navigate(`/products/${item?.product?._id}`)}
               >
-                <img src={item?.product?.mainImage} alt={item?.product?.name} />
+                <img src={item?.product?.mainImage} alt={item?.product?.name.split("").length > 20 ? item?.product?.name.split("").slice(0, 20).join("") + "..." : item?.product?.name} />
               </div>
 
               <div className="item-details">
-                <h3>{item?.product?.name}</h3>
+                <h3>{item?.product?.name }</h3>
                 <div className="product-id">#{item?.product?._id}</div>
                 <div className="quantity-controls">
                   <button
