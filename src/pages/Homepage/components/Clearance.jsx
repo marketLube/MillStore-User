@@ -8,7 +8,9 @@ import {
 import { Link } from "react-router-dom";
 import { useProducts } from "../../../hooks/queries/products";
 import LoadingSpinner from "../../../components/LoadingSpinner";
+import { useNavigate } from "react-router-dom";
 function  Clearance() {
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const scrollContainerRef = useRef(null);
   const { data: response, isLoading, error } = useProducts({
@@ -50,6 +52,10 @@ function  Clearance() {
     }
   };
 
+  const handleViewAll = () => {
+    navigate("/products", { state: { selectedLabel: { id: "67e3e64d72fa36c2809afedb", name: "Clearance" } } });
+  };
+
   return (
     <div className="clearance-container" data-aos="fade-up">
       <div className="clearance-header">
@@ -61,9 +67,9 @@ function  Clearance() {
             Get amazing deals on our top-rated products
           </p>
         </div>
-        <Link to="/products" className="view-all desktop-view-all">
+        <p onClick={handleViewAll} className="view-all desktop-view-all">
           View All <ViewAllIcon />
-        </Link>
+        </p>
       </div>
       <div className="clearance-products-wrapper">
         <button

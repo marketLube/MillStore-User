@@ -18,29 +18,30 @@ import ErrorFallback from "../../components/error/ErrorFallback";
 import { useLabels } from "../../hooks/queries/labels";
 import { useLocation } from "react-router-dom";
 import Pagination from "../../components/Pagination/Pagination";
+import { useBanners } from "../../hooks/queries/Banner";
 
-const data = [
-  {
-    image: "/images/carousel/carousel-1.jpg",
-    alt: "carousel-1",
-    heading: `Strength in Every Tool.
-       in Every Task.`,
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-  },
-  {
-    image: "/images/carousel/carousel-1.jpg",
-    alt: "carousel-2",
-    heading: "The Best Tools for the Job",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-  },
-  {
-    image: "/images/carousel/carousel-1.jpg",
-    alt: "carousel-3",
-    heading: "The Best Tools for the Job",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-  },
-];
+// const data = [
+//   {
+//     image: "/images/carousel/carousel-1.jpg",
+//     alt: "carousel-1",
+//     heading: `Strength in Every Tool.
+//        in Every Task.`,
+//     description:
+//       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+//   },
+//   {
+//     image: "/images/carousel/carousel-1.jpg",
+//     alt: "carousel-2",
+//     heading: "The Best Tools for the Job",
+//     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+//   },
+//   {
+//     image: "/images/carousel/carousel-1.jpg",
+//     alt: "carousel-3",
+//     heading: "The Best Tools for the Job",
+//     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+//   },
+// ];
 
 // Separate the content into a new component
 function AllProductsContent() {
@@ -111,6 +112,9 @@ function AllProductsContent() {
     error: labelsError,
   } = useLabels();
 
+  const { allBanners, isLoading: bannersLoading, error: bannersError } = useBanners();
+
+
   const debouncedUpdateFilters = useCallback(
     debounce((newRange) => {
       setSelectedFilters((prev) => ({
@@ -136,6 +140,8 @@ function AllProductsContent() {
 
   useEffect(() => {
     const categoryFromHeader = location.state?.selectedCategory;
+    const labelFromHomePage = location.state?.selectedLabel;
+
     if (categoryFromHeader) {
       setSelectedFilters((prev) => ({
         ...prev,
@@ -146,6 +152,17 @@ function AllProductsContent() {
         categoryName: categoryFromHeader.name,
       }));
       window.history.replaceState({}, document.title);
+    }
+
+    if (labelFromHomePage) {
+      setSelectedFilters((prev) => ({
+        ...prev,
+        labelId: labelFromHomePage.id,
+      }));
+      setSelectedNames((prev) => ({
+        ...prev,
+        labelName: labelFromHomePage.name,
+      }));
     }
   }, [location.state]);
 
@@ -420,7 +437,7 @@ function AllProductsContent() {
 
   return (
     <div className="product-page">
-      <Carousel data={data} maxHeight="25rem" />
+      <Carousel data={allBanners?.filter((banner) => banner?.bannerFor === "hero")} maxHeight="25rem" isLoading={bannersLoading} />
       <div className="product-section">
         <div className="breadcrumb">
           <span>Home</span> / <span>All Products</span>

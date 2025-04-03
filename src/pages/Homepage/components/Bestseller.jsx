@@ -78,6 +78,7 @@ function Bestseller() {
               src={currentProduct?.mainImage}
               alt={currentProduct?.name}
               className="fade-image"
+              onClick={() => navigate(`/products/${currentProduct?._id}`)}
             />
           </div>
         </div>
@@ -97,7 +98,8 @@ function Bestseller() {
             </button>
           </div>
           <h2 className="fade-text">{currentProduct?.name}</h2>
-          <p className="fade-text">{currentProduct?.description}</p>
+          <p className="fade-text">{currentProduct?.description.split("").length > 500 ? currentProduct?.description.split("").slice(0, 500).join("") + "..." : currentProduct?.description}</p>
+
           <div className="buttons">
             <button
               className="add-to-cart"
