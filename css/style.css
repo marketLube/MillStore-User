@@ -1547,6 +1547,11 @@ ul {
   align-items: center;
   gap: 0.5rem;
 }
+@media screen and (max-width: 768px) {
+  .product-page .product-section .product-header .header-right .sort-section .sort-text {
+    display: none;
+  }
+}
 @media (max-width: 768px) {
   .product-page .product-section .product-header .header-right .sort-section {
     border: 1px solid #ddd;

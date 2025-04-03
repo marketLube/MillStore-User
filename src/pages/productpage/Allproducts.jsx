@@ -56,6 +56,7 @@ function AllProductsContent() {
     min: 0,
     max: Infinity,
   });
+
   const [selectedFilters, setSelectedFilters] = useState({
     categoryId: null,
     subcategoryId: null,
@@ -66,6 +67,7 @@ function AllProductsContent() {
     labelId: null,
     sort: "newest",
   });
+
   const [selectedNames, setSelectedNames] = useState({
     categoryName: "",
     subcategoryName: "",
@@ -267,12 +269,15 @@ function AllProductsContent() {
   // Handle sort change
   const handleSortChange = (e) => {
     const sortValue = e.target.value;
+    console.log(sortValue);
 
     setSelectedFilters((prev) => ({
       ...prev,
       sort: sortValue,
     }));
   };
+
+
 
   // Modified renderActiveFilters to show all active filters
   const renderActiveFilters = () => {
@@ -415,7 +420,7 @@ function AllProductsContent() {
           </div>
           <div className="header-right">
             <div className="sort-section">
-              {/* <span>Sort:</span> */}
+              <span className="sort-text">Sort:</span>
               <select value={selectedFilters.sort} onChange={handleSortChange}>
                 <option value="newest">Newest Arrivals</option>
                 <option value="price-low">Price: Low to High</option>
@@ -703,7 +708,6 @@ function AllProductsContent() {
           {/* Product Grid */}
           <div className="product-grid">
             {products.map((product, index) => {
-              console.log(`Rendering product ${index}:`, product);
               return <Card key={product._id} product={product} />;
             })}
           </div>

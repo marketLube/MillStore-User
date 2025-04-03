@@ -167,7 +167,9 @@ function ProductDetailsContent() {
             {/* {selectedVariant
               ? selectedVariant?.attributes?.title
               : product?.name} */}
-            {product?.name }
+            {selectedVariant
+              ? `${product?.name} (${selectedVariant?.attributes?.title})`
+              : product?.name}
           </h1>
 
           <div className="rating-summary">
@@ -269,7 +271,7 @@ function ProductDetailsContent() {
             </div>
           </div>
 
-          <div className="section specifications">
+          {/* <div className="section specifications">
             <h3>Product Specification</h3>
             <ul>
               <li>Uses only 10W power</li>
@@ -278,7 +280,7 @@ function ProductDetailsContent() {
               <li>Long lifespan of up to 50,000 hours</li>
               <li>Fits E27 base sockets</li>
             </ul>
-          </div>
+          </div> */}
 
           <div className="section reviews">
             <div className="reviews-header">
@@ -395,13 +397,13 @@ function ProductDetailsContent() {
             {product?.totalRatings > 0 && (
               <div className="reviews-list">
                 {visibleReviews.map((review) => (
-                  <div key={review._id} className="review-item">
+                  <div key={review?._id} className="review-item">
                     <div className="review-header">
                       <div className="user-info">
                         <img
                           src={
-                            review.userId.image
-                              ? review.userId.image
+                            review?.userId?.image
+                              ? review?.userId?.image
                               : "/images/user/profilepicture.jpg"
                           }
                           alt={review.userId?.username}
@@ -417,15 +419,15 @@ function ProductDetailsContent() {
                         </div>
                       </div>
                       <div className="review-rating">
-                        {"★".repeat(review.rating)}
-                        {"☆".repeat(5 - review.rating)}
+                        {"★".repeat(review?.rating)}
+                        {"☆".repeat(5 - review?.rating)}
                       </div>
                     </div>
                     <div className="review-image">
-                      {review.image && (
+                      {review?.image && (
                         <img
-                          src={review.image}
-                          alt={review.review}
+                          src={review?.image}
+                          alt={review?.review}
                           style={{
                             width: "20%",
                             height: "20%",
@@ -434,7 +436,7 @@ function ProductDetailsContent() {
                         />
                       )}
                     </div>
-                    <p className="review-comment">{review.review}</p>
+                    <p className="review-comment">{review?.review}</p>
                   </div>
                 ))}
                 {reviews.length > 2 && (
