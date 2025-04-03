@@ -23,6 +23,7 @@
 @use "page/Signuppage/Signuppage";
 @use "components/Loadingspinner";
 @use "components/error/ErrorFallback";
+@use "components/Pagination";
 @use "components/confirmationModal";
 @use "components/ButtonLoadingSpinner";
 @use "page/Productpage/RatingModal";

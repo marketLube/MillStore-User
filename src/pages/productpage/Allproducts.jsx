@@ -17,6 +17,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "../../components/error/ErrorFallback";
 import { useLabels } from "../../hooks/queries/labels";
 import { useLocation } from "react-router-dom";
+import Pagination from "../../components/Pagination/Pagination";
 
 const data = [
   {
@@ -76,6 +77,10 @@ function AllProductsContent() {
 
   const MAX_PRICE_VALUE = 999999999;
 
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
+
   const {
     data: response,
     isLoading,
@@ -90,6 +95,8 @@ function AllProductsContent() {
         : selectedFilters.priceRange.max,
     labelId: selectedFilters.labelId,
     sort: selectedFilters.sort,
+    page: currentPage,
+    limit: ITEMS_PER_PAGE,
   });
 
   const {
@@ -277,7 +284,14 @@ function AllProductsContent() {
     }));
   };
 
-
+  // Add pagination handler
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
 
   // Modified renderActiveFilters to show all active filters
   const renderActiveFilters = () => {
@@ -705,11 +719,24 @@ function AllProductsContent() {
             onClick={toggleFilter}
           ></div>
 
-          {/* Product Grid */}
-          <div className="product-grid">
-            {products.map((product, index) => {
-              return <Card key={product._id} product={product} />;
-            })}
+          <div className="products-container">
+            {/* Product Grid */}
+            <div className="product-grid">
+              {products.map((product, index) => (
+                <Card key={product._id} product={product} />
+              ))}
+            </div>
+
+            {/* Add Pagination */}
+            {response?.data?.totalProducts > ITEMS_PER_PAGE && (
+              <div className="pagination-wrapper">
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={Math.ceil(response?.data?.totalProducts / ITEMS_PER_PAGE)}
+                  onPageChange={handlePageChange}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>
