@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import Card from "../../../components/Card";
 import { Link, useNavigate } from "react-router-dom";
 import { useProducts } from "../../../hooks/queries/products";
@@ -8,9 +8,16 @@ import { FiArrowRight as ViewAllIcon, FiArrowLeft, FiArrowRight } from "react-ic
 function Trending() {
   const navigate = useNavigate();
   const scrollContainerRef = useRef(null);
+  const [mounted, setMounted] = useState(false);
+
   const { data: response, isLoading, error } = useProducts({
     labelId: "67e3f8b437db8d10f8e5f341",
   });
+
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
 
   const handleViewAll = () => {
     navigate("/products", {
@@ -19,28 +26,19 @@ function Trending() {
   };
 
   const scroll = (direction) => {
-    if (scrollContainerRef.current) {
-      const container = scrollContainerRef.current;
-      const isMobile = window.innerWidth <= 768;
+    if (!scrollContainerRef.current) return;
 
-      const cardWidth = isMobile
-        ? container.offsetWidth
-        : (container.offsetWidth - 2 * 24) / 3;
+    const container = scrollContainerRef.current;
+    const scrollAmount = container.clientWidth * (direction === "left" ? -0.8 : 0.8);
 
-      const currentScroll = container.scrollLeft;
-      const targetScroll =
-        direction === "left"
-          ? currentScroll - cardWidth - 24
-          : currentScroll + cardWidth + 24;
-
-      container.scrollTo({
-        left: targetScroll,
-        behavior: "smooth",
-      });
-    }
+    container.scrollBy({
+      left: scrollAmount,
+      behavior: "smooth"
+    });
   };
 
-  if (isLoading) {
+  // Always render the container to maintain layout
+  if (!mounted || isLoading) {
     return (
       <section className="trending-container">
         <div className="trending-header">
@@ -50,22 +48,9 @@ function Trending() {
             </h2>
           </div>
         </div>
-        <div className="trending-grid">
+        <div className="trending-products-wrapper">
           <LoadingSpinner />
         </div>
-      </section>
-    );
-  }
-
-  if (error) {
-    return (
-      <section className="trending-container">
-        <div className="trending-header">
-          <h2>
-            Trending <span>This Week</span>
-          </h2>
-        </div>
-        <div className="error-message">Error: {error.message}</div>
       </section>
     );
   }
@@ -73,7 +58,7 @@ function Trending() {
   const trendingProducts = response?.data?.products || [];
 
   return (
-    <section className="trending-container" data-aos="fade-up">
+    <section className="trending-container">
       <div className="trending-header">
         <div className="trending-content">
           <h2 className="trending-content_h2">
@@ -89,12 +74,14 @@ function Trending() {
       </div>
 
       <div className="trending-products-wrapper">
-        <button
-          className="scroll-button scroll-left"
-          onClick={() => scroll("left")}
-        >
-          <FiArrowLeft />
-        </button>
+        {trendingProducts.length > 0 && (
+          <button
+            className="scroll-button scroll-left"
+            onClick={() => scroll("left")}
+          >
+            <FiArrowLeft />
+          </button>
+        )}
 
         <div className="trending-products" ref={scrollContainerRef}>
           {trendingProducts.length > 0 ? (
@@ -106,12 +93,14 @@ function Trending() {
           )}
         </div>
 
-        <button
-          className="scroll-button scroll-right"
-          onClick={() => scroll("right")}
-        >
-          <FiArrowRight />
-        </button>
+        {trendingProducts.length > 0 && (
+          <button
+            className="scroll-button scroll-right"
+            onClick={() => scroll("right")}
+          >
+            <FiArrowRight />
+          </button>
+        )}
       </div>
 
       <p onClick={handleViewAll} className="view-all mobile-view-all">

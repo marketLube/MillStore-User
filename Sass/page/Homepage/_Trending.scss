@@ -5,6 +5,19 @@
   padding: var.$default-padding;
   background: #fff;
   margin: 2rem 0;
+  min-height: 400px;
+  opacity: 1;
+
+  &[data-aos="fade-up"] {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+
+    &.aos-animate {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 
   .trending-header {
     display: flex;
@@ -48,6 +61,8 @@
 
   .trending-products-wrapper {
     position: relative;
+    min-height: 300px;
+    opacity: 1;
 
     .scroll-button {
       position: absolute;
@@ -89,6 +104,8 @@
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
     scroll-snap-type: x mandatory;
+    opacity: 1;
+    min-height: 200px;
 
     &::-webkit-scrollbar {
       display: none;

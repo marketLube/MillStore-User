@@ -1003,6 +1003,8 @@ ul {
 
 .offer-container {
   margin: 2rem 0;
+  height: 30rem;
+  opacity: 1;
 }
 .offer-container .offer-content {
   display: grid;
@@ -1010,17 +1012,18 @@ ul {
   gap: 2rem;
   background: linear-gradient(135deg, #ffb347 0%, #ffaa33 100%);
   overflow: hidden;
-  transition: all 0.5s ease-in-out;
-  opacity: 0;
-  transform: translateX(100%);
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+  opacity: 1;
+  transform: translateX(0);
+  height: 30rem;
 }
 .offer-container .offer-content.slide-enter {
   opacity: 1;
   transform: translateX(0);
 }
 .offer-container .offer-content.slide-exit {
-  opacity: 0;
-  transform: translateX(-100%);
+  opacity: 0.5;
+  transform: translateX(-50px);
 }
 .offer-container .offer-content .offer-text {
   padding: 4rem;
@@ -1097,15 +1100,21 @@ ul {
 }
 .offer-container .offer-content .offer-image {
   height: 100%;
+  overflow: hidden;
 }
 .offer-container .offer-content .offer-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: fill;
+  object-position: center;
 }
 @media screen and (max-width: 768px) {
+  .offer-container {
+    height: auto;
+  }
   .offer-container .offer-content {
     grid-template-columns: 1fr;
+    height: auto;
   }
   .offer-container .offer-content .offer-text {
     padding: 2rem;
@@ -1135,11 +1144,11 @@ ul {
 }
 
 @keyframes fadeSlide {
-  from {
-    opacity: 0.3;
-    transform: translateX(20px);
+  0% {
+    opacity: 0.5;
+    transform: translateX(10px);
   }
-  to {
+  100% {
     opacity: 1;
     transform: translateX(0);
   }
@@ -1168,6 +1177,17 @@ ul {
   padding: 0 10%;
   background: #fff;
   margin: 2rem 0;
+  min-height: 400px;
+  opacity: 1;
+}
+.trending-container[data-aos=fade-up] {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.trending-container[data-aos=fade-up].aos-animate {
+  opacity: 1;
+  transform: translateY(0);
 }
 .trending-container .trending-header {
   display: flex;
@@ -1203,6 +1223,8 @@ ul {
 }
 .trending-container .trending-products-wrapper {
   position: relative;
+  min-height: 300px;
+  opacity: 1;
 }
 .trending-container .trending-products-wrapper .scroll-button {
   position: absolute;
@@ -1239,6 +1261,8 @@ ul {
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
   scroll-snap-type: x mandatory;
+  opacity: 1;
+  min-height: 200px;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -2426,14 +2450,35 @@ body.filter-open {
   color: #ffb64a;
 }
 @media (max-width: 768px) {
-  .product-details .product-container .product-info .variants {
+  .product-details .product-container .product-info .variants .type-buttons {
     width: 100%;
-    flex-direction: column;
-    gap: 0.5rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
   }
-  .product-details .product-container .product-info .variants .type-btn {
+  .product-details .product-container .product-info .variants .type-buttons .type-btn {
     width: 100%;
     justify-content: flex-start;
+  }
+}
+@media (max-width: 400px) {
+  .product-details .product-container .product-info .variants .type-buttons {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .product-details .product-container .product-info .variants .type-buttons .type-btn {
+    padding: 0.75rem;
+    gap: 1rem;
+  }
+  .product-details .product-container .product-info .variants .type-buttons .type-btn .variant-image {
+    width: 4rem;
+    height: 4rem;
+  }
+  .product-details .product-container .product-info .variants .type-buttons .type-btn .light-info span {
+    font-size: 0.938rem;
+  }
+  .product-details .product-container .product-info .variants .type-buttons .type-btn .light-info span.temp {
+    font-size: 0.813rem;
   }
 }
 .product-details .product-container .price .price-info {

@@ -320,16 +320,42 @@
             border-color: var.$color-primary;
             color: var.$color-primary;
           }
-        }
 
-        @media (max-width: 768px) {
-          width: 100%;
-          flex-direction: column;
-          gap: 0.5rem;
-
-          .type-btn {
+          @media (max-width: 768px) {
             width: 100%;
-            justify-content: flex-start;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); // Two items per row
+            gap: 0.75rem;
+
+            .type-btn {
+              width: 100%;
+              justify-content: flex-start;
+            }
+          }
+
+          @media (max-width: 400px) {
+            grid-template-columns: 1fr; // Single column
+            gap: 1rem; // Increased gap between items
+
+            .type-btn {
+              padding: 0.75rem; // Increased padding
+              gap: 1rem; // Increased gap between image and text
+
+              .variant-image {
+                width: 4rem; // Larger image
+                height: 4rem;
+              }
+
+              .light-info {
+                span {
+                  font-size: 0.938rem; // Larger font size
+
+                  &.temp {
+                    font-size: 0.813rem; // Larger secondary text
+                  }
+                }
+              }
+            }
           }
         }
       }
