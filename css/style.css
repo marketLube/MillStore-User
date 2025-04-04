@@ -546,7 +546,6 @@ ul {
   left: -20px;
   width: calc(100% + 40px);
   height: 100%;
-  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.3) 30%, rgba(0, 0, 0, 0.2) 60%, rgba(0, 0, 0, 0) 100%);
   z-index: -1;
   border-radius: 8px;
 }
@@ -591,9 +590,6 @@ ul {
     left: 50%;
     width: 90%;
     text-align: center;
-  }
-  .carousel-container .carousel-content::before {
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 0) 100%);
   }
   .carousel-container .carousel-content h1 {
     font-size: 32px;

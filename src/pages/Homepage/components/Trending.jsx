@@ -79,7 +79,13 @@ function Trending() {
           <h2 className="trending-content_h2">
             Trending <span className="trending-content_span">This Week</span>
           </h2>
+          <p className="trending-content_p">
+            Discover what's hot and trending right now
+          </p>
         </div>
+        <p onClick={handleViewAll} className="view-all desktop-view-all">
+          View All <ViewAllIcon />
+        </p>
       </div>
 
       <div className="trending-products-wrapper">
@@ -108,12 +114,9 @@ function Trending() {
         </button>
       </div>
 
-      <div className="trending-footer">
-        <p>Don't miss out! Explore all trending styles</p>
-        <Link to="/products" className="view-all">
-          View All <ViewAllIcon />
-        </Link>
-      </div>
+      <p onClick={handleViewAll} className="view-all mobile-view-all">
+        View All <ViewAllIcon />
+      </p>
     </section>
   );
 }

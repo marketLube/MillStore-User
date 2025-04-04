@@ -41,6 +41,7 @@ function ProductDetailsContent() {
   // Local state to track which button is loading
   const [loadingAction, setLoadingAction] = useState(null); // "buy" or "cart"
   const [isRatingModalOpen, setIsRatingModalOpen] = useState(false);
+  const [showFullDescription, setShowFullDescription] = useState(false);
 
   useEffect(() => {
     setSelectedVariant(null);
@@ -109,6 +110,13 @@ function ProductDetailsContent() {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const truncateDescription = (text) => {
+    if (!text) return "";
+    const words = text.split(" ");
+    if (words.length <= 100) return text;
+    return showFullDescription ? text : words.slice(0, 100).join(" ") + "...";
   };
 
   return (
@@ -184,10 +192,20 @@ function ProductDetailsContent() {
           <div className="section description">
             <h3>Description</h3>
             <p>
-              {selectedVariant
-                ? selectedVariant?.attributes?.description
-                : product?.description}
-              {/* <button className="read-more">Read more</button> */}
+              {truncateDescription(
+                selectedVariant
+                  ? selectedVariant?.attributes?.description
+                  : product?.description
+              )}
+              {((selectedVariant?.attributes?.description?.split(" ").length > 30) ||
+                (product?.description?.split(" ").length > 30)) && (
+                <button
+                  className="read-more"
+                  onClick={() => setShowFullDescription(!showFullDescription)}
+                >
+                  {showFullDescription ? "Show less" : "Read more"}
+                </button>
+              )}
             </p>
           </div>
 

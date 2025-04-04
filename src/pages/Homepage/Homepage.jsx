@@ -8,6 +8,7 @@ import Trending from "./components/Trending";
 import Footer from "../../components/Footer";
 import ProductBanner from "../../components/banner/ProductBanner";
 import { useBanners } from "../../hooks/queries/Banner";
+import { useOfferBanner } from "../../hooks/queries/offerBanner";
 const data = [
   {
     image: "/images/carousel/carousel-1.jpg",
@@ -33,7 +34,7 @@ const data = [
 
 function Homepage() {
   const { allBanners, isLoading, error } = useBanners();
-  console.log(allBanners);
+  const { offerBanner, isLoading: offerBannerLoading, error: offerBannerError } = useOfferBanner();
   return (
     <div>
       <Carousel data={allBanners?.filter((banner) => banner?.bannerFor === "hero")} isLoading={isLoading}  />
