@@ -34,7 +34,6 @@ const data = [
 
 function Homepage() {
   const { allBanners, isLoading, error } = useBanners();
-  const { offerBanner, isLoading: offerBannerLoading, error: offerBannerError } = useOfferBanner();
   return (
     <div>
       <Carousel data={allBanners?.filter((banner) => banner?.bannerFor === "hero")} isLoading={isLoading}  />

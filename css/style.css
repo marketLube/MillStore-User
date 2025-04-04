@@ -1046,6 +1046,13 @@ ul {
   margin-bottom: 2rem;
   max-width: 90%;
 }
+.offer-container .offer-content .offer-text p .read-more {
+  color: #ffffff;
+  cursor: pointer;
+  font-weight: 500;
+  margin-left: 4px;
+  text-decoration: underline;
+}
 .offer-container .offer-content .offer-text .offer-tags {
   display: flex;
   gap: 1rem;

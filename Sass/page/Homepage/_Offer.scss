@@ -48,6 +48,14 @@
         line-height: 1.6;
         margin-bottom: 2rem;
         max-width: 90%;
+
+        .read-more {
+          color: #ffffff;
+          cursor: pointer;
+          font-weight: 500;
+          margin-left: 4px;
+          text-decoration: underline;
+        }
       }
 
       .offer-tags {
