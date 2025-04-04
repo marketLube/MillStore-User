@@ -42,12 +42,17 @@ function ProductDetailsContent() {
   const [loadingAction, setLoadingAction] = useState(null); // "buy" or "cart"
   const [isRatingModalOpen, setIsRatingModalOpen] = useState(false);
   const [showFullDescription, setShowFullDescription] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
     setSelectedVariant(null);
+    setSelectedImage(null);
 
     if (product?.variants?.length > 0) {
       setSelectedVariant(product.variants[0]);
+      setSelectedImage(product.variants[0].images[0]);
+    } else if (product?.images?.length > 0) {
+      setSelectedImage(product.images[0]);
     }
 
     window.scrollTo({
@@ -130,26 +135,33 @@ function ProductDetailsContent() {
       <div className="product-container">
         <div className="product-images">
           <div className="main-image">
-            {/* <button className="wishlist-btn">
-              <FiHeart />
-            </button> */}
             <img
-              src={
-                selectedVariant ? selectedVariant.images[0] : product?.images[0]
-              }
+              src={selectedImage || (selectedVariant ? selectedVariant.images[0] : product?.images[0])}
               alt={product?.name}
             />
           </div>
           <div className="thumbnail-images">
-            {!selectedVariant?.images[0]
-              ? product?.images?.map(
-                  (image, index) =>
-                    index > 0 && <img src={image} alt={product?.name} />
-                )
-              : selectedVariant?.images.map(
-                  (image, index) =>
-                    index > 0 && <img src={image} alt={product?.name} />
-                )}
+            {!selectedVariant
+              ? product?.images?.map((image, index) => (
+                  <img
+                    key={index}
+                    src={image}
+                    alt={`${product?.name} ${index + 1}`}
+                    onClick={() => setSelectedImage(image)}
+                    className={selectedImage === image ? 'selected' : ''}
+                    style={{ cursor: 'pointer' }}
+                  />
+                ))
+              : selectedVariant?.images.map((image, index) => (
+                  <img
+                    key={index}
+                    src={image}
+                    alt={`${product?.name} ${index + 1}`}
+                    onClick={() => setSelectedImage(image)}
+                    className={selectedImage === image ? 'selected' : ''}
+                    style={{ cursor: 'pointer' }}
+                  />
+                ))}
           </div>
         </div>
 

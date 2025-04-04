@@ -95,7 +95,7 @@ const RatingModal = ({ isOpen, onClose, onSubmit, productId }) => {
             onChange={(e) => setMedia(e.target.files[0])}
             style={{ display: 'none' }}
           />
-          {media && <div className="media-preview">{media.name}</div>}
+          {media && <div className="media-preview">{media.name.length > 30 ? media.name.substring(0, 30) + "..." : media.name}</div>}
 
           <button
             type="submit"
