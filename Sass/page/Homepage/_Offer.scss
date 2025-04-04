@@ -11,7 +11,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
-    background: linear-gradient(135deg, #ffb347 0%, #ffaa33 100%);
+    background: linear-gradient(135deg, var.$color-primary 0%, #ffaa33 100%);
     overflow: hidden;
     transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
     opacity: 1;
@@ -37,14 +37,14 @@
       h2 {
         font-size: 2.5rem;
         font-weight: 600;
-        color: white;
+        color: var.$color-white;
         margin-bottom: 0.5rem;
       }
 
       h3 {
         font-size: 1.5rem;
         font-weight: 500;
-        color: white;
+        color: var.$color-white;
         margin-bottom: 1.5rem;
         position: relative;
         display: inline-block;
@@ -56,18 +56,18 @@
           left: 0;
           width: 60%;
           height: 2px;
-          background-color: white;
+          background-color: var.$color-white;
         }
       }
 
       p {
-        color: white;
+        color: var.$color-white;
         line-height: 1.6;
         margin-bottom: 2rem;
         max-width: 90%;
 
         .read-more {
-          color: #ffffff;
+          color: var.$color-white;
           cursor: pointer;
           font-weight: 500;
           margin-left: 4px;
@@ -86,13 +86,11 @@
           font-weight: 500;
 
           &.discount {
-            // background-color: white;
-            color: white;
+            color: var.$color-white;
           }
 
           &.limited {
-            // background-color: rgba(255, 255, 255, 0.2);
-            color: white;
+            color: var.$color-white;
           }
         }
       }
@@ -100,7 +98,7 @@
       .explore-btn {
         align-self: flex-start;
         padding: 0.75rem 2rem;
-        background-color: white;
+        background-color: var.$color-white;
         color: var.$color-primary;
         border: none;
         border-radius: 4px;
@@ -109,7 +107,7 @@
         transition: all 0.3s ease;
 
         &:hover {
-          background-color: white;
+          background-color: var.$color-white;
           transform: translateY(-2px);
         }
       }
@@ -193,13 +191,13 @@
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background-color: rgba(255, 179, 71, 0.3);
+    background-color: rgba(var.$color-primary, 0.3);
     border: none;
     cursor: pointer;
     transition: all 0.3s ease;
 
     &.active {
-      background-color: #ffb347;
+      background-color: var.$color-primary;
       transform: scale(1.2);
     }
   }
