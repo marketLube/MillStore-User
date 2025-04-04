@@ -1,22 +1,41 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useOfferBanner } from "../../../hooks/queries/offerBanner";
 
 function Offer() {
   const { offerBanner, isLoading: offerBannerLoading, error: offerBannerError } = useOfferBanner();
-  const [isExpanded, setIsExpanded] = React.useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
-  // Handle loading state
-  if (offerBannerLoading) return <div>Loading...</div>;
+  const handleSlideChange = (newIndex) => {
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setCurrentIndex(newIndex);
+      setIsTransitioning(false);
+    }, 500); // Match this with the CSS transition duration
+  };
+
+  // Update auto-sliding functionality with smooth transition
+  useEffect(() => {
+    if (offerBanner?.length > 1) {
+      const timer = setInterval(() => {
+        const newIndex = currentIndex === offerBanner.length - 1 ? 0 : currentIndex + 1;
+        handleSlideChange(newIndex);
+      }, 5000);
+
+      return () => clearInterval(timer);
+    }
+  }, [offerBanner, currentIndex]);
 
   // Handle error state
   if (offerBannerError) return <div>Error loading offer banner</div>;
 
   // Handle case when offerBanner is empty or undefined
-  if (!offerBanner?.[0]) return null;
+  if (!offerBanner?.length) return null;
 
-  // Get the first banner from the array
-  const banner = offerBanner[0];
+  // Get the current banner
+  const banner = offerBanner[currentIndex];
   const fullDescription = `${banner.description} Performance, And Exceptional Quality—All In One Solution.`;
   const shouldShowReadMore = fullDescription.length > 300;
 
@@ -26,7 +45,7 @@ function Offer() {
 
   return (
     <div className="offer-container" data-aos="fade-up">
-      <div className="offer-content">
+      <div className={`offer-content ${isTransitioning ? 'slide-exit' : 'slide-enter'}`}>
         <div className="offer-text">
           <h2>{banner.title}</h2>
           <h3>{banner.subtitle}</h3>
@@ -53,6 +72,19 @@ function Offer() {
           <img src={banner.image} alt="offer banner" />
         </div>
       </div>
+
+      {/* Add navigation dots if there are multiple banners */}
+      {offerBanner.length > 1 && (
+        <div className="slider-dots">
+          {offerBanner.map((_, index) => (
+            <button
+              key={index}
+              className={`dot ${index === currentIndex ? 'active' : ''}`}
+              onClick={() => handleSlideChange(index)}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

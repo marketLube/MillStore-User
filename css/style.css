@@ -1010,6 +1010,17 @@ ul {
   gap: 2rem;
   background: linear-gradient(135deg, #ffb347 0%, #ffaa33 100%);
   overflow: hidden;
+  transition: all 0.5s ease-in-out;
+  opacity: 0;
+  transform: translateX(100%);
+}
+.offer-container .offer-content.slide-enter {
+  opacity: 1;
+  transform: translateX(0);
+}
+.offer-container .offer-content.slide-exit {
+  opacity: 0;
+  transform: translateX(-100%);
 }
 .offer-container .offer-content .offer-text {
   padding: 4rem;
@@ -1121,6 +1132,36 @@ ul {
     order: -1;
     height: 300px;
   }
+}
+
+@keyframes fadeSlide {
+  from {
+    opacity: 0.3;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.slider-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+.slider-dots .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: rgba(255, 179, 71, 0.3);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.slider-dots .dot.active {
+  background-color: #ffb347;
+  transform: scale(1.2);
 }
 
 .trending-container {
