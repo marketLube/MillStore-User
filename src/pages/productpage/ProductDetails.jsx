@@ -43,6 +43,7 @@ function ProductDetailsContent() {
   const [isRatingModalOpen, setIsRatingModalOpen] = useState(false);
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
 
   useEffect(() => {
     setSelectedVariant(null);
@@ -122,6 +123,14 @@ function ProductDetailsContent() {
     const words = text.split(" ");
     if (words.length <= 100) return text;
     return showFullDescription ? text : words.slice(0, 100).join(" ") + "...";
+  };
+
+  const handleImageClick = (imageUrl) => {
+    setPreviewImage(imageUrl);
+  };
+
+  const handleClosePreview = () => {
+    setPreviewImage(null);
   };
 
   return (
@@ -463,6 +472,7 @@ function ProductDetailsContent() {
                             height: "20%",
                             objectFit: "cover",
                           }}
+                          onClick={() => handleImageClick(review.image)}
                         />
                       )}
                     </div>
@@ -529,6 +539,15 @@ function ProductDetailsContent() {
         onSubmit={handleSubmitReview}
         productId={product?._id}
       />
+
+      {previewImage && (
+        <div className="image-preview-overlay" onClick={handleClosePreview}>
+          <div className="image-preview-container">
+            <img src={previewImage} alt="Preview" onClick={(e) => e.stopPropagation()} />
+            <button className="close-preview" onClick={handleClosePreview}>×</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
