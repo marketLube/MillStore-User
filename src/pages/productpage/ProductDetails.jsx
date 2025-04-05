@@ -133,6 +133,13 @@ function ProductDetailsContent() {
     setPreviewImage(null);
   };
 
+  const handleShare = () => {
+    const currentUrl = window.location.href;
+    const message = `Check out this product: ${product?.name}\n${currentUrl}`;
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
   return (
     <div className="product-details">
       <div className="breadcrumb">
@@ -185,8 +192,8 @@ function ProductDetailsContent() {
               <span>{product?.brand?.name}</span>
             </div>
             <div className="actions">
-              <span className="product-id"># {product?._id}</span>
-              <button className="share-btn">
+              {/* <span className="product-id"># {product?._id}</span> */}
+              <button className="share-btn" onClick={handleShare}>
                 <FiShare2 />
               </button>
             </div>
@@ -249,7 +256,10 @@ function ProductDetailsContent() {
                     className={`type-btn ${
                       selectedVariant?._id === variant._id ? "active" : ""
                     }`}
-                    onClick={() => setSelectedVariant(variant)}
+                    onClick={() => {
+                      setSelectedVariant(variant);
+                      setSelectedImage(variant.images[0]);
+                    }}
                   >
                     <div className="variant-image">
                       <img src={variant?.images[0]} alt={variant?.name} />
