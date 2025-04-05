@@ -57,7 +57,7 @@ function  Clearance() {
   };
 
   return (
-    <div className="clearance-container" data-aos="fade-up">
+    <div className="clearance-container" >
       <div className="clearance-header">
         <div className="clearance-content">
           <h2 className="clearance-content_h2">
