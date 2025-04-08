@@ -5,7 +5,6 @@ import {
   FiChevronUp,
   FiArrowLeft,
 } from "react-icons/fi";
-import Header from "../../components/Header";
 import Card from "../../components/Card";
 import Carousel from "../../components/Carousel";
 import LoadingSpinner from "../../components/LoadingSpinner";
@@ -19,33 +18,14 @@ import { useLabels } from "../../hooks/queries/labels";
 import { useLocation } from "react-router-dom";
 import Pagination from "../../components/Pagination/Pagination";
 import { useBanners } from "../../hooks/queries/Banner";
-
-// const data = [
-//   {
-//     image: "/images/carousel/carousel-1.jpg",
-//     alt: "carousel-1",
-//     heading: `Strength in Every Tool.
-//        in Every Task.`,
-//     description:
-//       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-//   },
-//   {
-//     image: "/images/carousel/carousel-1.jpg",
-//     alt: "carousel-2",
-//     heading: "The Best Tools for the Job",
-//     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-//   },
-//   {
-//     image: "/images/carousel/carousel-1.jpg",
-//     alt: "carousel-3",
-//     heading: "The Best Tools for the Job",
-//     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-//   },
-// ];
+import { useDispatch, useSelector } from "react-redux";
+import { setCategory } from "../../redux/features/category/categorySlice";
 
 // Separate the content into a new component
 function AllProductsContent() {
+  const activeCategory = useSelector((state) => state.category.category);
   const location = useLocation();
+  const dispatch = useDispatch();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [openSections, setOpenSections] = useState({
     categories: true,
@@ -77,7 +57,6 @@ function AllProductsContent() {
   });
 
   const MAX_PRICE_VALUE = 999999999;
-
 
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 10;
@@ -112,8 +91,11 @@ function AllProductsContent() {
     error: labelsError,
   } = useLabels();
 
-  const { allBanners, isLoading: bannersLoading, error: bannersError } = useBanners();
-
+  const {
+    allBanners,
+    isLoading: bannersLoading,
+    error: bannersError,
+  } = useBanners();
 
   const debouncedUpdateFilters = useCallback(
     debounce((newRange) => {
@@ -121,6 +103,8 @@ function AllProductsContent() {
         ...prev,
         priceRange: newRange,
       }));
+      setIsFilterOpen(false);
+      document.body.style.overflow = "auto";
     }, 500),
     []
   );
@@ -137,6 +121,12 @@ function AllProductsContent() {
       debouncedUpdateFilters.cancel();
     };
   }, [debouncedUpdateFilters]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(setCategory(null));
+    };
+  }, []);
 
   useEffect(() => {
     const categoryFromHeader = location.state?.selectedCategory;
@@ -176,8 +166,6 @@ function AllProductsContent() {
   const categories = categoriesData?.envelop?.data || [];
   const labels = labelsData?.envelop?.data || [];
 
-  console.log(products);
-
   const toggleFilter = () => {
     setIsFilterOpen(!isFilterOpen);
     document.body.style.overflow = !isFilterOpen ? "hidden" : "auto";
@@ -210,6 +198,9 @@ function AllProductsContent() {
     categoryName = "",
     subcategoryName = ""
   ) => {
+    console.log(categoryId, activeCategory);
+    dispatch(setCategory(categoryId));
+
     setSelectedFilters((prev) => ({
       ...prev,
       categoryId: categoryId,
@@ -285,6 +276,7 @@ function AllProductsContent() {
         ...newRange,
         max: newRange.max === Infinity ? MAX_PRICE_VALUE : newRange.max,
       };
+
       debouncedUpdateFilters(apiRange);
       return newRange;
     });
@@ -398,7 +390,7 @@ function AllProductsContent() {
     return active;
   };
 
-  const SLIDER_MAX = 10000;
+  const SLIDER_MAX = 100000;
 
   // Update the getTrackStyle function
   const getTrackStyle = () => {
@@ -437,7 +429,11 @@ function AllProductsContent() {
 
   return (
     <div className="product-page">
-      <Carousel data={allBanners?.filter((banner) => banner?.bannerFor === "hero")} maxHeight="25rem" isLoading={bannersLoading} />
+      <Carousel
+        data={allBanners?.filter((banner) => banner?.bannerFor === "hero")}
+        maxHeight="25rem"
+        isLoading={bannersLoading}
+      />
       <div className="product-section">
         <div className="breadcrumb">
           <span>Home</span> / <span>All Products</span>
@@ -486,6 +482,7 @@ function AllProductsContent() {
                   labelName: "",
                 });
                 setPriceRange({ min: 0, max: Infinity });
+                dispatch(setCategory(null));
               }}
             >
               Clear All
@@ -749,7 +746,9 @@ function AllProductsContent() {
               <div className="pagination-wrapper">
                 <Pagination
                   currentPage={currentPage}
-                  totalPages={Math.ceil(response?.data?.totalProducts / ITEMS_PER_PAGE)}
+                  totalPages={Math.ceil(
+                    response?.data?.totalProducts / ITEMS_PER_PAGE
+                  )}
                   onPageChange={handlePageChange}
                 />
               </div>

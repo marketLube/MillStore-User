@@ -6,7 +6,6 @@ export const useOfferBanner = () => {
     queryKey: ["offer-banner"],
     queryFn: () => apiClient.get("/offerBanner"),
   });
-  console.log(data , "data");
   const offerBanner = data?.data?.data;
 
   return { offerBanner, isLoading, error };

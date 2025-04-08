@@ -77,27 +77,34 @@ function ProductDetailsContent() {
 
   const reviews = product.ratings;
 
-  // const visibleReviews = showAllReviews ? reviews : reviews.slice(0, 2);
-  const visibleReviews = reviews;
+  const visibleReviews = showAllReviews ? reviews : reviews.slice(0, 2);
+  // const visibleReviews = reviews;
 
   const handleAddToCart = (type) => {
-    const productToAdd = {
-      productId: product._id,
-      variantId: selectedVariant?._id || null,
-      quantity: 1,
-    };
+    try {
+      const productToAdd = {
+        productId: product._id,
+        variantId: selectedVariant?._id || null,
+        quantity: 1,
+      };
 
-    setLoadingAction(type);
-    addToCart(productToAdd, {
-      onSuccess: () => {
-        if (type === "buy") {
-          navigate("/cart");
-        }
-      },
-      onSettled: () => {
-        setLoadingAction(null);
-      },
-    });
+      setLoadingAction(type);
+      addToCart(productToAdd, {
+        onSuccess: () => {
+          if (type === "buy") {
+            navigate("/cart");
+          }
+        },
+        onSettled: () => {
+          setLoadingAction(null);
+        },
+        onError: (error) => {
+          console.log(error);
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleSubmitReview = async (reviewData) => {
@@ -137,7 +144,7 @@ function ProductDetailsContent() {
     const currentUrl = window.location.href;
     const message = `Check out this product: ${product?.name}\n${currentUrl}`;
     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
+    window.open(whatsappUrl, "_blank");
   };
 
   return (
@@ -145,14 +152,19 @@ function ProductDetailsContent() {
       <div className="breadcrumb">
         <span>All products</span>
         <span>/</span>
-        <span> {product?.category?.name} </span>
+        <span className="category-name"> {product?.category?.name} </span>
       </div>
 
       <div className="product-container">
         <div className="product-images">
           <div className="main-image">
             <img
-              src={selectedImage || (selectedVariant ? selectedVariant.images[0] : product?.images[0])}
+              src={
+                selectedImage ||
+                (selectedVariant
+                  ? selectedVariant.images[0]
+                  : product?.images[0])
+              }
               alt={product?.name}
             />
           </div>
@@ -164,8 +176,8 @@ function ProductDetailsContent() {
                     src={image}
                     alt={`${product?.name} ${index + 1}`}
                     onClick={() => setSelectedImage(image)}
-                    className={selectedImage === image ? 'selected' : ''}
-                    style={{ cursor: 'pointer' }}
+                    className={selectedImage === image ? "selected" : ""}
+                    style={{ cursor: "pointer" }}
                   />
                 ))
               : selectedVariant?.images.map((image, index) => (
@@ -174,15 +186,15 @@ function ProductDetailsContent() {
                     src={image}
                     alt={`${product?.name} ${index + 1}`}
                     onClick={() => setSelectedImage(image)}
-                    className={selectedImage === image ? 'selected' : ''}
-                    style={{ cursor: 'pointer' }}
+                    className={selectedImage === image ? "selected" : ""}
+                    style={{ cursor: "pointer" }}
                   />
                 ))}
           </div>
         </div>
 
         <div className="product-info">
-          <div className="header">
+          <div className="product-info-header">
             <div className="brand">
               <img
                 src={product?.brand?.image}
@@ -225,8 +237,9 @@ function ProductDetailsContent() {
                   ? selectedVariant?.attributes?.description
                   : product?.description
               )}
-              {((selectedVariant?.attributes?.description?.split(" ").length > 30) ||
-                (product?.description?.split(" ").length > 30)) && (
+              {(selectedVariant?.attributes?.description?.split(" ").length >
+                30 ||
+                product?.description?.split(" ").length > 30) && (
                 <button
                   className="read-more"
                   onClick={() => setShowFullDescription(!showFullDescription)}
@@ -510,7 +523,9 @@ function ProductDetailsContent() {
             Top Picks <span>For You</span>
           </h2>
           <div className="view-controls">
-            <span className="view-all" onClick={()=>navigate("/products")}>View all</span>
+            <span className="view-all" onClick={() => navigate("/products")}>
+              View all
+            </span>
             <div className="navigation-buttons">
               <button className="nav-btn prev" onClick={() => scroll("left")}>
                 <FiChevronLeft />
@@ -553,8 +568,14 @@ function ProductDetailsContent() {
       {previewImage && (
         <div className="image-preview-overlay" onClick={handleClosePreview}>
           <div className="image-preview-container">
-            <img src={previewImage} alt="Preview" onClick={(e) => e.stopPropagation()} />
-            <button className="close-preview" onClick={handleClosePreview}>×</button>
+            <img
+              src={previewImage}
+              alt="Preview"
+              onClick={(e) => e.stopPropagation()}
+            />
+            <button className="close-preview" onClick={handleClosePreview}>
+              ×
+            </button>
           </div>
         </div>
       )}

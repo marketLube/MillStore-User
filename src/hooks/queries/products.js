@@ -43,7 +43,6 @@ async function getProducts(filters) {
   try {
     const url = `/product/get-products?${params.toString()}`;
     const response = await apiClient.get(url);
-console.log(response);
     return response.data;
   } catch (error) {
     if (error.response?.status === 500) {
@@ -56,7 +55,7 @@ console.log(response);
 }
 
 export const useProductById = (id) => {
-  const { data, isLoading, error , refetch} = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["product", id],
     queryFn: () => productService.getProductById(id),
   });

@@ -1,13 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { FiCopy } from "react-icons/fi";
 import { useGetOrderHistory } from "../../hooks/queries/order";
 import LoadingSpinner from "../../components/LoadingSpinner";
 
 const OrderHistory = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+
   const { data, isLoading } = useGetOrderHistory();
   const orders = data?.orders;
 
-console.log(orders , "orders");
+  // Filter orders based on the search query
+  const filteredOrders = orders?.filter((order) =>
+    order.products.some((product) =>
+      product?.productId?.name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  );
 
   return (
     <>
@@ -25,22 +32,21 @@ console.log(orders , "orders");
                 </p>
               </div>
               <div className="search-section">
-                <input type="text" placeholder="Enter Order ID..." />
+                <input
+                  type="text"
+                  placeholder="Enter Product Name..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
                 <button className="search-btn">Search</button>
               </div>
             </div>
 
             <div className="orders-table">
-              {orders?.length === 0 ? (
+              {filteredOrders?.length === 0 ? (
                 <div className="no-orders">
-                  <h3>No Orders Yet</h3>
-                  <p>Begin your purchase by visiting our home page.</p>
-                  <button
-                    className="buy-now-btn"
-                    onClick={() => (window.location.href = "/")}
-                  >
-                    Go to Home Page
-                  </button>
+                  <h3>No Orders Found</h3>
+                  <p>Try searching with a different product name.</p>
                 </div>
               ) : (
                 <>
@@ -52,18 +58,28 @@ console.log(orders , "orders");
                     <div className="action-col"></div>
                   </div>
                   <div className="table-body">
-                    {orders?.map((order) => (
+                    {filteredOrders.map((order) => (
                       <div key={order._id} className="order-row">
                         <div className="product-col">
                           {order.products.map((product, index) => (
                             <div key={index} className="product-details">
                               <img
-                                src={product.variantId ? product.variantId.images[0] : product?.productId?.images[0]}
-                                alt={product.variantId ? product.variantId.name : product?.productId?.name}
+                                src={
+                                  product.variantId
+                                    ? product.variantId.images[0]
+                                    : product?.productId?.images[0]
+                                }
+                                alt={
+                                  product.variantId
+                                    ? product.variantId.name
+                                    : product?.productId?.name
+                                }
                               />
                               <div className="info">
                                 <h3>{product?.productId?.name}</h3>
-                                <div className="product-price">₹ {product.price}</div>
+                                <div className="product-price">
+                                  ₹ {product.price}
+                                </div>
                               </div>
                             </div>
                           ))}
@@ -71,14 +87,15 @@ console.log(orders , "orders");
 
                         <div className="total-col" data-label="Total Amount">
                           <div className="total-amount">
-                            ₹ {order.couponApplied ? order.couponApplied.finalAmount : order?.totalAmount}
+                            ₹{" "}
+                            {order.couponApplied
+                              ? order.couponApplied.finalAmount
+                              : order?.totalAmount}
                           </div>
                         </div>
 
                         <div className="order-id-col" data-label="Order ID">
-                          <div className="order-id">
-                            {order?._id} <FiCopy className="copy-icon" />
-                          </div>
+                          <span className="order-id">{order?._id}</span>
                         </div>
 
                         <div className="status-col">
@@ -96,11 +113,9 @@ console.log(orders , "orders");
                               ? "Delivered on"
                               : "Expected delivery"}
                             <br />
-                            {order?.status === "delivered"
-                              ? order?.deliveredOn
-                              : new Date(
-                                  order?.expectedDelivery
-                                ).toLocaleDateString()}
+                            {new Date(
+                              order?.expectedDelivery
+                            ).toLocaleDateString()}
                           </div>
                         </div>
 

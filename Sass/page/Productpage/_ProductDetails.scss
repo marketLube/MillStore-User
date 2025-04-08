@@ -18,6 +18,10 @@
     margin-bottom: 1rem;
   }
 
+  .category-name {
+    color: var.$color-primary;
+  }
+
   .product-container {
     display: flex;
     gap: 2rem;
@@ -140,7 +144,7 @@
         padding: 0 0.5rem;
       }
 
-      .header {
+      .product-info-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -285,6 +289,7 @@
             align-items: center;
             gap: 0.75rem;
             transition: all 0.2s ease;
+            width: 15rem;
 
             .variant-image {
               width: 5rem;
@@ -392,7 +397,7 @@
 
         .discount {
           background: #ffe4d6;
-          color: var.$color-primary;
+          color: black;
           padding: 0.25rem 0.5rem;
           border-radius: 4px;
           font-size: 0.75rem;

@@ -12,10 +12,10 @@ import { setUser } from "../../redux/features/user/userSlice";
 
 const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
   const user = useSelector((state) => state.user.user);
-const dispatch = useDispatch();
-  const [selectedAddress, setSelectedAddress] = useState("");
+  const dispatch = useDispatch();
+  const [selectedAddress, setSelectedAddress] = useState({});
   const [formData, setFormData] = useState({
-    fullName: user?.username,
+    fullName: "",
     building: "",
     street: "",
     landmark: "",
@@ -25,14 +25,14 @@ const dispatch = useDispatch();
     saveAddress: false,
   });
 
-useEffect(()=>{
-updatedUser();
-},[])
+  useEffect(() => {
+    updatedUser();
+  }, []);
 
-const updatedUser = async()=>{
-  const response = await userService.getAuthUser();
-  dispatch(setUser(response.user));
-}
+  const updatedUser = async () => {
+    const response = await userService.getAuthUser();
+    dispatch(setUser(response.user));
+  };
 
   const { mutate: updateUser, isPending } = useUpdateUser();
   const { mutate: placeOrder, isPending: isOrderPending } = usePlaceOrder();
@@ -60,7 +60,7 @@ const updatedUser = async()=>{
 
   const resetForm = () => {
     setFormData({
-      fullName: user?.username,
+      fullName: "",
       building: "",
       street: "",
       landmark: "",
@@ -106,7 +106,7 @@ const updatedUser = async()=>{
     const { fullName, building, street, city, state, pincode } = formData;
 
     if (
-      selectedAddress ||
+      Object.keys(selectedAddress).length > 0 ||
       (fullName && building && street && city && state && pincode)
     ) {
       const address = selectedAddress ? selectedAddress : formData;
@@ -143,11 +143,18 @@ const updatedUser = async()=>{
               {savedAddresses?.map((addr) => (
                 <label key={addr?._id} className="address-option">
                   <input
-                    type="radio"
+                    type="checkbox"
                     name="address"
                     value={addr?._id}
                     checked={selectedAddress === addr?._id}
-                    onChange={() => { resetForm();setSelectedAddress(addr?._id)}}
+                    onChange={() => {
+                      if (selectedAddress === addr?._id) {
+                        setSelectedAddress("");
+                      } else {
+                        setSelectedAddress(addr?._id);
+                      }
+                      resetForm();
+                    }}
                   />
                   <div className="address-details">
                     <strong>{addr?.fullName}</strong>
@@ -174,59 +181,68 @@ const updatedUser = async()=>{
 
           <h3 className="manual-entry-title">Enter address</h3>
 
-          <form className="address-form" onSubmit={handleSubmit}>
-            <input
-              type="text"
-              name="fullName"
-              placeholder="Full Name"
-              value={formData.fullName}
-              onChange={handleInputChange}
-            />
-            <input
-              type="text"
-              name="building"
-              placeholder="House/Apartment Name"
-              value={formData.building}
-              onChange={handleInputChange}
-            />
-            <input
-              type="text"
-              name="street"
-              placeholder="Street Address"
-              value={formData.street}
-              onChange={handleInputChange}
-            />
-            <input
-              type="text"
-              name="landmark"
-              placeholder="Landmark (Optional)"
-              value={formData.landmark}
-              onChange={handleInputChange}
-            />
-            <div className="form-row">
+          {
+            <form className="address-form" onSubmit={handleSubmit}>
               <input
                 type="text"
-                name="city"
-                placeholder="City"
-                value={formData.city}
+                name="fullName"
+                placeholder="Full Name"
+                value={formData.fullName}
                 onChange={handleInputChange}
+                disabled={Object.keys(selectedAddress).length > 0}
               />
               <input
                 type="text"
-                name="state"
-                placeholder="State"
-                value={formData.state}
+                name="building"
+                placeholder="House/Apartment Name"
+                value={formData.building}
                 onChange={handleInputChange}
+                disabled={Object.keys(selectedAddress).length > 0}
               />
-            </div>
-            <input
-              type="text"
-              name="pincode"
-              placeholder="Pincode"
-              value={formData.pincode}
-              onChange={handleInputChange}
-            />
-          </form>
+              <input
+                type="text"
+                name="street"
+                placeholder="Street Address"
+                value={formData.street}
+                onChange={handleInputChange}
+                disabled={Object.keys(selectedAddress).length > 0}
+              />
+              <input
+                type="text"
+                name="landmark"
+                placeholder="Landmark (Optional)"
+                value={formData.landmark}
+                onChange={handleInputChange}
+                disabled={Object.keys(selectedAddress).length > 0}
+              />
+              <div className="form-row">
+                <input
+                  type="text"
+                  name="city"
+                  placeholder="City"
+                  value={formData.city}
+                  onChange={handleInputChange}
+                  disabled={Object.keys(selectedAddress).length > 0}
+                />
+                <input
+                  type="text"
+                  name="state"
+                  placeholder="State"
+                  value={formData.state}
+                  onChange={handleInputChange}
+                  disabled={Object.keys(selectedAddress).length > 0}
+                />
+              </div>
+              <input
+                type="text"
+                name="pincode"
+                placeholder="Pincode"
+                value={formData.pincode}
+                onChange={handleInputChange}
+                disabled={Object.keys(selectedAddress).length > 0}
+              />
+            </form>
+          }
         </div>
 
         {mode === "cart" ? (
@@ -237,9 +253,11 @@ const updatedUser = async()=>{
                 name="saveAddress"
                 checked={formData.saveAddress}
                 onChange={handleInputChange}
-                disabled={user?.address?.length >=3 }
+                disabled={user?.address?.length >= 3}
               />
-              {user?.address?.length >=3 ? "You can only save 3 addresses go to profile to delete some" : "Save this address for future purchases"}
+              {user?.address?.length >= 3
+                ? "You can only save 3 addresses go to profile to delete some"
+                : "Save this address for future purchases"}
             </label>
             <button
               className="proceed-btn"

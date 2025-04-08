@@ -13,6 +13,7 @@ export const useLogin = () => {
       localStorage.setItem("user-auth-token", data.token);
       dispatch(setUser(data.user));
       dispatch(setIsLoggedIn(true));
+
       navigate("/");
     },
     onError: (error) => {
@@ -51,7 +52,7 @@ export const useSignup = () => {
     },
     onError: (error) => {
       // toast.error(error.response?.data?.message || "Failed to signup");
-return error.response?.data?.message;
+      return error.response?.data?.message;
     },
   });
 };

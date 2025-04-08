@@ -22,7 +22,6 @@ import {
   useGetCoupons,
   useRemoveCoupon,
 } from "../../hooks/queries/coupon";
-import axios from "axios";
 import apiClient from "../../api/client";
 
 // Add this array of coupons
@@ -45,12 +44,12 @@ function Cartpage() {
 
   const navigate = useNavigate();
   const { data: cartData, isLoading, error } = useCart();
-  console.log(isLoading, "isLoading");
-  console.log(cartData, "cartData");
-  const { mutate: updateQuantity, isPending: isUpdating } = useUpdateCartQuantity();
+  const { mutate: updateQuantity, isPending: isUpdating } =
+    useUpdateCartQuantity();
   const { mutate: removeFromCart, isPending: isRemoving } = useRemoveFromCart();
   const { mutate: applyCoupon, isPending: isApplyingCoupon } = useApplyCoupon();
-  const { mutate: removeCoupon, isPending: isRemovingCoupon } = useRemoveCoupon();
+  const { mutate: removeCoupon, isPending: isRemovingCoupon } =
+    useRemoveCoupon();
 
   const {
     data: couponsData,
@@ -76,7 +75,15 @@ function Cartpage() {
     }
   }, [cartData?.data?.couponDetails]);
 
-  if (isLoading || isCouponsLoading || isRemoving || isUpdating || isApplyingCoupon || isRemovingCoupon) return <LoadingSpinner />;
+  if (
+    isLoading ||
+    isCouponsLoading ||
+    isRemoving ||
+    isUpdating ||
+    isApplyingCoupon ||
+    isRemovingCoupon
+  )
+    return <LoadingSpinner />;
 
   if (error) {
     throw error;
@@ -88,8 +95,9 @@ function Cartpage() {
   const subtotal = cartData?.data?.formattedCart?.totalPrice;
   const deliveryCharges = 0;
   const gst = 0;
-  const total = cartData?.data?.finalAmount? cartData?.data?.finalAmount: cartData?.data?.formattedCart?.totalPrice;
-
+  const total = cartData?.data?.finalAmount
+    ? cartData?.data?.finalAmount
+    : cartData?.data?.formattedCart?.totalPrice;
 
   const handleQuantityUpdate = (productId, variantId, action) => {
     if (
@@ -186,8 +194,6 @@ function Cartpage() {
     setIsAddressModalOpen(false);
   };
 
-
-
   if (!cartData?.data?.formattedCart?.items?.length) {
     return (
       <div className="cart-page">
@@ -219,11 +225,19 @@ function Cartpage() {
                 className="item-image"
                 onClick={() => navigate(`/products/${item?.product?._id}`)}
               >
-                <img src={item?.product?.mainImage} alt={item?.product?.name.split("").length > 20 ? item?.product?.name.split("").slice(0, 20).join("") + "..." : item?.product?.name} />
+                <img
+                  src={item?.product?.mainImage}
+                  alt={
+                    item?.product?.name.split("").length > 20
+                      ? item?.product?.name.split("").slice(0, 20).join("") +
+                        "..."
+                      : item?.product?.name
+                  }
+                />
               </div>
 
               <div className="item-details">
-                <h3>{item?.product?.name }</h3>
+                <h3>{item?.product?.name}</h3>
                 <div className="product-id">#{item?.product?._id}</div>
                 <div className="quantity-controls">
                   <button
@@ -337,7 +351,7 @@ function Cartpage() {
             </button>
           </div>
 
-          {  availableCoupons.length > 0 && (
+          {availableCoupons.length > 0 && (
             <div className="coupon-section">
               <h3>Apply Coupons & Save</h3>
               <div className="coupon-input">
@@ -489,7 +503,16 @@ function Cartpage() {
         cancelText="Keep"
         type="danger"
       />
-      {displayRazorpay && <RenderRazorpay orderId={orderDetails.orderId} keyId={process.env.REACT_APP_RAZORPAY_KEY_ID} keySecret={process.env.REACT_APP_RAZORPAY_KEY_SECRET} currency={orderDetails.currency} amount={orderDetails.amount} address={address} />}
+      {displayRazorpay && (
+        <RenderRazorpay
+          orderId={orderDetails.orderId}
+          keyId={process.env.REACT_APP_RAZORPAY_KEY_ID}
+          keySecret={process.env.REACT_APP_RAZORPAY_KEY_SECRET}
+          currency={orderDetails.currency}
+          amount={orderDetails.amount}
+          address={address}
+        />
+      )}
     </div>
   );
 }

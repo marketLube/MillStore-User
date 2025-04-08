@@ -8,14 +8,15 @@ import {
 } from "react-icons/md";
 import { BiLogOut } from "react-icons/bi";
 import { Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../redux/features/user/userSlice";
-import { useDispatch } from "react-redux";
 import { useCategories } from "../hooks/queries/categories";
 import { useProducts } from "../hooks/queries/products";
+import { setCategory } from "../redux/features/category/categorySlice";
 
 export default function Header() {
   const dispatch = useDispatch();
+  const cart = useSelector((state) => state.cart.cart);
   const user = useSelector((state) => state.user.user);
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -26,7 +27,8 @@ export default function Header() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const searchRef = useRef(null);
-
+  const activeCategory = useSelector((state) => state.category.category);
+  console.log(activeCategory, "activeCategory");
   const {
     data,
     isLoading: categoriesLoading,
@@ -86,6 +88,7 @@ export default function Header() {
   const categories = data?.envelop?.data || [];
 
   const handleCategoryClick = (category) => {
+    dispatch(setCategory(category?._id || "all"));
     navigate("/products", {
       state: {
         selectedCategory: {
@@ -241,7 +244,12 @@ export default function Header() {
           </div>
           <div className="header-actions-item">
             <Link to="/cart">
-              <FiShoppingCart className="icon" />
+              <div className="cart-icon">
+                <FiShoppingCart className="icon" />
+                {cart?.items?.length > 0 && (
+                  <span className="cart-badge">{cart?.items?.length}</span>
+                )}
+              </div>
             </Link>
           </div>
         </div>
@@ -284,11 +292,24 @@ export default function Header() {
       </header>
       {categories && (
         <ul className="header-cat">
+          <li
+            onClick={() => {
+              dispatch(setCategory("all"));
+              navigate("/products");
+            }}
+            style={{ cursor: "pointer" }}
+            className={activeCategory === "all" ? "header-cat-active" : ""}
+          >
+            All
+          </li>
           {categories?.map((category) => (
             <li
               key={category?._id}
               onClick={() => handleCategoryClick(category)}
               style={{ cursor: "pointer" }}
+              className={
+                activeCategory === category?._id ? "header-cat-active" : ""
+              }
             >
               {category?.name}
             </li>
