@@ -28,7 +28,6 @@ export default function Header() {
   const [searchResults, setSearchResults] = useState([]);
   const searchRef = useRef(null);
   const activeCategory = useSelector((state) => state.category.category);
-  console.log(activeCategory, "activeCategory");
   const {
     data,
     isLoading: categoriesLoading,
@@ -63,6 +62,12 @@ export default function Header() {
       navigate("/login");
     }
   };
+
+  useEffect(() => {
+    window.addEventListener("scroll", () => {
+      setIsUserMenuOpen(false);
+    });
+  }, []);
 
   const handleMenuItemClick = (item) => {
     setIsUserMenuOpen(false);

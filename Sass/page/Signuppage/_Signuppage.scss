@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10rem;
+  padding: 5rem;
 
   .signup-card {
     background: white;
@@ -134,22 +134,22 @@
       padding-right: 35px;
     }
 
-@media screen and (max-width: 480px) {
-  .signup-container {
-    padding: 16px;
-  }
-.password-input input {
-  padding-right: 25px;
-}
-.password-toggle {
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  color: #666;
-margin-bottom: 10px;
-}
-}
+    @media screen and (max-width: 480px) {
+      .signup-container {
+        padding: 16px;
+      }
+      .password-input input {
+        padding-right: 25px;
+      }
+      .password-toggle {
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #666;
+        margin-bottom: 10px;
+      }
+    }
 
     .login-link {
       text-align: center;

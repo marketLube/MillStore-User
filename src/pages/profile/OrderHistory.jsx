@@ -127,7 +127,7 @@ const OrderHistory = () => {
                           >
                             {order?.status === "delivered"
                               ? "View"
-                              : "Track Order"}{" "}
+                              : "Track & Manage"}{" "}
                             →
                           </button>
                         </div>

@@ -247,7 +247,8 @@ select {
 
 @media (max-width: 768px) {
   .header {
-    position: relative;
+    position: sticky;
+    top: 0;
     z-index: 100;
   }
   .header-search {
@@ -619,9 +620,6 @@ ul {
   .carousel-container .carousel-content .carousel-button {
     padding: 10px 24px;
     font-size: 14px;
-  }
-  .carousel-container .custom-dots {
-    bottom: 5rem;
   }
 }
 
@@ -2286,7 +2284,7 @@ body.filter-open {
   overflow: hidden;
   aspect-ratio: 1/1;
   width: 100%;
-  min-height: 400px;
+  height: 30rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3712,7 +3710,6 @@ body.modal-open {
   .address-modal .modal-content {
     margin: 0;
     max-width: none;
-    min-height: 85vh;
     max-height: 90vh;
     border-radius: 20px 20px 0 0;
     position: relative;
@@ -4435,7 +4432,7 @@ body.modal-open {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10rem;
+  padding: 5rem;
 }
 .login-container .login-card {
   background: white;
@@ -4542,7 +4539,7 @@ body.modal-open {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10rem;
+  padding: 5rem;
 }
 .signup-container .signup-card {
   background: white;

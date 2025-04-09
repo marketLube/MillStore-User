@@ -97,8 +97,16 @@ function Bestseller() {
               <FiArrowRight />
             </button>
           </div>
+          <p className="fade-text" style={{ marginBottom: "0" }}>
+            {`# ${currentIndex + 1} Best Seller `}
+          </p>
           <h2 className="fade-text">{currentProduct?.name}</h2>
-          <p className="fade-text">{currentProduct?.description.split("").length > 500 ? currentProduct?.description.split("").slice(0, 500).join("") + "..." : currentProduct?.description}</p>
+          <p className="fade-text">
+            {currentProduct?.description.split("").length > 500
+              ? currentProduct?.description.split("").slice(0, 500).join("") +
+                "..."
+              : currentProduct?.description}
+          </p>
 
           <div className="buttons">
             <button

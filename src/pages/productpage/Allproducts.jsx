@@ -111,6 +111,13 @@ function AllProductsContent() {
 
   useEffect(() => {
     window.scrollTo({
+      top: 100,
+      behavior: "smooth",
+    });
+  }, [selectedFilters]);
+
+  useEffect(() => {
+    window.scrollTo({
       top: 0,
       behavior: "smooth",
     });

@@ -1,8 +1,29 @@
 import React from "react";
 import { FaTwitter, FaFacebookF, FaInstagram, FaYoutube } from "react-icons/fa";
 import Logo from "../assets/logo.png";
-
+import { useCategories } from "../hooks/queries/categories";
+import { setCategory } from "../redux/features/category/categorySlice";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 function Footer() {
+  const { data } = useCategories();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const categories = data?.envelop?.data;
+
+  const handleCategoryClick = (category) => {
+    dispatch(setCategory(category?._id || "all"));
+    navigate("/products", {
+      state: {
+        selectedCategory: {
+          id: category._id,
+          name: category.name,
+        },
+      },
+    });
+  };
+
   return (
     <footer className="footer">
       {/* Newsletter Section */}
@@ -38,18 +59,15 @@ function Footer() {
           <div className="footer-section">
             <h4>Categories</h4>
             <ul>
-              <li>
-                <a href="/men">Men</a>
-              </li>
-              <li>
-                <a href="/women">Women</a>
-              </li>
-              <li>
-                <a href="/kids">Kids</a>
-              </li>
-              <li>
-                <a href="/accessories">Accessories</a>
-              </li>
+              {categories?.map((category) => (
+                <li
+                  onClick={() => handleCategoryClick(category)}
+                  key={category._id}
+                  style={{ cursor: "pointer" }}
+                >
+                  <span>{category.name}</span>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -58,16 +76,16 @@ function Footer() {
             <h4>Company</h4>
             <ul>
               <li>
-                <a href="/about">About us</a>
+                <span>About us</span>
               </li>
               <li>
-                <a href="/blog">Blog</a>
+                <span>Blog</span>
               </li>
               <li>
-                <a href="/gift-vouchers">Gift vouchers</a>
+                <span>Gift vouchers</span>
               </li>
               <li>
-                <a href="/policy">Our policy</a>
+                <span>Our policy</span>
               </li>
             </ul>
           </div>
@@ -77,7 +95,7 @@ function Footer() {
             <h4>Contact</h4>
             <ul>
               <li>
-                <a href="/contact">Contact us</a>
+                <span>Contact us</span>
               </li>
               <li className="address">
                 123 Fashion Street,
@@ -87,10 +105,10 @@ function Footer() {
                 India, 400001
               </li>
               <li>
-                <a href="mailto:Lorem@gmail.com">Lorem@gmail.com</a>
+                <span>Lorem@gmail.com</span>
               </li>
               <li>
-                <a href="/support">Support & FAQ</a>
+                <span>Support & FAQ</span>
               </li>
             </ul>
           </div>
@@ -100,25 +118,25 @@ function Footer() {
       {/* Footer Bottom */}
       <div className="footer-bottom">
         <div className="social-links">
-          <a href="#">
+          <span>
             <FaTwitter />
-          </a>
-          <a href="#">
+          </span>
+          <span>
             <FaFacebookF />
-          </a>
-          <a href="#">
+          </span>
+          <span>
             <FaInstagram />
-          </a>
-          <a href="#">
+          </span>
+          <span>
             <FaYoutube />
-          </a>
+          </span>
         </div>
 
         <p>© 2025 Lorem All rights reserved</p>
 
         <div className="legal-links">
-          <a href="/terms">Terms & Condition</a>
-          <a href="/privacy">Privacy Policy</a>
+          <span>Terms & Condition</span>
+          <span>Privacy Policy</span>
         </div>
       </div>
     </footer>
