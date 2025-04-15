@@ -172,27 +172,27 @@ function Cartpage() {
     removeCoupon();
   };
 
-  // const handleSubmit = async (selectedAddress, paymentMethod = "razorpay") => {
-  //   setAddress(selectedAddress);
-  //   if (paymentMethod === "razorpay") {
-  //     const response = await apiClient.post(`/order/paymentIntent`);
-  //     if (response && response.order_id) {
-  //       setOrderDetails({
-  //         orderId: response.order_id,
-  //         currency: response.currency,
-  //         amount: response.amount,
-  //       });
-  //       setDisplayRazorpay(true);
-  //     }
-  //   } else {
-  //     const response = await apiClient.post(`/order/placeOrder`, {
-  //       selectedAddress,
-  //       paymentMethod,
-  //     });
-  //     console.log(response);
-  //   }
-  //   setIsAddressModalOpen(false);
-  // };
+  const handleSubmit = async (selectedAddress, paymentMethod = "razorpay") => {
+    setAddress(selectedAddress);
+    if (paymentMethod === "razorpay") {
+      const response = await apiClient.post(`/order/paymentIntent`);
+      if (response && response.order_id) {
+        setOrderDetails({
+          orderId: response.order_id,
+          currency: response.currency,
+          amount: response.amount,
+        });
+        setDisplayRazorpay(true);
+      }
+    } else {
+      const response = await apiClient.post(`/order/placeOrder`, {
+        selectedAddress,
+        paymentMethod,
+      });
+      console.log(response);
+    }
+    setIsAddressModalOpen(false);
+  };
 
   if (!cartData?.data?.formattedCart?.items?.length) {
     return (

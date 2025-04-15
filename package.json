@@ -16,6 +16,7 @@
     "aos": "^2.3.4",
     "axios": "^1.8.2",
     "concurrently": "^9.1.2",
+    "lottie-react": "^2.4.1",
     "razorpay": "^2.9.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

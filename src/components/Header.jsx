@@ -298,10 +298,7 @@ export default function Header() {
       {categories && (
         <ul className="header-cat">
           <li
-            onClick={() => {
-              dispatch(setCategory("all"));
-              navigate("/products");
-            }}
+            onClick={() => handleCategoryClick("all")}
             style={{ cursor: "pointer" }}
             className={activeCategory === "all" ? "header-cat-active" : ""}
           >

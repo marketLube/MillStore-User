@@ -5752,4 +5752,190 @@ h1 span {
   color: #333;
 }
 
+.payment-success-container {
+  text-align: center;
+  padding: 50px;
+  font-family: Arial, sans-serif;
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon {
+  margin-bottom: 20px;
+}
+
+.payment-success-h2 {
+  color: #ffb64a;
+  margin-bottom: 10px;
+}
+
+.payment-success-p {
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.payment-success-span {
+  font-weight: bold;
+}
+
+.payment-success-buttons {
+  margin-top: 20px;
+}
+
+.payment-success-button {
+  padding: 10px 20px;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.payment-success-view-orders {
+  background-color: #fff;
+  color: #ffb64a;
+  border: 2px solid #ffb64a;
+}
+
+.payment-success-continue-shopping {
+  background-color: #ffb64a;
+  color: #fff;
+}
+
+.order-status-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.order-status-container {
+  width: 600px;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.order-info,
+.order-product-info,
+.track-order,
+.delivery-address {
+  margin-top: 20px;
+}
+
+.delivery-address {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.order-product-info {
+  display: flex;
+  align-items: center;
+}
+
+.order-product-info img {
+  width: 100px;
+  height: 100px;
+  margin-right: 20px;
+}
+
+.cancel-order {
+  color: red;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.price {
+  margin-left: auto;
+  font-weight: bold;
+}
+
+.track-order ul {
+  list-style: none;
+  padding: 0;
+}
+
+.track-order li {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.status {
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: white;
+}
+
+.cancelled {
+  background: red;
+}
+
+.delivered {
+  background: green;
+}
+
+.shipped {
+  background: blue;
+}
+
+.processed {
+  background: orange;
+}
+
+.pending {
+  background: yellow;
+  color: black;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-container {
+  width: 600px;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
 /*# sourceMappingURL=style.css.map */

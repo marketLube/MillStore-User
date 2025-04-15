@@ -10,6 +10,7 @@ import Cartpage from "../pages/cartpage/Cartpage";
 import Login from "../pages/Loginpage/Login";
 import Signup from "../pages/Signuppage/Signup";
 import ProtectedRoute from "../components/route/ProtectedRoute";
+import PaymentSuccess from "../pages/payment/PaymentSuccess";
 const error = new Error("Page Not Found", { cause: 404 });
 
 // Create a wrapper component for ErrorBoundary
@@ -92,6 +93,10 @@ const router = createBrowserRouter([
             </ProtectedRoute>
           </WithErrorBoundary>
         ),
+      },
+      {
+        path: "/payment-success",
+        element: <PaymentSuccess />,
       },
     ],
   },

@@ -2,12 +2,25 @@ import React, { useState } from "react";
 import { FiCopy } from "react-icons/fi";
 import { useGetOrderHistory } from "../../hooks/queries/order";
 import LoadingSpinner from "../../components/LoadingSpinner";
+import OrderStatus from "./OrderStatus";
 
 const OrderHistory = () => {
   const [searchQuery, setSearchQuery] = useState("");
-
+  const [isOrderStatusOpen, setIsOrderStatusOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
   const { data, isLoading } = useGetOrderHistory();
   const orders = data?.orders;
+
+  const handleOrderStatusOpen = (order) => {
+    console.log(order, "order");
+    setIsOrderStatusOpen(true);
+
+    setSelectedOrder(order);
+  };
+
+  const handleOrderStatusClose = () => {
+    setIsOrderStatusOpen(false);
+  };
 
   // Filter orders based on the search query
   const filteredOrders = orders?.filter((order) =>
@@ -124,6 +137,7 @@ const OrderHistory = () => {
                             className={`action-btn ${
                               order?.status === "delivered" ? "view" : "track"
                             }`}
+                            onClick={() => handleOrderStatusOpen(order)}
                           >
                             {order?.status === "delivered"
                               ? "View"
@@ -138,6 +152,12 @@ const OrderHistory = () => {
               )}
             </div>
           </div>
+
+          <OrderStatus
+            isOpen={isOrderStatusOpen}
+            onClose={handleOrderStatusClose}
+            order={selectedOrder}
+          />
         </>
       )}
     </>
