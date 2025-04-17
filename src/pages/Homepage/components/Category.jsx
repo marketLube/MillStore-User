@@ -4,15 +4,6 @@ import LoadingSpinner from "../../../components/LoadingSpinner";
 import { useDispatch } from "react-redux";
 import { setCategory } from "../../../redux/features/category/categorySlice";
 import { useNavigate } from "react-router-dom";
-// const categories = [
-//   { name: "Power & Hand Tools", imgSrc: "path/to/power-tools.png" },
-//   { name: "Gardening Tools", imgSrc: "path/to/gardening-tools.png" },
-//   { name: "Home Care", imgSrc: "path/to/home-care.png" },
-//   { name: "Home Improvement", imgSrc: "path/to/home-improvement.png" },
-//   { name: "Kitchen & Dining", imgSrc: "path/to/kitchen-dining.png" },
-//   { name: "Car Care", imgSrc: "path/to/car-care.png" },
-//   { name: "Stationery", imgSrc: "path/to/stationery.png" },
-// ];
 
 function Category() {
   const dispatch = useDispatch();
@@ -35,7 +26,7 @@ function Category() {
 
   return (
     <div className="container" data-aos="fade-up">
-      <h1>
+      <h1 className="category-heading">
         <span> Shop By </span>Category
       </h1>
       {isLoading ? (

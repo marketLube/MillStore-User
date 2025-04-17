@@ -3,16 +3,31 @@ import Card from "../../../components/Card";
 import { Link, useNavigate } from "react-router-dom";
 import { useProducts } from "../../../hooks/queries/products";
 import LoadingSpinner from "../../../components/LoadingSpinner";
-import { FiArrowRight as ViewAllIcon, FiArrowLeft, FiArrowRight } from "react-icons/fi";
+import {
+  FiArrowRight as ViewAllIcon,
+  FiArrowLeft,
+  FiArrowRight,
+} from "react-icons/fi";
 
 function Trending() {
   const navigate = useNavigate();
   const scrollContainerRef = useRef(null);
   const [mounted, setMounted] = useState(false);
-
-  const { data: response, isLoading, error } = useProducts({
+  const [trendingProducts, setTrendingProducts] = useState([]);
+  const {
+    data: response,
+    isLoading,
+    error,
+  } = useProducts({
     labelId: "67e3f8b437db8d10f8e5f341",
   });
+
+  useEffect(() => {
+    if (response?.data?.products) {
+      setTrendingProducts(response?.data?.products);
+    }
+    console.log(response);
+  }, [response]);
 
   useEffect(() => {
     setMounted(true);
@@ -21,7 +36,9 @@ function Trending() {
 
   const handleViewAll = () => {
     navigate("/products", {
-      state: { selectedLabel: { id: "67e3f8b437db8d10f8e5f341", name: "Trending" } }
+      state: {
+        selectedLabel: { id: "67e3f8b437db8d10f8e5f341", name: "Trending" },
+      },
     });
   };
 
@@ -29,11 +46,12 @@ function Trending() {
     if (!scrollContainerRef.current) return;
 
     const container = scrollContainerRef.current;
-    const scrollAmount = container.clientWidth * (direction === "left" ? -0.8 : 0.8);
+    const scrollAmount =
+      container.clientWidth * (direction === "left" ? -0.8 : 0.8);
 
     container.scrollBy({
       left: scrollAmount,
-      behavior: "smooth"
+      behavior: "smooth",
     });
   };
 
@@ -54,8 +72,6 @@ function Trending() {
       </section>
     );
   }
-
-  const trendingProducts = response?.data?.products || [];
 
   return (
     <section className="trending-container">

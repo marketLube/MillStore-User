@@ -13,6 +13,10 @@ const userService = {
     const response = await apiClient.get("/user/check-user");
     return response.data;
   },
+  subscribe: async (data) => {
+    const response = await apiClient.post("/user/submit-user-details", data);
+    return response.data;
+  },
 };
 
 export default userService;

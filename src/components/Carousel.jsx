@@ -55,25 +55,28 @@ function Carousel({ data, maxHeight, width, isBrand = false, isLoading }) {
     customPaging: (i) => <div className="custom-dot"></div>,
     dotsClass: "slick-dots custom-dots",
   };
-if(isLoading) return <LoadingSpinner />
+  if (isLoading) return <LoadingSpinner />;
   return (
     <div className="carousel-container" style={{ maxHeight: maxHeight }}>
       <Slider {...settings}>
         {data?.map((item, index) => (
           <div key={isBrand ? item.brand.bannerImage : item.image}>
             <img
-              src={isBrand ? item.brand.bannerImage : item.image }
+              src={isBrand ? item.brand.bannerImage : item.image}
               alt={item.alt}
               className="carousel-image"
             />
             {!isBrand && (
               <div className="carousel-content">
                 <h1>{item?.heading || item?.title || ""}</h1>
-                <p>
-                  {item?.description ||
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit."}
-                </p>
-                <Link style={{textDecoration:"none"}} className="carousel-button" to={"/products"}>Shop Now</Link>
+
+                <Link
+                  style={{ textDecoration: "none" }}
+                  className="carousel-button"
+                  to={"/products"}
+                >
+                  Shop Now
+                </Link>
               </div>
             )}
           </div>

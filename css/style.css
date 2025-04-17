@@ -548,7 +548,7 @@ ul {
   top: 50%;
   left: 30%;
   transform: translate(-50%, -50%);
-  color: #fff;
+  color: #fff !important;
   width: 80%;
   max-width: 50rem;
   padding: 2rem;
@@ -4764,73 +4764,16 @@ input[required]::placeholder::after {
 
 .saw-spinner {
   position: relative;
-  width: 120px;
-  height: 120px;
+  width: 12rem;
+  height: 10rem;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-
-.saw-blade {
+.saw-spinner img {
   width: 100%;
   height: 100%;
-  border-radius: 50%;
-  background: #333;
-  position: relative;
-  animation: spin 2s linear infinite;
-}
-.saw-blade::before {
-  content: "";
-  position: absolute;
-  width: 80%;
-  height: 80%;
-  background: #fff;
-  border-radius: 50%;
-  top: 10%;
-  left: 10%;
-}
-.saw-blade::after {
-  content: "";
-  position: absolute;
-  width: 30%;
-  height: 30%;
-  background: #ffd700;
-  border-radius: 50%;
-  top: 35%;
-  left: 35%;
-}
-
-.saw-text {
-  position: absolute;
-  color: #333;
-  font-weight: bold;
-  font-size: 0.8rem;
-  text-align: center;
-  width: 100%;
-  animation: no-spin 2s linear infinite;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-@keyframes no-spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(0deg);
-  }
-}
-.saw-blade::before {
-  box-shadow: 0 0 0 12px #333;
-}
-.saw-blade::after {
-  box-shadow: 0 -45px 0 -15px #333, 32px -32px 0 -15px #333, 45px 0 0 -15px #333, 32px 32px 0 -15px #333, 0 45px 0 -15px #333, -32px 32px 0 -15px #333, -45px 0 0 -15px #333, -32px -32px 0 -15px #333;
+  object-fit: cover;
 }
 
 .error-container {
@@ -5685,11 +5628,11 @@ input[required]::placeholder::after {
   }
 }
 
-h1 {
+.category-heading {
   color: #ffb64a;
   margin-bottom: 5rem;
 }
-h1 span {
+.category-heading span {
   color: black;
 }
 
@@ -5976,10 +5919,11 @@ h1 span {
 .trending-collections {
   text-align: center;
   padding: 0 10%;
+  margin-bottom: 2rem;
 }
 .trending-collections h2 {
   font-size: 1.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
   position: relative;
   display: inline-block;
   padding-bottom: 0.5rem;
@@ -5999,21 +5943,26 @@ h1 span {
 }
 .trending-collections .collection-item img {
   width: 100%;
-  height: auto;
-  object-fit: cover;
+  height: 100%;
+  object-fit: fill;
 }
 .trending-collections .collection-item .offer-tag {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 5px;
+  right: 10px;
   background: red;
   color: white;
   padding: 0.5rem;
   border-radius: 4px;
   font-size: 0.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 85% 100%, 0% 100%);
 }
 .trending-collections .collection-item .shop-now-btn {
-  margin: 1rem 0;
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
   padding: 0.5rem 1rem;
   background: #333;
   color: white;
@@ -6021,6 +5970,9 @@ h1 span {
   border-radius: 4px;
   cursor: pointer;
   transition: background 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 .trending-collections .collection-item .shop-now-btn:hover {
   background: #555;

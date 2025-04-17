@@ -1,4 +1,5 @@
 import React from "react";
+import logo from "../assets/Loading_Logo.gif";
 
 function LoadingSpinner({ height }) {
   return (
@@ -7,8 +8,7 @@ function LoadingSpinner({ height }) {
       style={{ height: height || "calc(100vh - 8rem)" }}
     >
       <div className="saw-spinner">
-        <div className="saw-blade"></div>
-        <div className="saw-text">MILL STORE</div>
+        <img src={logo} alt="logo" />
       </div>
     </div>
   );

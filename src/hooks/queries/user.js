@@ -21,3 +21,17 @@ export const useUpdateUser = () => {
     },
   });
 };
+
+export const useSubscribe = () => {
+  return useMutation({
+    mutationFn: (data) => userService.subscribe(data),
+    onSuccess: (response) => {
+      toast.success("Subscribed successfully");
+      return true;
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || error.message);
+      return false;
+    },
+  });
+};

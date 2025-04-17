@@ -14,9 +14,19 @@ function Bestseller() {
   const [currentProduct, setCurrentProduct] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const { mutate: addToCart, isPending: isAddingToCart } = useAddToCart();
+  const [bestsellerProducts, setBestsellerProducts] = useState([]);
 
   // Local state to track which button is loading
   const [loadingAction, setLoadingAction] = useState(null); // "buy" or "add"
+
+  const handleViewAll = () => {
+    alert("clicked");
+    navigate("/products", {
+      state: {
+        selectedLabel: { id: "67dd34fd6b3c047b3082abb5", name: "Best Sellers" },
+      },
+    });
+  };
 
   const { data, isLoading, error } = useProducts({
     labelId: "67dd34fd6b3c047b3082abb5",
@@ -28,7 +38,9 @@ function Bestseller() {
     }
   }, [data, currentIndex]);
 
-  const bestsellerProducts = data?.data?.products || [];
+  useEffect(() => {
+    setBestsellerProducts(data?.data?.products);
+  }, [data]);
 
   const handleNavigation = (direction) => {
     if (direction === "prev") {
@@ -66,7 +78,7 @@ function Bestseller() {
         <h3>
           Our Best Sellers- <span>Loved By Thousands</span>
         </h3>
-        <Link to="/products" className="view-all desktop-view-all">
+        <Link onClick={handleViewAll} className="view-all desktop-view-all">
           View All <ViewAllIcon />
         </Link>
       </div>
@@ -130,9 +142,9 @@ function Bestseller() {
           </div>
         </div>
       </div>
-      <Link to="/products" className="view-all mobile-view-all">
+      {/* <Link to="/products" className="view-all mobile-view-all">
         View All <ViewAllIcon />
-      </Link>
+      </Link> */}
     </div>
   );
 }

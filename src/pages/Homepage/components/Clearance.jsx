@@ -9,17 +9,24 @@ import { Link } from "react-router-dom";
 import { useProducts } from "../../../hooks/queries/products";
 import LoadingSpinner from "../../../components/LoadingSpinner";
 import { useNavigate } from "react-router-dom";
-function  Clearance() {
+function Clearance() {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
+  const [productslists, setProductslists] = useState([]);
   const scrollContainerRef = useRef(null);
-  const { data: response, isLoading, error } = useProducts({
+  const {
+    data: response,
+    isLoading,
+    error,
+  } = useProducts({
     labelId: "67e3e64d72fa36c2809afedb",
   });
-  const productslists = response?.data?.products
-    ? response?.data?.products
-    : [];
 
+  useEffect(() => {
+    if (response?.data?.products) {
+      setProductslists(response.data.products);
+    }
+  }, [response]);
 
   useEffect(() => {
     setProducts(productslists);
@@ -53,11 +60,15 @@ function  Clearance() {
   };
 
   const handleViewAll = () => {
-    navigate("/products", { state: { selectedLabel: { id: "67e3e64d72fa36c2809afedb", name: "Clearance" } } });
+    navigate("/products", {
+      state: {
+        selectedLabel: { id: "67e3e64d72fa36c2809afedb", name: "Clearance" },
+      },
+    });
   };
 
   return (
-    <div className="clearance-container" >
+    <div className="clearance-container">
       <div className="clearance-header">
         <div className="clearance-content">
           <h2 className="clearance-content_h2">
