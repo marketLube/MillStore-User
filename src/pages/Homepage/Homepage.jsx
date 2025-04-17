@@ -7,9 +7,11 @@ import Offer from "./components/Offer";
 import Trending from "./components/Trending";
 import { useBanners } from "../../hooks/queries/Banner";
 import Category from "./components/Category";
-
+import { useCart } from "../../hooks/queries/cart";
+import TrendingCollection from "./components/Trendingcollection";
 function Homepage() {
   const { allBanners, isLoading } = useBanners();
+  const { data: cartData, isLoading: isCartLoading } = useCart();
   return (
     <div>
       <Carousel
@@ -22,6 +24,7 @@ function Homepage() {
       {/* <ProductBanner banners={allBanners?.filter((banner) => banner?.bannerFor === "product") } /> */}
       <Offer />
       <Trending />
+      <TrendingCollection />
     </div>
   );
 }

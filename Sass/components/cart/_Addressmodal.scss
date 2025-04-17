@@ -54,7 +54,7 @@ body.modal-open {
       font-size: 1.25rem;
     }
 
-    .close-btn {
+    .modal-close-btn {
       background: none;
       border: none;
       font-size: 1.5rem;
@@ -179,6 +179,31 @@ body.modal-open {
         }
       }
     }
+
+    .payment-option {
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      cursor: pointer;
+      transition: border-color 0.3s ease;
+
+      input[type="radio"] {
+        margin-right: 0.5rem;
+      }
+
+      span {
+        margin-left: 0.5rem;
+        color: #666;
+        font-size: 0.9rem;
+      }
+
+      &:hover {
+        border-color: var.$color-primary;
+      }
+    }
   }
 
   .modal-footer {
@@ -215,6 +240,11 @@ body.modal-open {
       font-weight: 500;
       cursor: pointer;
       margin-bottom: 1rem;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: darken(var.$color-primary, 10%);
+      }
     }
 
     .terms {

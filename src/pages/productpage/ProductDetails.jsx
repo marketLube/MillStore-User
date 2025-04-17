@@ -16,6 +16,7 @@ import ButtonLoadingSpinner from "../../components/ButtonLoadingSpinners";
 import RatingModal from "./RatingModal";
 import { reviewService } from "../../api/services/reviewService";
 import { toast } from "sonner";
+import { useCart } from "../../hooks/queries/cart";
 
 const CalculateDiscount = (price, offerPrice) => {
   const discount = ((price - offerPrice) / price) * 100;
@@ -584,6 +585,8 @@ function ProductDetailsContent() {
 }
 
 function ProductDetails() {
+  const { data: cartData, isLoading: isCartLoading } = useCart();
+
   return (
     <ErrorBoundary
       FallbackComponent={ErrorFallback}

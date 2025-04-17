@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FiCopy } from "react-icons/fi";
 import { useGetOrderHistory } from "../../hooks/queries/order";
 import LoadingSpinner from "../../components/LoadingSpinner";
@@ -28,6 +28,15 @@ const OrderHistory = () => {
       product?.productId?.name.toLowerCase().includes(searchQuery.toLowerCase())
     )
   );
+
+  useEffect(() => {
+    if (selectedOrder) {
+      const updatedSelectedOrder = orders.find(
+        (order) => order?._id === selectedOrder?._id
+      );
+      setSelectedOrder(updatedSelectedOrder);
+    }
+  }, [orders]);
 
   return (
     <>
@@ -112,13 +121,7 @@ const OrderHistory = () => {
                         </div>
 
                         <div className="status-col">
-                          <div
-                            className={`status-tag ${
-                              order?.status === "delivered"
-                                ? "delivered"
-                                : "order-placed"
-                            }`}
-                          >
+                          <div className={`status-tag ${order?.status}`}>
                             {order?.status}
                           </div>
                           <div className="delivery-info">

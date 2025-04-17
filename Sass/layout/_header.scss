@@ -48,6 +48,8 @@
     background-color: var.$color-primary;
     padding: var.$default-padding;
     overflow-x: hidden;
+    font-size: 1.2rem;
+    font-weight: 400;
 
     @media (max-width: 992px) {
       overflow-x: auto;

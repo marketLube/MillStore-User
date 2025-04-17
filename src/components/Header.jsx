@@ -251,7 +251,7 @@ export default function Header() {
             <Link to="/cart">
               <div className="cart-icon">
                 <FiShoppingCart className="icon" />
-                {cart?.items?.length > 0 && (
+                {isLoggedIn && cart?.items?.length > 0 && (
                   <span className="cart-badge">{cart?.items?.length}</span>
                 )}
               </div>

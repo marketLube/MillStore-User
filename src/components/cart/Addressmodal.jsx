@@ -12,8 +12,9 @@ import { setUser } from "../../redux/features/user/userSlice";
 import apiClient from "../../api/client";
 import { meta } from "@eslint/js";
 import RenderRazorpay from "../Razorpay/RenderRazorpay";
-
+import { useNavigate } from "react-router-dom";
 const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
+  const navigate = useNavigate();
   const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
   const [selectedAddress, setSelectedAddress] = useState({});
@@ -30,7 +31,9 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
 
   const [orderDetails, setOrderDetails] = useState({});
   const [displayRazorpay, setDisplayRazorpay] = useState(false);
-
+  const [isSelectingPayment, setIsSelectingPayment] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState("");
+  const [onOrderPending, setOnOrderPending] = useState(false);
   useEffect(() => {
     updatedUser();
   }, []);
@@ -63,6 +66,14 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
       [name]: name === "saveAddress" ? checked : value,
     }));
   };
+
+  useEffect(() => {
+    return () => {
+      setSelectedAddress("");
+      setPaymentMethod("");
+      setOnOrderPending(false);
+    };
+  }, []);
 
   const resetForm = () => {
     setFormData({
@@ -108,68 +119,16 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
     onClose();
   };
 
-  // const handlePlaceOrder = () => {
-  //   const { fullName, building, street, city, state, pincode } = formData;
+  const handlePlaceOrder = async () => {
+    setOnOrderPending(true);
+    if (paymentMethod == "") {
+      toast.warning("Please select a payment method", {
+        position: "top-right",
+      });
+      setOnOrderPending(false);
+      return;
+    }
 
-  //   if (
-  //     Object.keys(selectedAddress).length > 0 ||
-  //     (fullName && building && street && city && state && pincode)
-  //   ) {
-  //     const address = selectedAddress ? selectedAddress : formData;
-  //     apiClient
-  //       .post("/order/paymentIntent")
-  //       .then((res) => {
-  //         console.log(res);
-
-  //         const options = {
-  //           key: "rzp_test_VKMWLG1gaizZiV",
-  //           amount: res.data.amount,
-  //           currency: "INR",
-  //           name: "Mill Store",
-  //           description: "Test Transaction",
-  //           order_id: res.data.id,
-  //           theme: {
-  //             color: "#ffb64a",
-  //           },
-  //         };
-
-  //         const rzp = new Razorpay(options);
-
-  //         rzp.on("payment.success", function (response) {
-  //           console.log(response, "trigger");
-  //           const paymentData = {
-  //             razorpay_payment_id: response.razorpay_payment_id,
-  //             razorpay_order_id: response.razorpay_order_id,
-  //             razorpay_signature: response.razorpay_signature,
-  //           };
-
-  //           apiClient
-  //             .post("/order/paymentVerify", paymentData)
-  //             .then((res) => {
-  //               console.log("Payment verified:", res.data);
-  //             })
-  //             .catch((err) => {
-  //               console.log("Verification failed:", err);
-  //             });
-  //         });
-  //         rzp.open();
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //       });
-
-  //     // placeOrder(address);
-  //   } else {
-  //     toast.warning(
-  //       "Please select an address or fill in all required fields.",
-  //       {
-  //         position: "top-right",
-  //       }
-  //     );
-  //   }
-  // };
-
-  const handlePlaceOrder = async (paymentMethod = "razorpay") => {
     try {
       const { fullName, building, street, city, state, pincode } = formData;
 
@@ -177,7 +136,7 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
         Object.keys(selectedAddress).length > 0 ||
         (fullName && building && street && city && state && pincode)
       ) {
-        if (paymentMethod == "razorpay") {
+        if (paymentMethod == "online") {
           const response = await apiClient.post(`/order/paymentIntent`);
 
           if (response && response.data.order_id) {
@@ -189,10 +148,28 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
             setDisplayRazorpay(true);
           }
         } else {
-          const response = await apiClient.post(`/order/placeOrder`, {
-            selectedAddress,
-            paymentMethod,
-          });
+          try {
+            const response = await apiClient.post(`/order/placeOrder`, {
+              address:
+                Object.keys(selectedAddress).length > 0
+                  ? selectedAddress
+                  : formData,
+              paymentMethod,
+            });
+
+            if (response && response.data.success) {
+              navigate("/payment-success");
+              onClose();
+            }
+          } catch (error) {
+            toast.error(
+              error?.response?.data?.message || "Something went wrong",
+              {
+                position: "top-right",
+              }
+            );
+            console.log(error);
+          }
         }
       } else {
         toast.warning(
@@ -201,23 +178,89 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
             position: "top-right",
           }
         );
+        setIsSelectingPayment(false);
+        setOnOrderPending(false);
       }
     } catch (error) {
       console.log(error);
+      setOnOrderPending(false);
+    }
+  };
+
+  const handleAddressSelection = () => {
+    console.log(selectedAddress, "selectedAddress");
+    console.log(formData, "formData");
+
+    const { fullName, building, street, city, state, pincode } = formData;
+
+    if (
+      Object.keys(selectedAddress).length > 0 ||
+      (fullName && building && street && city && state && pincode)
+    ) {
+      setIsSelectingPayment(true);
+    } else {
+      toast.warning(
+        "Please select an address or fill in all required fields.",
+        {
+          position: "top-right",
+        }
+      );
     }
   };
   return (
     <div className={`address-modal ${isOpen ? "open" : ""}`}>
       <div className="modal-content">
         <div className="modal-header">
-          <h2>Address</h2>
-          <button className="close-btn" onClick={onClose}>
+          <h2>{isSelectingPayment ? "Payment" : "Address"}</h2>
+          <button
+            className="modal-close-btn"
+            onClick={() => {
+              onClose();
+              setIsSelectingPayment(false);
+              setSelectedAddress({});
+            }}
+          >
             <FiX />
           </button>
         </div>
 
         <div className="modal-body">
-          {mode === "cart" ? (
+          {isSelectingPayment ? (
+            // Payment method selection view
+            <>
+              <h3>Choose Payment Method</h3>
+              <p className="subtitle">
+                Select how you'd like to pay for your order:
+              </p>
+
+              <label className="payment-option">
+                <input
+                  type="radio"
+                  name="payment"
+                  value="cod"
+                  checked={paymentMethod === "cod"}
+                  onChange={() => setPaymentMethod("cod")}
+                />
+                Cash On Delivery
+                <span>(Cash, UPI and cards are accepted on delivery)</span>
+              </label>
+
+              <label className="payment-option">
+                <input
+                  type="radio"
+                  name="payment"
+                  value="online"
+                  checked={paymentMethod === "online"}
+                  onChange={() => setPaymentMethod("online")}
+                />
+                Online Payment
+                <span>
+                  (UPI, Net banking, Debit Card/Credit Card can be used)
+                </span>
+              </label>
+            </>
+          ) : (
+            // Address selection view
             <>
               <h3>Where Should We Deliver?</h3>
               <p className="subtitle">
@@ -254,116 +297,100 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
               ))}
 
               <div className="divider">or</div>
-            </>
-          ) : (
-            <>
-              <h3>Add a New Delivery Address</h3>
-              <p className="subtitle">
-                Enter your address details to ensure accurate delivery and
-                seamless service
-              </p>
+
+              <h3 className="manual-entry-title">Enter address</h3>
+              <form className="address-form" onSubmit={handleSubmit}>
+                <input
+                  type="text"
+                  name="fullName"
+                  placeholder="Full Name"
+                  value={formData.fullName}
+                  onChange={handleInputChange}
+                  disabled={Object.keys(selectedAddress).length > 0}
+                />
+                <input
+                  type="text"
+                  name="building"
+                  placeholder="House/Apartment Name"
+                  value={formData.building}
+                  onChange={handleInputChange}
+                  disabled={Object.keys(selectedAddress).length > 0}
+                />
+                <input
+                  type="text"
+                  name="street"
+                  placeholder="Street Address"
+                  value={formData.street}
+                  onChange={handleInputChange}
+                  disabled={Object.keys(selectedAddress).length > 0}
+                />
+                <input
+                  type="text"
+                  name="landmark"
+                  placeholder="Landmark (Optional)"
+                  value={formData.landmark}
+                  onChange={handleInputChange}
+                  disabled={Object.keys(selectedAddress).length > 0}
+                />
+                <div className="form-row">
+                  <input
+                    type="text"
+                    name="city"
+                    placeholder="City"
+                    value={formData.city}
+                    onChange={handleInputChange}
+                    disabled={Object.keys(selectedAddress).length > 0}
+                  />
+                  <input
+                    type="text"
+                    name="state"
+                    placeholder="State"
+                    value={formData.state}
+                    onChange={handleInputChange}
+                    disabled={Object.keys(selectedAddress).length > 0}
+                  />
+                </div>
+                <input
+                  type="text"
+                  name="pincode"
+                  placeholder="Pincode"
+                  value={formData.pincode}
+                  onChange={handleInputChange}
+                  disabled={Object.keys(selectedAddress).length > 0}
+                />
+              </form>
             </>
           )}
-
-          <h3 className="manual-entry-title">Enter address</h3>
-
-          {
-            <form className="address-form" onSubmit={handleSubmit}>
-              <input
-                type="text"
-                name="fullName"
-                placeholder="Full Name"
-                value={formData.fullName}
-                onChange={handleInputChange}
-                disabled={Object.keys(selectedAddress).length > 0}
-              />
-              <input
-                type="text"
-                name="building"
-                placeholder="House/Apartment Name"
-                value={formData.building}
-                onChange={handleInputChange}
-                disabled={Object.keys(selectedAddress).length > 0}
-              />
-              <input
-                type="text"
-                name="street"
-                placeholder="Street Address"
-                value={formData.street}
-                onChange={handleInputChange}
-                disabled={Object.keys(selectedAddress).length > 0}
-              />
-              <input
-                type="text"
-                name="landmark"
-                placeholder="Landmark (Optional)"
-                value={formData.landmark}
-                onChange={handleInputChange}
-                disabled={Object.keys(selectedAddress).length > 0}
-              />
-              <div className="form-row">
-                <input
-                  type="text"
-                  name="city"
-                  placeholder="City"
-                  value={formData.city}
-                  onChange={handleInputChange}
-                  disabled={Object.keys(selectedAddress).length > 0}
-                />
-                <input
-                  type="text"
-                  name="state"
-                  placeholder="State"
-                  value={formData.state}
-                  onChange={handleInputChange}
-                  disabled={Object.keys(selectedAddress).length > 0}
-                />
-              </div>
-              <input
-                type="text"
-                name="pincode"
-                placeholder="Pincode"
-                value={formData.pincode}
-                onChange={handleInputChange}
-                disabled={Object.keys(selectedAddress).length > 0}
-              />
-            </form>
-          }
         </div>
 
-        {mode === "cart" ? (
-          <div className="modal-footer">
-            <label className="save-address">
-              <input
-                type="checkbox"
-                name="saveAddress"
-                checked={formData.saveAddress}
-                onChange={handleInputChange}
-                disabled={user?.address?.length >= 3}
-              />
-              {user?.address?.length >= 3
-                ? "You can only save 3 addresses go to profile to delete some"
-                : "Save this address for future purchases"}
-            </label>
+        <div className="modal-footer">
+          <label className="save-address">
+            <input
+              type="checkbox"
+              name="saveAddress"
+              checked={formData.saveAddress}
+              onChange={handleInputChange}
+              disabled={user?.address?.length >= 3}
+            />
+            {user?.address?.length >= 3
+              ? "You can only save 3 addresses go to profile to delete some"
+              : "Save this address for future purchases"}
+          </label>
+          {!isSelectingPayment && (
+            <button className="proceed-btn" onClick={handleAddressSelection}>
+              Continue
+            </button>
+          )}
+          {isSelectingPayment && (
             <button
               className="proceed-btn"
-              disabled={isOrderPending}
-              onClick={() => handlePlaceOrder("razorpay")}
+              onClick={handlePlaceOrder}
+              disabled={onOrderPending}
             >
-              {isOrderPending ? <ButtonLoading /> : <span>Place Order</span>}
+              {onOrderPending ? <ButtonLoading /> : "Confirm Payment"}
             </button>
-          </div>
-        ) : (
-          <div className="modal-footer">
-            <button
-              className="save-btn"
-              onClick={handleSubmit}
-              disabled={isPending}
-            >
-              {isPending ? <ButtonLoading /> : <span>Save Address</span>}
-            </button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {displayRazorpay && (
@@ -373,7 +400,9 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
           keySecret={import.meta.env.VITE_RAZORPAY_KEY_SECRET}
           currency={orderDetails.currency}
           amount={orderDetails.amount}
-          address={selectedAddress ? selectedAddress : formData}
+          address={
+            Object.keys(selectedAddress).length > 0 ? selectedAddress : formData
+          }
           setDisplayRazorpay={setDisplayRazorpay}
         />
       )}

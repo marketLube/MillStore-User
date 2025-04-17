@@ -7,7 +7,6 @@ import {
   FiChevronUp,
 } from "react-icons/fi";
 import AddressModal from "../../components/cart/Addressmodal";
-import RenderRazorpay from "../../components/Razorpay/RenderRazorpay";
 import {
   useCart,
   useUpdateCartQuantity,
@@ -22,9 +21,6 @@ import {
   useGetCoupons,
   useRemoveCoupon,
 } from "../../hooks/queries/coupon";
-import apiClient from "../../api/client";
-
-// Add this array of coupons
 
 function Cartpage() {
   const [couponCode, setCouponCode] = useState("");
@@ -34,13 +30,6 @@ function Cartpage() {
   const [itemToRemove, setItemToRemove] = useState(null);
   const [selectedCoupon, setSelectedCoupon] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
-  const [address, setAddress] = useState(null);
-  const [orderDetails, setOrderDetails] = useState({
-    orderId: null,
-    currency: null,
-    amount: null,
-  });
-  const [displayRazorpay, setDisplayRazorpay] = useState(false);
 
   const navigate = useNavigate();
   const { data: cartData, isLoading, error } = useCart();
@@ -92,8 +81,8 @@ function Cartpage() {
   const cart = cartData?.data?.formattedCart?.items;
   const couponDetails = cartData?.data?.couponDetails;
   const availableCoupons = couponsData?.coupons;
-  const subtotal = cartData?.data?.formattedCart?.totalPrice;
-  const deliveryCharges = 0;
+  const subtotal = cartData?.data?.formattedCart?.subTotal;
+  const deliveryCharges = cartData?.data?.deliveryCharges;
   const gst = 0;
   const total = cartData?.data?.finalAmount
     ? cartData?.data?.finalAmount
@@ -124,13 +113,11 @@ function Cartpage() {
     );
   };
 
-  // Add handler for item removal
   const handleRemoveItem = (productId, variantId) => {
     setItemToRemove({ productId, variantId });
     setShowConfirmModal(true);
   };
 
-  // Add this function to handle the actual removal
   const confirmRemoveItem = () => {
     if (itemToRemove) {
       removeFromCart(
@@ -149,9 +136,7 @@ function Cartpage() {
     }
   };
 
-  // Update the handleCouponSelect function
   const handleCouponSelect = (coupon) => {
-    // Only allow selection if no coupon is applied
     if (!Object.keys(couponDetails || {}).length) {
       setSelectedCoupon(coupon);
       setCouponCode(coupon.code);
@@ -172,28 +157,6 @@ function Cartpage() {
     removeCoupon();
   };
 
-  const handleSubmit = async (selectedAddress, paymentMethod = "razorpay") => {
-    setAddress(selectedAddress);
-    if (paymentMethod === "razorpay") {
-      const response = await apiClient.post(`/order/paymentIntent`);
-      if (response && response.order_id) {
-        setOrderDetails({
-          orderId: response.order_id,
-          currency: response.currency,
-          amount: response.amount,
-        });
-        setDisplayRazorpay(true);
-      }
-    } else {
-      const response = await apiClient.post(`/order/placeOrder`, {
-        selectedAddress,
-        paymentMethod,
-      });
-      console.log(response);
-    }
-    setIsAddressModalOpen(false);
-  };
-
   if (!cartData?.data?.formattedCart?.items?.length) {
     return (
       <div className="cart-page">
@@ -207,6 +170,7 @@ function Cartpage() {
       </div>
     );
   }
+
   return (
     <div className="cart-page">
       <div className="breadcrumb">
@@ -502,16 +466,6 @@ function Cartpage() {
         cancelText="Keep"
         type="danger"
       />
-      {/* {displayRazorpay && (
-        <RenderRazorpay
-          orderId={orderDetails.orderId}
-          keyId={process.env.REACT_APP_RAZORPAY_KEY_ID}
-          keySecret={process.env.REACT_APP_RAZORPAY_KEY_SECRET}
-          currency={orderDetails.currency}
-          amount={orderDetails.amount}
-          address={address}
-        />
-      )} */}
     </div>
   );
 }

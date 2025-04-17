@@ -34,7 +34,7 @@ function Category() {
   };
 
   return (
-    <div className="container">
+    <div className="container" data-aos="fade-up">
       <h1>
         <span> Shop By </span>Category
       </h1>

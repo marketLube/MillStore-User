@@ -1,12 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
+import { useUpdateOrderStatus } from "../../hooks/queries/order";
+import ConfirmationModal from "../../components/confirmationModal";
 
 const OrderStatus = ({ isOpen, onClose, order }) => {
   if (!isOpen) return null;
-  console.log(order, "As props");
+  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+  const [orderId, setOrderId] = useState(null);
 
-  const handleCancelOrder = () => {
-    console.log(`Cancel entire order with ID: ${order._id}`);
-    // Add logic to cancel the entire order, e.g., API call
+  const { mutate: updateOrderStatus } = useUpdateOrderStatus();
+
+  const handleCancelOrder = (orderId) => {
+    console.log(`Cancel entire order with ID: ${orderId}`);
+    setIsConfirmationModalOpen(true);
+    setOrderId(orderId);
+  };
+
+  const handleConfirmCancelOrder = () => {
+    updateOrderStatus(orderId);
+    setIsConfirmationModalOpen(false);
   };
 
   return (
@@ -26,6 +37,9 @@ const OrderStatus = ({ isOpen, onClose, order }) => {
             {new Date(order.expectedDelivery).toLocaleDateString()}
           </p>
           <p>Total Amount: ₹ {order.totalAmount}</p>
+          <p style={{ fontWeight: "bold" }}>
+            Payment Method: {order.paymentMethod}
+          </p>
         </div>
         {order?.products?.map((product, index) => (
           <div className="order-product-info" key={index}>
@@ -44,11 +58,16 @@ const OrderStatus = ({ isOpen, onClose, order }) => {
             <p className="price">₹ {product.price}</p>
           </div>
         ))}
-        <div style={{ marginLeft: "auto", width: "fit-content" }}>
-          <button className="cancel-order" onClick={handleCancelOrder}>
-            Cancel Order
-          </button>
-        </div>
+        {order?.status == "pending" && (
+          <div style={{ marginLeft: "auto", width: "fit-content" }}>
+            <button
+              className="cancel-order"
+              onClick={() => handleCancelOrder(order._id)}
+            >
+              Cancel Order
+            </button>
+          </div>
+        )}
         <div className="track-order">
           <h3>Track your order</h3>
           <ul>
@@ -71,6 +90,16 @@ const OrderStatus = ({ isOpen, onClose, order }) => {
           <p>{order?.deliveryAddress?.phone}</p>
         </div>
       </div>
+      <ConfirmationModal
+        isOpen={isConfirmationModalOpen}
+        onClose={() => setIsConfirmationModalOpen(false)}
+        onConfirm={handleConfirmCancelOrder}
+        title="Cancel Order"
+        message="Are you sure you want to cancel this order?"
+        confirmText="Confirm"
+        cancelText="Cancel"
+        type="danger"
+      />
     </div>
   );
 };
