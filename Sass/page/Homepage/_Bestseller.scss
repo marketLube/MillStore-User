@@ -5,9 +5,7 @@
 .bestseller-container {
   padding: var.$default-padding;
   background-color: #fff;
-  margin: 2rem 0;
-
-
+  margin-top: 2rem;
 
   .bestseller-header {
     display: flex;
@@ -82,7 +80,7 @@
         height: 100%;
         object-fit: contain;
         padding: 2rem;
-cursor: pointer;
+        cursor: pointer;
       }
 
       img.fade-image {
@@ -206,7 +204,7 @@ cursor: pointer;
 
   @media screen and (max-width: 768px) {
     padding: 1rem;
-margin-top: 0;
+    margin-top: 0;
 
     .bestseller-header {
       flex-direction: column;

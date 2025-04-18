@@ -39,9 +39,13 @@
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "./LoadingSpinner";
+import { setCategory } from "../redux/features/category/categorySlice";
+import { useDispatch } from "react-redux";
 function Carousel({ data, maxHeight, width, isBrand = false, isLoading }) {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const settings = {
     dots: true,
     infinite: true,
@@ -70,13 +74,16 @@ function Carousel({ data, maxHeight, width, isBrand = false, isLoading }) {
               <div className="carousel-content">
                 <h1>{item?.heading || item?.title || ""}</h1>
 
-                <Link
+                <span
                   style={{ textDecoration: "none" }}
                   className="carousel-button"
-                  to={"/products"}
+                  onClick={() => {
+                    dispatch(setCategory("all"));
+                    navigate("/products");
+                  }}
                 >
                   Shop Now
-                </Link>
+                </span>
               </div>
             )}
           </div>

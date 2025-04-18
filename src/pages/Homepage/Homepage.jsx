@@ -23,7 +23,7 @@ function Homepage() {
       <Bestseller />
       {/* <ProductBanner banners={allBanners?.filter((banner) => banner?.bannerFor === "product") } /> */}
       <Offer />
-      <Trending />
+      {/* <Trending /> */}
       <TrendingCollection />
     </div>
   );

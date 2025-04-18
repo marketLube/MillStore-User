@@ -43,7 +43,7 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
     dispatch(setUser(response.user));
   };
 
-  const { mutate: updateUser, isPending } = useUpdateUser();
+  const { mutate: updateUser, isPending: isUpdatePending } = useUpdateUser();
   const { mutate: placeOrder, isPending: isOrderPending } = usePlaceOrder();
   const savedAddresses = user?.address;
 
@@ -225,8 +225,7 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
         </div>
 
         <div className="modal-body">
-          {isSelectingPayment ? (
-            // Payment method selection view
+          {isSelectingPayment && mode === "cart" ? (
             <>
               <h3>Choose Payment Method</h3>
               <p className="subtitle">
@@ -260,44 +259,46 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
               </label>
             </>
           ) : (
-            // Address selection view
             <>
-              <h3>Where Should We Deliver?</h3>
-              <p className="subtitle">
-                Enter your address or select a saved one to ensure a smooth and
-                timely delivery.
-              </p>
+              {mode === "cart" && (
+                <>
+                  <h3>Where Should We Deliver?</h3>
+                  <p className="subtitle">
+                    Enter your address or select a saved one to ensure a smooth
+                    and timely delivery.
+                  </p>
 
-              {savedAddresses?.map((addr) => (
-                <label key={addr?._id} className="address-option">
-                  <input
-                    type="checkbox"
-                    name="address"
-                    value={addr?._id}
-                    checked={selectedAddress === addr?._id}
-                    onChange={() => {
-                      if (selectedAddress === addr?._id) {
-                        setSelectedAddress("");
-                      } else {
-                        setSelectedAddress(addr?._id);
-                      }
-                      resetForm();
-                    }}
-                  />
-                  <div className="address-details">
-                    <strong>{addr?.fullName}</strong>
-                    <p>{addr?.building}</p>
-                    <p>{addr?.street}</p>
-                    <p>{addr?.landmark}</p>
-                    <p>{addr?.city}</p>
-                    <p>{addr?.state}</p>
-                    <p>{addr?.pincode}</p>
-                  </div>
-                </label>
-              ))}
+                  {savedAddresses?.map((addr) => (
+                    <label key={addr?._id} className="address-option">
+                      <input
+                        type="checkbox"
+                        name="address"
+                        value={addr?._id}
+                        checked={selectedAddress === addr?._id}
+                        onChange={() => {
+                          if (selectedAddress === addr?._id) {
+                            setSelectedAddress("");
+                          } else {
+                            setSelectedAddress(addr?._id);
+                          }
+                          resetForm();
+                        }}
+                      />
+                      <div className="address-details">
+                        <strong>{addr?.fullName}</strong>
+                        <p>{addr?.building}</p>
+                        <p>{addr?.street}</p>
+                        <p>{addr?.landmark}</p>
+                        <p>{addr?.city}</p>
+                        <p>{addr?.state}</p>
+                        <p>{addr?.pincode}</p>
+                      </div>
+                    </label>
+                  ))}
 
-              <div className="divider">or</div>
-
+                  <div className="divider">or</div>
+                </>
+              )}
               <h3 className="manual-entry-title">Enter address</h3>
               <form className="address-form" onSubmit={handleSubmit}>
                 <input
@@ -364,21 +365,31 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
         </div>
 
         <div className="modal-footer">
-          <label className="save-address">
-            <input
-              type="checkbox"
-              name="saveAddress"
-              checked={formData.saveAddress}
-              onChange={handleInputChange}
-              disabled={user?.address?.length >= 3}
-            />
-            {user?.address?.length >= 3
-              ? "You can only save 3 addresses go to profile to delete some"
-              : "Save this address for future purchases"}
-          </label>
-          {!isSelectingPayment && (
+          {mode === "cart" && (
+            <label className="save-address">
+              <input
+                type="checkbox"
+                name="saveAddress"
+                checked={formData.saveAddress}
+                onChange={handleInputChange}
+                disabled={user?.address?.length >= 3}
+              />
+              {user?.address?.length >= 3
+                ? "You can only save 3 addresses go to profile to delete some"
+                : "Save this address for future purchases"}
+            </label>
+          )}
+          {!isSelectingPayment && mode === "cart" ? (
             <button className="proceed-btn" onClick={handleAddressSelection}>
               Continue
+            </button>
+          ) : (
+            <button
+              className="proceed-btn"
+              onClick={handleSubmit}
+              disabled={onOrderPending}
+            >
+              {isUpdatePending ? <ButtonLoading /> : "Save Address"}
             </button>
           )}
           {isSelectingPayment && (

@@ -784,7 +784,7 @@ ul {
 .bestseller-container {
   padding: 0 10%;
   background-color: #fff;
-  margin: 2rem 0;
+  margin-top: 2rem;
 }
 .bestseller-container .bestseller-header {
   display: flex;
@@ -1032,7 +1032,7 @@ ul {
 }
 
 .offer-container {
-  margin: 2rem 0;
+  margin-top: 2rem;
   height: 30rem;
   opacity: 1;
 }
@@ -5920,17 +5920,17 @@ input[required]::placeholder::after {
 }
 
 .trending-collections {
-  text-align: center;
   padding: 0 10%;
   margin-bottom: 2rem;
+  margin-top: 2rem;
 }
-.trending-collections h2 {
-  font-size: 1.5rem;
-  margin-bottom: 2rem;
-  position: relative;
-  display: inline-block;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid #333;
+.trending-collections .trending-content_h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+.trending-collections .trending-content_h2_span {
+  color: #ffb64a;
 }
 .trending-collections .collections-grid {
   display: grid;

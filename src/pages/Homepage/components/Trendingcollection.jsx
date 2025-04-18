@@ -25,7 +25,11 @@ function TrendingCollection() {
   console.log(allCategoryBanners);
   return (
     <div className="trending-collections">
-      <h2>Trending Collections</h2>
+      <div className="trending-content">
+        <h2 className="trending-content_h2">
+          Trending <span className="trending-content_h2_span">Collections</span>
+        </h2>
+      </div>
       <div className="collections-grid">
         {allCategoryBanners?.map((collection, index) => (
           <div className="collection-item" key={index}>
