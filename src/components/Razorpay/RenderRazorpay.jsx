@@ -26,6 +26,7 @@ const RenderRazorpay = ({
   amount,
   address,
   setDisplayRazorpay,
+  onCancel,
 }) => {
   console.log(address), "this is addresss";
   const navigate = useNavigate();
@@ -68,6 +69,7 @@ const RenderRazorpay = ({
         // Handle successful order (e.g., redirect to order confirmation)
       } catch (e) {
         toast.error("Payment verification failed");
+        onCancel();
         // Handle verification failure
       }
     } else if (status === "failed") {
@@ -76,6 +78,7 @@ const RenderRazorpay = ({
     } else if (status === "cancelled") {
       toast.error("payment cancelled");
       setDisplayRazorpay(false);
+      onCancel();
     }
   };
 

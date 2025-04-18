@@ -151,7 +151,7 @@ function ProductDetailsContent() {
   return (
     <div className="product-details">
       <div className="breadcrumb">
-        <span>All products</span>
+        <span onClick={() => navigate("/products")}>All products</span>
         <span>/</span>
         <span className="category-name"> {product?.category?.name} </span>
       </div>

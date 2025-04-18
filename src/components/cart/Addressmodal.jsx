@@ -365,7 +365,7 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
         </div>
 
         <div className="modal-footer">
-          {mode === "cart" && (
+          {mode === "cart" && !isSelectingPayment && (
             <label className="save-address">
               <input
                 type="checkbox"
@@ -384,13 +384,17 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
               Continue
             </button>
           ) : (
-            <button
-              className="proceed-btn"
-              onClick={handleSubmit}
-              disabled={onOrderPending}
-            >
-              {isUpdatePending ? <ButtonLoading /> : "Save Address"}
-            </button>
+            mode === "profile" && (
+              <>
+                <button
+                  className="proceed-btn"
+                  onClick={handleSubmit}
+                  disabled={onOrderPending}
+                >
+                  {isUpdatePending ? <ButtonLoading /> : "Save Address"}
+                </button>
+              </>
+            )
           )}
           {isSelectingPayment && (
             <button
@@ -415,6 +419,11 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
             Object.keys(selectedAddress).length > 0 ? selectedAddress : formData
           }
           setDisplayRazorpay={setDisplayRazorpay}
+          onCancel={() => {
+            setDisplayRazorpay(false);
+            setIsSelectingPayment(false);
+            setOnOrderPending(false);
+          }}
         />
       )}
     </div>

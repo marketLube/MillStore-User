@@ -2244,6 +2244,7 @@ body.filter-open {
   color: #666;
   font-size: 0.875rem;
   margin-bottom: 1rem;
+  cursor: pointer;
 }
 .product-details .category-name {
   color: #ffb64a;
