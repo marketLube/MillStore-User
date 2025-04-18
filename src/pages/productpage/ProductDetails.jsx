@@ -28,6 +28,7 @@ function ProductDetailsContent() {
   const sliderRef = useRef(null);
   const [showAllReviews, setShowAllReviews] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState(null);
+  const [reviews, setReviews] = useState([]);
   const { id } = useParams();
   //api calls
   const { data: product, isLoading, error, refetch } = useProductById(id);
@@ -56,6 +57,7 @@ function ProductDetailsContent() {
     } else if (product?.images?.length > 0) {
       setSelectedImage(product.images[0]);
     }
+    setReviews(product?.ratings);
 
     window.scrollTo({
       top: 0,
@@ -75,8 +77,6 @@ function ProductDetailsContent() {
       });
     }
   };
-
-  const reviews = product.ratings;
 
   const visibleReviews = showAllReviews ? reviews : reviews.slice(0, 2);
   // const visibleReviews = reviews;

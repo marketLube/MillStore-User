@@ -1,22 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Animation from "../../components/paymentsuccessanimation/success.json";
 import Lottie from "lottie-react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setCart } from "../../redux/features/cart/cartSlice";
 const PaymentSuccess = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(setCart([]));
+  }, []);
   return (
     <div className="payment-success-container">
       <div className="payment-success-icon">
-        {/* <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="100"
-          height="100"
-          fill="green"
-          className="bi bi-check-circle-fill"
-          viewBox="0 0 16 16"
-        >
-          <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.97 11.03a.75.75 0 0 0 1.08.022l3.992-4.99a.75.75 0 1 0-1.14-.976L7.475 9.584 5.383 7.492a.75.75 0 0 0-1.06 1.06l2.647 2.475z" />
-        </svg> */}
         <Lottie
           animationData={Animation}
           style={{ height: "15rem", width: "15rem" }}
