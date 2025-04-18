@@ -23,13 +23,13 @@ function Bestseller() {
     alert("clicked");
     navigate("/products", {
       state: {
-        selectedLabel: { id: "67dd34fd6b3c047b3082abb5", name: "Best Sellers" },
+        selectedLabel: { id: "6802300f5956390f15f60d8a", name: "Best Sellers" },
       },
     });
   };
 
   const { data, isLoading, error } = useProducts({
-    labelId: "67dd34fd6b3c047b3082abb5",
+    labelId: "6802300f5956390f15f60d8a",
   });
 
   useEffect(() => {

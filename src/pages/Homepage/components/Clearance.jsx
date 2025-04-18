@@ -19,7 +19,7 @@ function Clearance() {
     isLoading,
     error,
   } = useProducts({
-    labelId: "67e3e64d72fa36c2809afedb",
+    labelId: "680232b43c6a55f506ab78a8",
   });
 
   useEffect(() => {
@@ -62,7 +62,7 @@ function Clearance() {
   const handleViewAll = () => {
     navigate("/products", {
       state: {
-        selectedLabel: { id: "67e3e64d72fa36c2809afedb", name: "Clearance" },
+        selectedLabel: { id: "680232b43c6a55f506ab78a8", name: "Clearance" },
       },
     });
   };

@@ -37,6 +37,19 @@ const Profile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (formData.name.trim() === "") {
+      toast.error("Name is required");
+      return;
+    }
+    if (formData.phone.trim() === "") {
+      toast.error("Phone number is required");
+      return;
+    }
+    if (!/^\d{10}$/.test(formData.phone)) {
+      toast.error("Invalid phone number");
+      return;
+    }
     if (
       formData.name.trim() === user?.username &&
       formData.phone.trim() === user?.phonenumber

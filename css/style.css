@@ -98,8 +98,11 @@ select {
   background-color: #ffb64a;
   padding: 0 10%;
   overflow-x: hidden;
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 400;
+}
+.header-cat li:hover {
+  color: white;
 }
 @media (max-width: 992px) {
   .header-cat {
@@ -4764,7 +4767,7 @@ input[required]::placeholder::after {
 
 .saw-spinner {
   position: relative;
-  width: 12rem;
+  width: 13rem;
   height: 10rem;
   display: flex;
   justify-content: center;
