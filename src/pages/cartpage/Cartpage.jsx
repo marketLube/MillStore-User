@@ -21,6 +21,7 @@ import {
   useGetCoupons,
   useRemoveCoupon,
 } from "../../hooks/queries/coupon";
+import { useQueryClient } from "@tanstack/react-query";
 
 function Cartpage() {
   const [couponCode, setCouponCode] = useState("");
@@ -40,9 +41,60 @@ function Cartpage() {
 
   const navigate = useNavigate();
   const { data: cartData, isLoading, error } = useCart();
-  const { mutate: updateQuantity, isPending: isUpdating } =
-    useUpdateCartQuantity();
-  const { mutate: removeFromCart, isPending: isRemoving } = useRemoveFromCart();
+  const { mutate: updateQuantity, isLoading: isUpdatingQuantity } =
+    useUpdateCartQuantity({
+      onMutate: async ({ productId, variantId, action }) => {
+        await queryClient.cancelQueries(["cart"]);
+
+        const previousCart = queryClient.getQueryData(["cart"]);
+
+        queryClient.setQueryData(["cart"], (old) => {
+          const newCart = { ...old };
+          const item = newCart.data.formattedCart.items.find(
+            (item) => item.product._id === productId
+          );
+
+          if (item) {
+            item.quantity += action === "increment" ? 1 : -1;
+          }
+
+          return newCart;
+        });
+
+        return { previousCart };
+      },
+      onError: (err, variables, context) => {
+        queryClient.setQueryData(["cart"], context.previousCart);
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries(["cart"]);
+      },
+    });
+  const { mutate: removeFromCart, isPending: isRemoving } = useRemoveFromCart({
+    onMutate: async ({ productId, variantId }) => {
+      await queryClient.cancelQueries(["cart"]);
+
+      const previousCart = queryClient.getQueryData(["cart"]);
+
+      queryClient.setQueryData(["cart"], (old) => {
+        const newCart = { ...old };
+        newCart.data.formattedCart.items =
+          newCart.data.formattedCart.items.filter(
+            (item) => item.product._id !== productId
+          );
+
+        return newCart;
+      });
+
+      return { previousCart };
+    },
+    onError: (err, variables, context) => {
+      queryClient.setQueryData(["cart"], context.previousCart);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(["cart"]);
+    },
+  });
   const { mutate: applyCoupon, isPending: isApplyingCoupon } = useApplyCoupon();
   const { mutate: removeCoupon, isPending: isRemovingCoupon } =
     useRemoveCoupon();
@@ -52,6 +104,8 @@ function Cartpage() {
     isLoading: isCouponsLoading,
     error: couponsError,
   } = useGetCoupons();
+
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     setIsMobile(window.innerWidth < 768);
@@ -92,7 +146,6 @@ function Cartpage() {
     isLoading ||
     isCouponsLoading ||
     isRemoving ||
-    isUpdating ||
     isApplyingCoupon ||
     isRemovingCoupon
   )
@@ -226,7 +279,7 @@ function Cartpage() {
                         "decrement"
                       )
                     }
-                    disabled={isUpdating}
+                    disabled={isUpdatingQuantity || isApplyingCoupon}
                   >
                     <FiMinus size={14} />
                   </button>
@@ -239,7 +292,7 @@ function Cartpage() {
                         "increment"
                       )
                     }
-                    disabled={isUpdating}
+                    disabled={isUpdatingQuantity || isApplyingCoupon}
                   >
                     <FiPlus size={14} />
                   </button>
