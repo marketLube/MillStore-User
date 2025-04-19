@@ -30,6 +30,13 @@ function Cartpage() {
   const [itemToRemove, setItemToRemove] = useState(null);
   const [selectedCoupon, setSelectedCoupon] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [cart, setCart] = useState([]);
+  const [couponDetails, setCouponDetails] = useState(null);
+  const [availableCoupons, setAvailableCoupons] = useState([]);
+  const [subtotal, setSubtotal] = useState(0);
+  const [deliveryCharges, setDeliveryCharges] = useState(0);
+  const [gst, setGst] = useState(0);
+  const [total, setTotal] = useState(0);
 
   const navigate = useNavigate();
   const { data: cartData, isLoading, error } = useCart();
@@ -64,6 +71,21 @@ function Cartpage() {
     }
   }, [cartData?.data?.couponDetails]);
 
+  useEffect(() => {
+    if (cartData?.data) {
+      setCart(cartData.data.formattedCart.items || []);
+      setCouponDetails(cartData.data.couponDetails || null);
+      setSubtotal(cartData.data.formattedCart.subTotal || 0);
+      setDeliveryCharges(cartData.data.deliveryCharges || 0);
+      setTotal(
+        cartData.data.finalAmount || cartData.data.formattedCart.totalPrice || 0
+      );
+    }
+    if (couponsData) {
+      setAvailableCoupons(couponsData.coupons || []);
+    }
+  }, [cartData, couponsData]);
+
   if (
     isLoading ||
     isCouponsLoading ||
@@ -77,16 +99,6 @@ function Cartpage() {
   if (error) {
     throw error;
   }
-
-  const cart = cartData?.data?.formattedCart?.items;
-  const couponDetails = cartData?.data?.couponDetails;
-  const availableCoupons = couponsData?.coupons;
-  const subtotal = cartData?.data?.formattedCart?.subTotal;
-  const deliveryCharges = cartData?.data?.deliveryCharges;
-  const gst = 0;
-  const total = cartData?.data?.finalAmount
-    ? cartData?.data?.finalAmount
-    : cartData?.data?.formattedCart?.totalPrice;
 
   const handleQuantityUpdate = (productId, variantId, action) => {
     if (
@@ -157,7 +169,7 @@ function Cartpage() {
     removeCoupon();
   };
 
-  if (!isLoading && !cartData?.data?.formattedCart?.items?.length) {
+  if (!cartData?.data?.formattedCart?.items?.length) {
     return (
       <div className="cart-page">
         <div className="breadcrumb">
@@ -256,7 +268,7 @@ function Cartpage() {
               <span>₹ {subtotal}</span>
             </div>
 
-            {Object.keys(couponDetails)?.length > 0 && (
+            {couponDetails && Object.keys(couponDetails)?.length > 0 && (
               <div className="summary-row discount">
                 <span>Discount</span>
                 <span className="orange-text">
@@ -288,7 +300,7 @@ function Cartpage() {
               <span>+ ₹ {gst}</span>
             </div>
 
-            {Object.keys(couponDetails)?.length > 0 && (
+            {couponDetails && Object.keys(couponDetails)?.length > 0 && (
               <div className="summary-row coupon-applied">
                 <span>
                   Coupon Applied{" "}
@@ -326,7 +338,7 @@ function Cartpage() {
                   onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                   disabled={couponDetails}
                 />
-                {Object.keys(couponDetails)?.length > 0 ? (
+                {couponDetails && Object.keys(couponDetails)?.length > 0 ? (
                   <button className="apply-btn" onClick={handleRemoveCoupon}>
                     Remove
                   </button>
