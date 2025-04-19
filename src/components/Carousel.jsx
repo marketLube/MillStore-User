@@ -43,7 +43,14 @@ import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "./LoadingSpinner";
 import { setCategory } from "../redux/features/category/categorySlice";
 import { useDispatch } from "react-redux";
-function Carousel({ data, maxHeight, width, isBrand = false, isLoading }) {
+function Carousel({
+  data,
+  maxHeight,
+  width,
+  isBrand = false,
+  isLoading,
+  from,
+}) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const settings = {
@@ -69,8 +76,11 @@ function Carousel({ data, maxHeight, width, isBrand = false, isLoading }) {
               src={isBrand ? item.brand.bannerImage : item.image}
               alt={item.alt}
               className="carousel-image"
+              style={{
+                objectFit: from === "allproducts" ? "fill" : "cover",
+              }}
             />
-            {!isBrand && (
+            {from !== "allproducts" && (
               <div className="carousel-content">
                 <h1>{item?.heading || item?.title || ""}</h1>
 

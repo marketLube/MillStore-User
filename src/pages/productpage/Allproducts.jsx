@@ -292,7 +292,6 @@ function AllProductsContent() {
   // Handle sort change
   const handleSortChange = (e) => {
     const sortValue = e.target.value;
-    console.log(sortValue);
 
     setSelectedFilters((prev) => ({
       ...prev,
@@ -437,9 +436,10 @@ function AllProductsContent() {
   return (
     <div className="product-page">
       <Carousel
-        data={allBanners?.filter((banner) => banner?.bannerFor === "hero")}
+        data={allBanners?.filter((banner) => banner?.bannerFor === "product")}
         maxHeight="25rem"
         isLoading={bannersLoading}
+        from="allproducts"
       />
       <div className="product-section">
         <div className="breadcrumb">

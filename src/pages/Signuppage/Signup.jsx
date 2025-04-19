@@ -96,7 +96,7 @@ function Signup() {
       password: validatePassword(value),
     }));
 
-    if (confirmPassword !== "") {
+    if (confirmPassword.length > 0) {
       setErrors((prev) => ({
         ...prev,
         confirmPassword:

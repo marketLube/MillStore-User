@@ -42,8 +42,8 @@
   // Update image styles
   .carousel-image {
     width: 100%;
-    height: calc(100vh - var.$header-height - 2.5rem); // Match container heigh
-    object-fit: cover;
+    height: 100%; // Match container heigh
+    object-fit: fill;
   }
 
   // Make sure the slide container takes full height
