@@ -87,6 +87,7 @@ function ProductDetailsContent() {
         productId: product._id,
         variantId: selectedVariant?._id || null,
         quantity: 1,
+        from: location.pathname,
       };
 
       setLoadingAction(type);
@@ -109,7 +110,6 @@ function ProductDetailsContent() {
   };
 
   const handleSubmitReview = async (reviewData) => {
-    console.log("Submitting review:", reviewData);
     const formData = new FormData();
     formData.append("rating", reviewData.rating);
     formData.append("review", reviewData.review);
