@@ -73,12 +73,14 @@ function Cartpage() {
 
   useEffect(() => {
     if (cartData?.data) {
-      setCart(cartData.data.formattedCart.items || []);
-      setCouponDetails(cartData.data.couponDetails || null);
-      setSubtotal(cartData.data.formattedCart.subTotal || 0);
-      setDeliveryCharges(cartData.data.deliveryCharges || 0);
+      setCart(cartData?.data?.formattedCart?.items || []);
+      setCouponDetails(cartData?.data?.couponDetails || null);
+      setSubtotal(cartData?.data?.formattedCart?.subTotal || 0);
+      setDeliveryCharges(cartData?.data?.deliveryCharges || 0);
       setTotal(
-        cartData.data.finalAmount || cartData.data.formattedCart.totalPrice || 0
+        cartData?.data?.finalAmount ||
+          cartData?.data?.formattedCart?.totalPrice ||
+          0
       );
     }
     if (couponsData) {
@@ -160,7 +162,7 @@ function Cartpage() {
       toast.error("Please select a coupon");
       return;
     }
-    applyCoupon(selectedCoupon._id);
+    applyCoupon(selectedCoupon?._id);
   };
 
   const handleRemoveCoupon = () => {
