@@ -157,7 +157,7 @@ function Cartpage() {
     removeCoupon();
   };
 
-  if (!cartData?.data?.formattedCart?.items?.length) {
+  if (!isLoading && !cartData?.data?.formattedCart?.items?.length) {
     return (
       <div className="cart-page">
         <div className="breadcrumb">

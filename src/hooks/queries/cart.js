@@ -30,7 +30,7 @@ export const useAddToCart = () => {
     onError: (error) => {
       if (error.status === 401) {
         toast.error("Please login to add item to cart");
-        navigate("/login", { state: { from: location.pathname } });
+        navigate("/login");
       } else {
         toast.error(
           error.response?.data?.message || "Failed to add item to cart"

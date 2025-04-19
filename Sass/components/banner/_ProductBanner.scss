@@ -11,9 +11,6 @@
   margin-bottom: 4rem;
   margin-top: 4rem;
 
-
-
-
   &__title {
     font-size: 6rem;
     margin-bottom: 3rem;
@@ -66,7 +63,7 @@
   }
 
   &__grid {
-    max-width:  100%;
+    max-width: 100%;
     // overflow-x: hidden;
     overflow-x: auto;
 
@@ -79,7 +76,6 @@
     &::-webkit-scrollbar {
       display: none;
     }
-
 
     .swiper {
       padding: 0 20px;
@@ -96,7 +92,7 @@
       }
     }
     .swiper-slide {
-      width: 55rem  !important; // Default size
+      width: 55rem !important; // Default size
       height: auto !important;
       transition: all 0.4s ease;
       transform: scale(1) !important;
@@ -181,7 +177,6 @@
     display: flex;
     justify-content: center;
     margin: 2rem;
-
   }
 
   // @media (max-width: 1080px) {
@@ -202,12 +197,12 @@
   flex: 0 0 auto;
   margin: 0 0.9rem;
 
-
   @media (max-width: 480px) {
-    border-radius:  6.173px;
+    border-radius: 6.173px;
+    margin: 0;
   }
 
-    &__title{
+  &__title {
     font-size: 1.6rem;
     margin-bottom: 0.75rem;
     font-weight: 100;
@@ -228,12 +223,11 @@
     @media (max-width: 480px) {
       font-size: 0.85rem;
     }
-}
+  }
 
   // &:hover {
   //   transform: translateY(-5px);
   // }
-
 
   &__image {
     width: 100%;
@@ -320,7 +314,6 @@
     width: 100%;
     white-space: normal;
     word-wrap: break-word;
-
 
     @media (min-width: 1024px) and (max-width: 1199px) {
       font-size: 1.4rem;

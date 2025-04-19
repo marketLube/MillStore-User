@@ -1,17 +1,14 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useLogin } from "../../hooks/queries/auth";
-import { useLocation } from "react-router-dom";
 
 const Login = () => {
-  const location = useLocation();
-  // const from = location.state?.from || "/";
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
-  const { mutate: loginMutation, isLoading } = useLogin();
+  const { mutate: loginMutation, isPending: isLoading } = useLogin();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
