@@ -78,7 +78,7 @@ function ProductDetailsContent() {
     }
   };
 
-  const visibleReviews = showAllReviews ? reviews : reviews.slice(0, 2);
+  const visibleReviews = showAllReviews ? reviews : reviews?.slice(0, 2);
   // const visibleReviews = reviews;
 
   const handleAddToCart = (type) => {
@@ -130,7 +130,7 @@ function ProductDetailsContent() {
     if (!text) return "";
     const words = text.split(" ");
     if (words.length <= 100) return text;
-    return showFullDescription ? text : words.slice(0, 100).join(" ") + "...";
+    return showFullDescription ? text : words?.slice(0, 100).join(" ") + "...";
   };
 
   const handleImageClick = (imageUrl) => {
@@ -459,7 +459,7 @@ function ProductDetailsContent() {
 
             {product?.totalRatings > 0 && (
               <div className="reviews-list">
-                {visibleReviews.map((review) => (
+                {visibleReviews?.map((review) => (
                   <div key={review?._id} className="review-item">
                     <div className="review-header">
                       <div className="user-info">
@@ -503,7 +503,7 @@ function ProductDetailsContent() {
                     <p className="review-comment">{review?.review}</p>
                   </div>
                 ))}
-                {reviews.length > 2 && (
+                {reviews?.length > 2 && (
                   <button
                     className="show-more"
                     onClick={() => setShowAllReviews(!showAllReviews)}
