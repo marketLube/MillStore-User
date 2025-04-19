@@ -1,7 +1,6 @@
 // export default AddressModal;
 import React, { useState, useEffect } from "react";
 import { FiX } from "react-icons/fi";
-import { FaWhatsapp } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { useUpdateUser } from "../../hooks/queries/user";
 import { usePlaceOrder } from "../../hooks/queries/order";
@@ -10,7 +9,6 @@ import { toast } from "sonner";
 import userService from "../../api/services/userService";
 import { setUser } from "../../redux/features/user/userSlice";
 import apiClient from "../../api/client";
-import { meta } from "@eslint/js";
 import RenderRazorpay from "../Razorpay/RenderRazorpay";
 import { useNavigate } from "react-router-dom";
 const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
@@ -184,6 +182,9 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
     } catch (error) {
       console.log(error);
       setOnOrderPending(false);
+    } finally {
+      setOnOrderPending(false);
+      setIsSelectingPayment(false);
     }
   };
 
