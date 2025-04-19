@@ -239,8 +239,8 @@ function ProductDetailsContent() {
                   : product?.description
               )}
               {(selectedVariant?.attributes?.description?.split(" ").length >
-                30 ||
-                product?.description?.split(" ").length > 30) && (
+                100 ||
+                product?.description?.split(" ").length > 100) && (
                 <button
                   className="read-more"
                   onClick={() => setShowFullDescription(!showFullDescription)}
