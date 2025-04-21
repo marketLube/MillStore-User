@@ -40,12 +40,36 @@ function Footer() {
   };
 
   const handleSubmit = (e) => {
+    e.preventDefault();
+
     const { name, email, phone } = values;
     if (!name || !email || !phone) {
       toast.error("Please fill all the fields");
       return;
     }
-    e.preventDefault();
+
+    if (phone.length !== 10) {
+      toast.error("Please enter a valid phone number");
+      return;
+    }
+    if (!/^\d{10}$/.test(phone)) {
+      toast.error("Please enter a valid phone number");
+      return;
+    }
+    if (email && !/\S+@\S+\.\S+/.test(email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+    if (name.trim().length < 3) {
+      toast.error("Please enter a valid name");
+      return;
+    }
+    if (!/^[a-zA-Z\s]*$/.test(name)) {
+      toast.error("Full name should only contain letters and spaces");
+      return;
+    }
+    setValues((prev) => ({ ...prev, name: name.trim() }));
+
     const response = subscribe(values);
     if (response) {
       setValues({

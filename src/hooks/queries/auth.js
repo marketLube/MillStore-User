@@ -14,7 +14,7 @@ export const useLogin = () => {
       dispatch(setUser(data.user));
       dispatch(setIsLoggedIn(true));
 
-      navigate(-1);
+      navigate(-1 || "/");
     },
     onError: (error) => {
       toast.error(error.response?.data?.message || "Failed to login");

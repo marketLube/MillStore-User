@@ -13,6 +13,7 @@ import { logout } from "../redux/features/user/userSlice";
 import { useCategories } from "../hooks/queries/categories";
 import { useProducts } from "../hooks/queries/products";
 import { setCategory } from "../redux/features/category/categorySlice";
+import { setCart } from "../redux/features/cart/cartSlice";
 
 export default function Header() {
   const dispatch = useDispatch();
@@ -74,6 +75,7 @@ export default function Header() {
     if (item === "logout") {
       localStorage.removeItem("user-auth-token");
       dispatch(logout());
+      dispatch(setCart([]));
       navigate("/login");
     }
   };
@@ -137,21 +139,6 @@ export default function Header() {
         {/* Desktop Search */}
         <div className="header-search desktop-search">
           <div className="search-container">
-            {/* <div className="category-dropdown">
-              <IoIosArrowDown className="dropdown-icon" />
-              <select>
-                <option value="all">All Categories</option>
-                {categories?.map((category) => (
-                  <option
-                    key={category._id}
-                    value={category.name}
-                    onClick={() => handleCategoryClick(category)}
-                  >
-                    {category.name}
-                  </option>
-                ))}
-              </select>
-            </div> */}
             <input
               type="text"
               placeholder="What are you looking for?"
@@ -197,7 +184,10 @@ export default function Header() {
             className="header-actions-item user-menu-container"
             ref={userMenuRef}
           >
-            <FiUser className="icon" onClick={toggleUserMenu} />
+            <div className="user-menu-item" onClick={toggleUserMenu}>
+              <FiUser className="icon" />
+              <strong>Account</strong>
+            </div>
 
             {isUserMenuOpen && isLoggedIn && (
               <div className={`user-menu ${isUserMenuOpen ? "active" : ""}`}>
@@ -253,15 +243,24 @@ export default function Header() {
               </div>
             )}
           </div>
-          <div className="header-actions-item">
-            <Link to="/cart">
-              <div className="cart-icon">
+          <div
+            className="header-actions-item"
+            onClick={() => navigate("/cart")}
+          >
+            {/* <div className="cart-icon">
                 <FiShoppingCart className="icon" />
                 {isLoggedIn && cart?.items?.length > 0 && (
                   <span className="cart-badge">{cart?.items?.length}</span>
                 )}
+              </div> */}
+
+            <div className="cart-icon-item">
+              <FiShoppingCart className="icon" />
+              <div>
+                <strong>Cart</strong>
+                <span className="cart-badge">({cart?.items?.length})</span>
               </div>
-            </Link>
+            </div>
           </div>
         </div>
 

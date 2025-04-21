@@ -32,6 +32,11 @@
     border-radius: 8px;
     overflow: hidden;
     text-align: center;
+    height: 13rem;
+
+    @media (max-width: 768px) {
+      height: 10rem;
+    }
 
     img {
       width: 100%;
