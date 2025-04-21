@@ -26,7 +26,7 @@
 
 .categories {
   display: grid;
-  grid-template-columns: auto auto auto auto;
+  grid-template-columns: repeat(4, 1fr);
   //   display: flex;
   //   flex-wrap: wrap;
   gap: 6rem 1rem;
@@ -35,18 +35,18 @@
 
   @media (max-width: 1024px) and (min-width: 768px) {
     display: grid;
-    grid-template-columns: auto auto auto;
+    grid-template-columns: repeat(3, 1fr);
     gap: 3rem 0.5rem;
   }
 
   @media (max-width: 768px) {
     display: grid;
-    grid-template-columns: auto auto auto;
+    grid-template-columns: repeat(2, 1fr);
     gap: 3rem 0.5rem;
   }
   @media (max-width: 667px) {
     display: grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: repeat(2, 1fr);
     gap: 1rem 0.2rem;
   }
 }

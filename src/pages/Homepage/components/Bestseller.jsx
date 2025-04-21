@@ -20,7 +20,6 @@ function Bestseller() {
   const [loadingAction, setLoadingAction] = useState(null); // "buy" or "add"
 
   const handleViewAll = () => {
-    alert("clicked");
     navigate("/products", {
       state: {
         selectedLabel: { id: "6802300f5956390f15f60d8a", name: "Best Sellers" },

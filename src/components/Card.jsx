@@ -27,13 +27,17 @@ function Card({ product }) {
         <img src={mainImage} alt={name} />
       </div>
       <div className="product-card_content">
-        <span className="category">{category.name}</span>
-        <h3 className="title">{name.split("").length > 20 ? name.split("").slice(0, 20).join("") + "..." : name}</h3>
+        <span className="category-name">{category.name}</span>
+        <h3 className="title">
+          {name.split("").length > 20
+            ? name.split("").slice(0, 20).join("") + "..."
+            : name}
+        </h3>
         <div className="price">
           <span className="current-price">₹{offerPrice}</span>
           <span className="original-price">₹{price}</span>
         </div>
-        {(averageRating !== null && averageRating !== undefined) && (
+        {averageRating !== null && averageRating !== undefined && (
           <div className="rating">
             {"★".repeat(Math.floor(averageRating))}
             {"☆".repeat(5 - Math.floor(averageRating))}
