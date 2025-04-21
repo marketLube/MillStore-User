@@ -65,7 +65,7 @@ select {
 }
 .header-logo {
   width: 8rem;
-  height: 8rem;
+  height: fit-content;
 }
 .header-logo img {
   width: 100%;
