@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLogin } from "../../hooks/queries/auth";
 
@@ -9,6 +9,13 @@ const Login = () => {
   });
 
   const { mutate: loginMutation, isPending: isLoading } = useLogin();
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

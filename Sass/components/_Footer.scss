@@ -3,6 +3,7 @@
 .footer {
   background: #fdf6f0;
   padding: 3rem 0 0;
+  margin-top: 3rem;
 
   // Newsletter Section
   .newsletter {
@@ -91,7 +92,7 @@
       display: flex;
       justify-content: start;
       img {
-        width: 15rem;
+        width: 22rem;
         object-fit: contain;
 
         @media (max-width: 768px) {
@@ -131,6 +132,7 @@
           margin-bottom: 0.75rem;
           font-size: 0.875rem;
           color: #666;
+          cursor: pointer;
 
           &.address {
             line-height: 1.5;
@@ -143,6 +145,10 @@
             &:hover {
               color: var.$color-primary;
             }
+          }
+
+          &:hover {
+            color: var.$color-primary;
           }
         }
       }

@@ -115,6 +115,12 @@ export default function Header() {
     setSearchQuery(e.target.value);
   };
 
+  const closeSearch = () => {
+    setIsSearchOpen(false);
+    setSearchQuery("");
+    setSearchResults([]);
+  };
+
   return (
     <>
       <header className="header">
@@ -271,7 +277,7 @@ export default function Header() {
               value={searchQuery}
               onChange={handleMobileSearchInputChange}
             />
-            <button className="mobile-search-close" onClick={toggleSearch}>
+            <button className="mobile-search-close" onClick={closeSearch}>
               <FiX className="icon" />
             </button>
           </div>

@@ -117,13 +117,6 @@ function AllProductsContent() {
   }, [selectedFilters]);
 
   useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  }, []);
-
-  useEffect(() => {
     return () => {
       debouncedUpdateFilters.cancel();
     };

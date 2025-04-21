@@ -12,19 +12,20 @@ import TrendingCollection from "./components/Trendingcollection";
 function Homepage() {
   const { allBanners, isLoading } = useBanners();
   const { data: cartData, isLoading: isCartLoading } = useCart();
+
   return (
     <div>
       <Carousel
         data={allBanners?.filter((banner) => banner?.bannerFor === "hero")}
         isLoading={isLoading}
       />
-      <Category />
-      <Clearance />
-      <Bestseller />
-      {/* <ProductBanner banners={allBanners?.filter((banner) => banner?.bannerFor === "product") } /> */}
-      <Offer />
-      {/* <Trending /> */}
-      <TrendingCollection />
+      <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
+        <Category />
+        <Clearance />
+        <TrendingCollection />
+        <Bestseller />
+        <Offer />
+      </div>
     </div>
   );
 }

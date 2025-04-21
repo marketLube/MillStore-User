@@ -72,6 +72,10 @@ function Bestseller() {
     });
   };
 
+  if (bestsellerProducts && bestsellerProducts?.length === 0) {
+    return null;
+  }
+
   return (
     <div className="bestseller-container" data-aos="fade-up">
       <div className="bestseller-header">

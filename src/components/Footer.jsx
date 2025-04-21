@@ -156,7 +156,12 @@ function Footer() {
               <li> Delta Tower </li>
               <li>Cherootty Road Opp Gandhi Park</li>
               <li>Calicut - Kerala 673032</li>
-              {/* <li>Support & FAQ</li> */}
+              <li>
+                <a href="mailto:tradelinesmillstore1990@gmail.com">
+                  tradelinesmillstore1990@gmail.com
+                </a>
+              </li>
+              <li> 9562566880</li>
             </ul>
           </div>
         </div>
@@ -171,7 +176,15 @@ function Footer() {
           <span>
             <FaFacebookF />
           </span>
-          <span>
+          <span
+            onClick={() =>
+              window.open(
+                "https://www.instagram.com/tradelinesmillstore/",
+                "_blank"
+              )
+            }
+            style={{ cursor: "pointer" }}
+          >
             <FaInstagram />
           </span>
           <span>

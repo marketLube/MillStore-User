@@ -258,6 +258,7 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
                   (UPI, Net banking, Debit Card/Credit Card can be used)
                 </span>
               </label>
+              <span>You will get extra 5% off on online payment</span>
             </>
           ) : (
             <>

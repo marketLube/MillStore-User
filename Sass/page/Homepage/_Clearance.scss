@@ -89,17 +89,17 @@
     scroll-behavior: smooth;
     scroll-snap-type: x mandatory;
 
+    .product-card {
+      flex: 0 0 calc((100% - 7.5rem) / 6);
+      min-width: calc((100% - 7.5rem) / 6);
+      scroll-snap-align: start;
+    }
+
     &::-webkit-scrollbar {
       display: none;
     }
     scrollbar-width: none;
     -ms-overflow-style: none;
-
-    .product-card {
-      flex: 0 0 calc((100% - 4.5rem) / 4.5);
-      min-width: calc((100% - 4.5rem) / 4.5);
-      scroll-snap-align: start;
-    }
 
     & > *:last-child {
       padding-right: var.$default-padding;
