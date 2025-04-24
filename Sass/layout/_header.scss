@@ -18,12 +18,12 @@
   }
 
   &-logo {
-    width: 12.5rem;
+    width: 8rem;
     height: fit-content;
     padding: 0.5rem;
 
     @media (max-width: 768px) {
-      width: 8.5rem;
+      width: 5.5rem;
     }
     img {
       width: 100%;
@@ -35,7 +35,7 @@
   &-actions {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: top;
     gap: 1rem;
     margin-right: 0.5rem;
     &-item {
@@ -85,7 +85,7 @@
       }
     }
 
-    @media (max-width: 992px) {
+    @media (max-width: 1301px) {
       overflow-x: auto;
       justify-content: flex-start;
       // -webkit-overflow-scrolling: touch; // Smooth scroll on iOS
@@ -520,6 +520,24 @@
   align-items: center;
   cursor: pointer;
   gap: 0.4rem;
+
+  .user-menu-item-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    // gap: 0.2rem;
+
+    strong {
+      font-size: 0.9rem;
+      line-height: 0.8;
+    }
+
+    .cart-badge {
+      font-size: 0.8rem;
+      line-height: 1;
+    }
+  }
 }
 
 .cart-icon-item {
@@ -527,6 +545,24 @@
   align-items: center;
   text-decoration: none;
   gap: 0.4rem;
+
+  .cart-icon-item-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+
+    strong {
+      font-size: 0.9rem;
+      line-height: 1;
+    }
+
+    .cart-badge {
+      font-size: 0.8rem;
+      line-height: 1;
+    }
+  }
 }
 
 .cart-badge {

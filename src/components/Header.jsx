@@ -20,8 +20,8 @@ import { setCart } from "../redux/features/cart/cartSlice";
 export default function Header() {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart.cart);
-  const user = useSelector((state) => state.user.user);
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const user = useSelector((state) => state.user.user);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
@@ -131,7 +131,7 @@ export default function Header() {
         <Link to="/">
           <div className="header-logo">
             <img
-              src={"/logo/logo.png"}
+              src={"/logo/footerLogo.svg"}
               alt="logo"
               className="header-logo-img"
             />
@@ -188,7 +188,10 @@ export default function Header() {
           >
             <div className="user-menu-item" onClick={toggleUserMenu}>
               <FiUser className="icon" />
-              <strong>Account</strong>
+              <div className="user-menu-item-text">
+                <strong>Account</strong>
+                <span>{isLoggedIn ? false : "Login"}</span>
+              </div>
             </div>
 
             {isUserMenuOpen && isLoggedIn && (
@@ -245,8 +248,7 @@ export default function Header() {
               </div>
             )}
           </div>
-          <di
-            v
+          <div
             className="header-actions-item"
             onClick={() => navigate("/cart")}
           >
@@ -259,12 +261,18 @@ export default function Header() {
 
             <div className="cart-icon-item">
               <PiShoppingCart className="icon" />
-              <div>
+              <div className="cart-icon-item-text">
                 <strong>Cart</strong>
-                <span className="cart-badge">({cart?.items?.length})</span>
+                <span className="cart-badge">
+                  {cart?.items?.length
+                    ? cart.items.length < 10
+                      ? cart.items.length.toFixed(2).padStart(5, "0")
+                      : cart.items.length
+                    : "00.00"}
+                </span>
               </div>
             </div>
-          </di>
+          </div>
         </div>
 
         {/* Mobile Search Overlay */}
