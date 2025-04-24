@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FiHeart, FiShoppingCart, FiUser, FiSearch, FiX } from "react-icons/fi";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
+import { PiShoppingCart } from "react-icons/pi";
+
 import {
   MdOutlineLocationOn,
   MdOutlineLocalShipping,
@@ -243,7 +245,8 @@ export default function Header() {
               </div>
             )}
           </div>
-          <div
+          <di
+            v
             className="header-actions-item"
             onClick={() => navigate("/cart")}
           >
@@ -255,13 +258,13 @@ export default function Header() {
               </div> */}
 
             <div className="cart-icon-item">
-              <FiShoppingCart className="icon" />
+              <PiShoppingCart className="icon" />
               <div>
                 <strong>Cart</strong>
                 <span className="cart-badge">({cart?.items?.length})</span>
               </div>
             </div>
-          </div>
+          </di>
         </div>
 
         {/* Mobile Search Overlay */}

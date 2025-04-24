@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { FaTwitter, FaFacebookF, FaInstagram, FaYoutube } from "react-icons/fa";
-import Logo from "../assets/logo.png";
+import Logo from "../../public/logo/footerLogo.svg";
 import { useCategories } from "../hooks/queries/categories";
 import { setCategory } from "../redux/features/category/categorySlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useSubscribe } from "../hooks/queries/user";
 import ButtonLoadingSpinner from "./ButtonLoadingSpinners";
+import { FaPhoneAlt } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
+import { MdLocationPin } from "react-icons/md";
 import { toast } from "sonner";
 function Footer() {
   const { data } = useCategories();
@@ -127,10 +130,10 @@ function Footer() {
         </div>
       </div>
 
-      <div className="footer-divider"></div>
+      {/* <div className="footer-divider"></div> */}
 
       {/* Main Footer */}
-      <div className="footer-main">
+      <div className="footer-main" style={{}}>
         {/* Brand Section */}
         <div className="footer-brand">
           <img src={Logo} alt="Mill Store Logo" />
@@ -176,16 +179,30 @@ function Footer() {
           <div className="footer-section">
             <h4>Contact</h4>
             <ul>
-              <li className="address">Tradelines Millstore</li>
-              <li> Delta Tower </li>
+              <li className="address">
+                {" "}
+                <MdLocationPin className="contact-icon" /> Tradelines Millstore
+                <br />
+                <span>Delta Tower</span>
+                <br />
+                <span>Cherootty Road Opp Gandhi Park</span>
+                <br />
+                <span>Calicut - Kerala 673032</span>
+              </li>
+              {/* <li>
+                Delta Tower{" "}
+              </li>
               <li>Cherootty Road Opp Gandhi Park</li>
-              <li>Calicut - Kerala 673032</li>
+              <li>Calicut - Kerala 673032</li>*/}
               <li>
                 <a href="mailto:tradelinesmillstore1990@gmail.com">
+                  <MdEmail className="contact-icon" />{" "}
                   tradelinesmillstore1990@gmail.com
                 </a>
               </li>
-              <li> 9562566880</li>
+              <li>
+                <FaPhoneAlt className="contact-icon" /> 9562566880
+              </li>
             </ul>
           </div>
         </div>

@@ -25,13 +25,16 @@
 }
 
 .categories {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  //   display: flex;
-  //   flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
   gap: 6rem 1rem;
   justify-content: center;
+  justify-items: center;
   align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
 
   @media (max-width: 1024px) and (min-width: 768px) {
     display: grid;

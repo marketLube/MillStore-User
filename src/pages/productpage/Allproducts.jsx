@@ -132,6 +132,11 @@ function AllProductsContent() {
     const categoryFromHeader = location.state?.selectedCategory;
     const labelFromHomePage = location.state?.selectedLabel;
 
+    console.log("Location State:", {
+      categoryFromHeader,
+      labelFromHomePage,
+    });
+
     if (categoryFromHeader) {
       setSelectedFilters((prev) => ({
         ...prev,
@@ -425,6 +430,8 @@ function AllProductsContent() {
       toggleFilter();
     }
   };
+
+  console.log(response?.data?.products, " ");
 
   return (
     <div className="product-page">

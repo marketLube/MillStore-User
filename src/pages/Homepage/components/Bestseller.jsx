@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   FiArrowLeft,
   FiArrowRight,
@@ -8,6 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useProducts } from "../../../hooks/queries/products";
 import { useAddToCart } from "../../../hooks/queries/cart";
 import ButtonLoadingSpinner from "../../../components/ButtonLoadingSpinners";
+import ProductCard from "../../../components/Card";
 
 function Bestseller() {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ function Bestseller() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const { mutate: addToCart, isPending: isAddingToCart } = useAddToCart();
   const [bestsellerProducts, setBestsellerProducts] = useState([]);
+  const scrollContainerRef = useRef(null);
 
   // Local state to track which button is loading
   const [loadingAction, setLoadingAction] = useState(null); // "buy" or "add"
@@ -53,27 +55,51 @@ function Bestseller() {
     }
   };
 
-  const handleAddToCart = (type) => {
-    const productToAdd = {
-      productId: currentProduct._id,
-      variantId: currentProduct?.variants?.[0]?._id || null,
-      quantity: 1,
-    };
+  // const handleAddToCart = (type) => {
+  //   const productToAdd = {
+  //     productId: currentProduct._id,
+  //     variantId: currentProduct?.variants?.[0]?._id || null,
+  //     quantity: 1,
+  //   };
 
-    setLoadingAction(type);
-    addToCart(productToAdd, {
-      onSettled: () => {
-        setLoadingAction(null);
-        if (type === "buy") {
-          navigate("/cart");
-        }
-      },
-    });
-  };
+  //   setLoadingAction(type);
+  //   addToCart(productToAdd, {
+  //     onSettled: () => {
+  //       setLoadingAction(null);
+  //       if (type === "buy") {
+  //         navigate("/cart");
+  //       }
+  //     },
+  //   });
+  // };
 
   if (bestsellerProducts && bestsellerProducts?.length === 0) {
     return null;
   }
+
+  const scroll = (direction) => {
+    if (scrollContainerRef.current) {
+      const container = scrollContainerRef.current;
+      const isMobile = window.innerWidth <= 768;
+
+      // Calculate card width including gap
+      const cardWidth = isMobile
+        ? container.offsetWidth
+        : (container.offsetWidth - 2 * 24) / 3; // 3 cards with 1.5rem (24px) gap
+
+      // Calculate scroll position
+      const currentScroll = container.scrollLeft;
+      const targetScroll =
+        direction === "left"
+          ? currentScroll - cardWidth - 24 // subtract gap
+          : currentScroll + cardWidth + 24; // add gap
+
+      container.scrollTo({
+        left: targetScroll,
+        behavior: "smooth",
+      });
+    }
+  };
 
   return (
     <div className="bestseller-container" data-aos="fade-up">
@@ -81,11 +107,11 @@ function Bestseller() {
         <h3>
           Our Best Sellers- <span>Loved By Thousands</span>
         </h3>
-        <Link onClick={handleViewAll} className="view-all desktop-view-all">
+        <div onClick={handleViewAll} className="view-all desktop-view-all">
           View All <ViewAllIcon />
-        </Link>
+        </div>
       </div>
-      <div className="bestseller-content">
+      {/* <div className="bestseller-content">
         <div className="bestseller-image-wrapper">
           <div className="bestseller-image">
             <span className="tag">{currentProduct?.label?.name}</span>
@@ -144,6 +170,25 @@ function Bestseller() {
             </button>
           </div>
         </div>
+      </div> */}
+      <div className="bestseller-products-wrapper" ref={scrollContainerRef}>
+        <button
+          className="scroll-button scroll-left"
+          onClick={() => scroll("left")}
+        >
+          <FiArrowLeft />
+        </button>
+        <div className="bestseller-products">
+          {data?.data?.products?.map((product, index) => (
+            <ProductCard key={index} product={product} />
+          ))}
+        </div>
+        <button
+          className="scroll-button scroll-right"
+          onClick={() => scroll("right")}
+        >
+          <FiArrowRight />
+        </button>
       </div>
       {/* <Link to="/products" className="view-all mobile-view-all">
         View All <ViewAllIcon />
