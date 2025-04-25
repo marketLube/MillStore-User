@@ -90,8 +90,16 @@
     padding-bottom: 1rem;
     // margin-bottom: 1rem;
 
+    @media (min-width: 1200px) and (max-width: 1400px) {
+      grid-template-columns: 0.7fr 1fr;
+    }
+
     @media (max-width: 768px) {
       grid-template-columns: 1fr;
+    }
+
+    @media (max-width: 1199px) {
+      padding: 2rem 5% 1rem;
     }
 
     .footer-brand {
@@ -114,10 +122,24 @@
     .footer-links-group {
       display: grid;
       grid-template-columns: auto auto auto;
-      gap: 6rem;
+      gap: 5rem;
+
+      @media (max-width: 992px) {
+        grid-template-columns: 1fr 1fr;
+        gap: 0rem;
+      }
 
       @media (max-width: 768px) {
         grid-template-columns: 1fr 1fr;
+        gap: 0rem;
+      }
+      @media (max-width: 575px) {
+        grid-template-columns: 1fr;
+        gap: 0rem;
+      }
+
+      @media (max-width: 1650px) {
+        gap: 2rem;
       }
     }
 
@@ -126,7 +148,7 @@
         font-size: 1rem;
         font-weight: 600;
         margin-bottom: 1.25rem;
-        color: #ffffff;
+        color: #39333f;
       }
 
       ul {
@@ -137,7 +159,7 @@
         li {
           margin-bottom: 0.75rem;
           font-size: 0.875rem;
-          color: #ffffff;
+          color: #39333f;
           cursor: pointer;
 
           &.address {
@@ -145,16 +167,16 @@
           }
 
           a {
-            color: #ffffff;
+            color: #39333f;
             text-decoration: none;
 
             &:hover {
-              color: #39333f;
+              color: #000;
             }
           }
 
           &:hover {
-            color: #39333f;
+            color: #000;
           }
         }
       }
@@ -175,12 +197,16 @@
       gap: 1.5rem;
       padding: 0.6rem 0;
 
-      a {
+      @media (max-width: 768px) {
+        padding: 0;
+      }
+
+      span {
         color: #666;
         font-size: 1.25rem;
 
         &:hover {
-          color: var.$color-primary;
+          color: var.$color-primary !important;
         }
       }
     }
@@ -235,6 +261,16 @@
       gap: 1rem;
       text-align: center;
 
+      @media (max-width: 575px) {
+        gap: 0rem;
+        padding: 1rem 0;
+      }
+
+      @media (max-width: 768px) {
+        // gap: 0rem;
+        padding: 1rem 0;
+      }
+
       .social-links {
         justify-content: center;
       }
@@ -249,4 +285,32 @@
 .contact-icon {
   margin-right: 8px;
   vertical-align: middle;
+}
+
+.powered-by {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+
+  a {
+    color: #666;
+    text-decoration: none;
+    font-size: 0.8rem;
+    &:hover {
+      color: var.$color-primary;
+    }
+  }
+}
+
+.footer-email {
+  @media (max-width: 575px) {
+    white-space: nowrap;
+  }
+}
+
+.moboNone {
+  @media (max-width: 768px) {
+    display: none;
+  }
 }

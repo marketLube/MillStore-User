@@ -79,12 +79,13 @@
         grid-template-columns: 2fr 1fr 1.5fr 1fr 120px;
         padding: 1.25rem 0;
         border-bottom: 1px solid #eee;
-        align-items: start;
+        align-items: center;
 
         .product-details {
           display: flex;
           gap: 1rem;
           margin-bottom: 1rem;
+          margin-top: 0 !important;
 
           &:last-child {
             margin-bottom: 0;
@@ -176,6 +177,7 @@
             font-size: 0.875rem;
             cursor: pointer;
             padding: 0;
+            white-space: nowrap;
 
             &.view {
               color: #666;

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import Card from "../../components/Card";
+import { useSelector } from "react-redux";
 import {
   FiChevronLeft,
   FiChevronRight,
@@ -26,6 +27,8 @@ const CalculateDiscount = (price, offerPrice) => {
 function ProductDetailsContent() {
   const navigate = useNavigate();
   const sliderRef = useRef(null);
+  const isLoggedIn = useSelector((state) => state?.user?.isLoggedIn);
+
   const [showAllReviews, setShowAllReviews] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [reviews, setReviews] = useState([]);
@@ -147,6 +150,8 @@ function ProductDetailsContent() {
     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, "_blank");
   };
+
+  console.log(isLoggedIn, "askjgdjksagdk");
 
   return (
     <div className="product-details">
@@ -348,12 +353,14 @@ function ProductDetailsContent() {
           <div className="section reviews">
             <div className="reviews-header">
               <h3>Ratings & Reviews</h3>
-              <button
-                className="rate-btn"
-                onClick={() => setIsRatingModalOpen(true)}
-              >
-                Rate Product
-              </button>
+              {isLoggedIn && (
+                <button
+                  className="rate-btn"
+                  onClick={() => setIsRatingModalOpen(true)}
+                >
+                  Rate Product
+                </button>
+              )}
             </div>
 
             <div className="rating-container">

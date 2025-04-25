@@ -98,7 +98,14 @@ const OrderHistory = () => {
                                 }
                               />
                               <div className="info">
-                                <h3>{product?.productId?.name}</h3>
+                                <h3 title={product?.productId?.name}>
+                                  {product?.productId?.name?.length > 30
+                                    ? `${product?.productId?.name?.slice(
+                                        0,
+                                        30
+                                      )}...`
+                                    : product?.productId?.name}
+                                </h3>
                                 <div className="product-price">
                                   ₹ {product.price}
                                 </div>
@@ -117,7 +124,9 @@ const OrderHistory = () => {
                         </div>
 
                         <div className="order-id-col" data-label="Order ID">
-                          <span className="order-id">{order?._id}</span>
+                          <span className="order-id">
+                            {order?._id}&nbsp;&nbsp;
+                          </span>
                         </div>
 
                         <div className="status-col">

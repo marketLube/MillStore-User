@@ -158,19 +158,16 @@ function Footer() {
 
           {/* Company */}
           <div className="footer-section">
-            <h4>Company</h4>
+            <h4>Highlights</h4>
             <ul>
               <li>
-                <span>About us</span>
+                <span>Best Sellers</span>
               </li>
               <li>
-                <span>Blog</span>
+                <span>Trending</span>
               </li>
               <li>
-                <span>Gift vouchers</span>
-              </li>
-              <li>
-                <span>Our policy</span>
+                <span>Clearance sale</span>
               </li>
             </ul>
           </div>
@@ -180,7 +177,6 @@ function Footer() {
             <h4>Contact</h4>
             <ul>
               <li className="address">
-                {" "}
                 <MdLocationPin className="contact-icon" /> Tradelines Millstore
                 <br />
                 <span>Delta Tower</span>
@@ -195,8 +191,11 @@ function Footer() {
               <li>Cherootty Road Opp Gandhi Park</li>
               <li>Calicut - Kerala 673032</li>*/}
               <li>
-                <a href="mailto:tradelinesmillstore1990@gmail.com">
-                  <MdEmail className="contact-icon" />{" "}
+                <a
+                  href="mailto:tradelinesmillstore1990@gmail.com"
+                  className="footer-email"
+                >
+                  <MdEmail className="contact-icon" />
                   tradelinesmillstore1990@gmail.com
                 </a>
               </li>
@@ -211,12 +210,12 @@ function Footer() {
       {/* Footer Bottom */}
       <div className="footer-bottom">
         <div className="social-links">
-          <span>
+          {/* <span>
             <FaTwitter />
           </span>
           <span>
             <FaFacebookF />
-          </span>
+          </span> */}
           <span
             onClick={() =>
               window.open(
@@ -228,16 +227,28 @@ function Footer() {
           >
             <FaInstagram />
           </span>
-          <span>
+          <span className="moboNone"></span>
+          <span className="moboNone"></span>
+          <span className="moboNone"></span>
+          <span className="moboNone"></span>
+          <span className="moboNone"></span>
+          <span className="moboNone"></span>
+          {/* <span>
             <FaYoutube />
-          </span>
+          </span> */}
         </div>
 
-        <p>© 2025 Mill Store All rights reserved</p>
+        <p>© 2025 All rights reserved Mill Store </p>
 
-        <div className="legal-links">
-          <span>Terms & Condition</span>
-          <span>Privacy Policy</span>
+        <div className="powered-by">
+          <span>Powered by</span>
+          <a
+            href="https://marketlube.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Marketlube
+          </a>
         </div>
       </div>
     </footer>

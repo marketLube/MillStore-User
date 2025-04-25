@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "../../components/Header";
 import Carousel from "../../components/Carousel";
 import Clearance from "./components/Clearance";
@@ -12,6 +12,9 @@ import TrendingCollection from "./components/Trendingcollection";
 function Homepage() {
   const { allBanners, isLoading } = useBanners();
   const { data: cartData, isLoading: isCartLoading } = useCart();
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   return (
     <div>

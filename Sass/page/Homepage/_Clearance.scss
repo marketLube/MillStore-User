@@ -5,11 +5,19 @@
   padding: var.$default-padding;
   margin-top: 2rem;
 
+  @media (max-width: 575px) {
+    margin-top: 0rem !important;
+  }
+
   .clearance-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2rem;
+
+    @media (max-width: 575px) {
+      margin-bottom: 0rem;
+    }
 
     .clearance-content {
       &_h2 {
@@ -93,6 +101,26 @@
       flex: 0 0 calc((100% - 7.5rem) / 6);
       min-width: calc((100% - 7.5rem) / 6);
       scroll-snap-align: start;
+
+      @media screen and (max-width: 1200px) {
+        flex: 0 0 calc((100% - 7.5rem) / 4);
+        min-width: calc((100% - 7.5rem) / 4);
+      }
+
+      @media screen and (max-width: 992px) {
+        flex: 0 0 calc((100% - 7.5rem) / 3);
+        min-width: calc((100% - 7.5rem) / 3);
+      }
+
+      @media screen and (max-width: 768px) {
+        flex: 0 0 calc((100% - 7.5rem) / 2);
+        min-width: calc((100% - 7.5rem) / 2);
+      }
+
+      @media screen and (max-width: 576px) {
+        flex: 0 0 calc((100% - 7.5rem) / 1);
+        min-width: calc((100% - 7.5rem) / 1);
+      }
     }
 
     &::-webkit-scrollbar {

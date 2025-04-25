@@ -9,6 +9,7 @@ const PaymentSuccess = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(setCart([]));
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
   return (
     <div className="payment-success-container">

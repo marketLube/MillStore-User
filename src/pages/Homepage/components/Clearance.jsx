@@ -74,9 +74,9 @@ function Clearance() {
           <h2 className="clearance-content_h2">
             Clearance <span className="clearance-content_span">sale</span>
           </h2>
-          <p className="clearance-content_p">
+          {/* <p className="clearance-content_p">
             Get amazing deals on our top-rated products
-          </p>
+          </p> */}
         </div>
         <p onClick={handleViewAll} className="view-all desktop-view-all">
           View All <ViewAllIcon />

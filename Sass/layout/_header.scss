@@ -20,7 +20,8 @@
   &-logo {
     width: 8rem;
     height: fit-content;
-    padding: 0.5rem;
+    margin-top: 0.5rem;
+    padding: 1rem 0.5rem 0.5rem 0.5rem;
 
     @media (max-width: 768px) {
       width: 5.5rem;
