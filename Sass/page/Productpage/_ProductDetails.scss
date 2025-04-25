@@ -1007,6 +1007,11 @@
   cursor: pointer;
   padding: 10px;
 
+  @media (max-width: 768px) {
+    top: -45px;
+    right: -20px;
+  }
+
   &:hover {
     opacity: 0.8;
   }

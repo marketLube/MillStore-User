@@ -3228,6 +3228,12 @@ body.filter-open {
   cursor: pointer;
   padding: 10px;
 }
+@media (max-width: 768px) {
+  .close-preview {
+    top: -45px;
+    right: -20px;
+  }
+}
 .close-preview:hover {
   opacity: 0.8;
 }
