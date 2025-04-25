@@ -264,7 +264,7 @@ export default function Header() {
               <div className="cart-icon-item-text">
                 <strong>Cart</strong>
                 <span className="cart-badge">
-                  {cart?.items?.length
+                  {isLoggedIn && cart?.items?.length
                     ? cart.items.length < 10
                       ? cart.items.length.toFixed(2).padStart(5, "0")
                       : cart.items.length
