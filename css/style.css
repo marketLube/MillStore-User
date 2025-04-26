@@ -1872,6 +1872,7 @@ ul {
   align-items: center;
   gap: 0.5rem;
   font-size: 0.8rem;
+  color: #666;
 }
 .powered-by a {
   color: #666;
@@ -5530,7 +5531,7 @@ input[required]::placeholder::after {
     gap: 1rem 0.2rem;
   }
 }
-@media (max-width: 375px) {
+@media (max-width: 400px) {
   .categories {
     gap: 2.5rem 0.2rem;
   }

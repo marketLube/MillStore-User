@@ -82,6 +82,37 @@ function Footer() {
       });
     }
   };
+
+  const handleBestSellers = () => {
+    navigate("/products", {
+      state: {
+        selectedCategory: {
+          id: "6802300f5956390f15f60d8a",
+          name: "Best Sellers",
+        },
+      },
+    });
+  };
+
+  const handleTrending = () => {
+    navigate("/products", {
+      state: {
+        selectedCategory: { id: "6802300f5956390f15f60d8a", name: "Trending" },
+      },
+    });
+  };
+
+  const handleClearanceSale = () => {
+    navigate("/products", {
+      state: {
+        selectedCategory: {
+          id: "6802300f5956390f15f60d8a",
+          name: "Clearance Sale",
+        },
+      },
+    });
+  };
+
   return (
     <footer className="footer">
       {/* Newsletter Section */}
@@ -161,13 +192,13 @@ function Footer() {
             <h4>Highlights</h4>
             <ul>
               <li>
-                <span>Best Sellers</span>
+                <a onClick={() => handleBestSellers()}>Best Sellers</a>
               </li>
               <li>
-                <span>Trending</span>
+                <a onClick={() => handleTrending()}>Trending</a>
               </li>
               <li>
-                <span>Clearance sale</span>
+                <a onClick={() => handleClearanceSale()}>Clearance sale</a>
               </li>
             </ul>
           </div>
