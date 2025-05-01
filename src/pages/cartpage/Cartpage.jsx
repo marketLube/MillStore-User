@@ -191,8 +191,9 @@ function Cartpage() {
         <span>Home</span> / <span>Cart</span>
       </div>
 
-      <h1>
-        Shopping Cart <span>({cart?.length})</span>
+      <h1 className="cart-header">
+        Shopping <span className="cart-header_span">Cart</span>
+        <span className="cart-header_count">({cart?.length})</span>
       </h1>
 
       <div className="cart-container" data-aos="fade-up">
@@ -215,7 +216,10 @@ function Cartpage() {
               </div>
 
               <div className="item-details">
-                <h3>{item?.product?.name}</h3>
+                <h3 title={item?.product?.name}>
+                  {item?.product?.name.slice(0, 20)}
+                  {item?.product?.name.length > 20 && "..."}
+                </h3>
                 <div className="product-id">#{item?.product?._id}</div>
                 <div className="quantity-controls">
                   <button
@@ -267,7 +271,7 @@ function Cartpage() {
             <h2>Order Summary</h2>
             <div className="summary-row">
               <span>Subtotal</span>
-              <span>₹ {subtotal}</span>
+              <span style={{ fontWeight: "500" }}>₹ {subtotal}</span>
             </div>
 
             {couponDetails && Object.keys(couponDetails)?.length > 0 && (
@@ -292,14 +296,14 @@ function Cartpage() {
 
             <div className="summary-row">
               <span>Delivery Charges</span>
-              <span>
+              <span style={{ fontWeight: "500" }}>
                 {deliveryCharges === 0 ? "Free" : `₹ ${deliveryCharges}`}
               </span>
             </div>
 
             <div className="summary-row">
               <span>GST</span>
-              <span>+ ₹ {gst}</span>
+              <span style={{ fontWeight: "500" }}>+ ₹ {gst}</span>
             </div>
 
             {couponDetails && Object.keys(couponDetails)?.length > 0 && (
@@ -363,7 +367,7 @@ function Cartpage() {
                 className="coupon-header"
                 onClick={() => setShowCoupons(!showCoupons)}
               >
-                <h3>Available Coupons</h3>
+                <h3 className="coupon-header_title">Available Coupons</h3>
                 {showCoupons ? (
                   <FiChevronUp className="mobile-icon" />
                 ) : (

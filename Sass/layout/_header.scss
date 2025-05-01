@@ -89,6 +89,7 @@
     @media (max-width: 1301px) {
       overflow-x: auto;
       justify-content: flex-start;
+      font-size: 1.1rem;
       // -webkit-overflow-scrolling: touch; // Smooth scroll on iOS
       // scrollbar-width: none; // Hide scrollbar for Firefox
       // -ms-overflow-style: none; // Hide scrollbar for IE/Edge
@@ -101,6 +102,9 @@
         white-space: nowrap; // Prevent text wrapping
         padding: 0 0.5rem; // Add some spacing between items
       }
+    }
+    @media (max-width: 768px) {
+      font-size: 0.8rem;
     }
     &-active {
       background-color: var.$color-primary;

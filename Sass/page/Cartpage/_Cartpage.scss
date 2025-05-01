@@ -14,13 +14,31 @@
     span:last-child {
       color: #666;
     }
+
+    @media (max-width: 768px) {
+      margin-bottom: 0;
+    }
   }
 
-  h1 {
+  .cart-header {
     margin-bottom: 2rem;
-    span {
-      color: #666;
+
+    @media (max-width: 768px) {
+      margin-bottom: 1rem;
+    }
+
+    &_span {
+      color: var.$color-primary;
+      // font-size: 0.8em;
+    }
+    &_count {
+      color: var.$color-primary;
       font-size: 0.8em;
+      padding-left: 0.5rem;
+
+      @media (max-width: 768px) {
+        font-size: 1rem;
+      }
     }
   }
 }
@@ -355,7 +373,11 @@
     margin-bottom: 2rem;
   }
 }
-
+.coupon-header_title {
+  font-size: 1rem !important;
+  // font-weight: 500;
+  color: #333;
+}
 @media (max-width: 768px) {
   .cart-page {
     padding: 0;
@@ -366,9 +388,11 @@
     .breadcrumb {
       margin-top: 1rem;
       padding: 0 1rem;
+      font-size: 12px;
     }
 
     h1 {
+      font-size: 1.5rem;
       margin-bottom: 1rem;
       padding: 0 1rem;
     }
@@ -387,7 +411,7 @@
 
   .cart-item {
     grid-template-columns: 60px 1fr auto;
-    padding: 1rem;
+    padding: 0.5rem;
     gap: 0.75rem;
 
     .item-image {
@@ -431,7 +455,7 @@
 
     h2 {
       font-size: 1.1rem;
-      margin: 1rem;
+      color: var.$color-primary;
     }
 
     .summary-details {
@@ -443,7 +467,8 @@
         font-size: 0.9rem;
 
         &.total {
-          margin-bottom: 3rem; // Add space for fixed proceed button
+          // margin-bottom: 3rem; // Add space for fixed proceed button
+          font-weight: 500;
         }
       }
     }
