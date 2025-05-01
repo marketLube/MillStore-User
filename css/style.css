@@ -3614,7 +3614,7 @@ body.filter-open {
 
 @media (max-width: 768px) {
   .cart-page {
-    padding: 0.5rem;
+    padding: 1rem;
     margin: 0;
     background-color: #f8f8f8;
   }
