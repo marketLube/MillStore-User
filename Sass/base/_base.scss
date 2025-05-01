@@ -2,6 +2,14 @@
 @use "../base/responive" as responsive;
 @use "../abstract/mixins" as mixins;
 
+:root {
+  font-size: 16px;
+
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
+}
+
 * {
   padding: 0;
   margin: 0;
@@ -16,13 +24,18 @@
 
 body {
   font-family: "Poppins", sans-serif;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
+
 input {
   font-family: "Poppins", sans-serif;
 }
+
 main {
   padding: 2rem;
 }
+
 .container {
   width: 80%;
   max-width: 1800px;

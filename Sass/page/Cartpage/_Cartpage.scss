@@ -359,34 +359,15 @@
   }
   @media screen and (max-width: 768px) {
     background: transparent;
-    padding: 0;
-    margin-bottom: 1rem;
-
-    .summary-details {
-      background: white;
-      padding: 1rem;
-      margin-bottom: 1rem;
-    }
-
-    .coupon-section {
-      background: white;
-      padding: 0;
-      margin-bottom: 1rem;
-    }
+    padding: 1rem;
+    margin-bottom: 4rem;
 
     .available-coupons {
-      background: white;
-
-      .coupon-header {
-        padding: 1rem;
-        border-bottom: 1px solid #eee;
-      }
+      margin-bottom: 5rem;
 
       .coupon-list {
-        &.show {
-          padding: 1rem;
-          margin-bottom: 80px;
-        }
+        max-height: none;
+        overflow: visible;
       }
     }
   }
@@ -495,6 +476,7 @@
   right: 0;
   padding: 1rem;
   z-index: 100;
+  background: white;
 
   .buy-buttons {
     .proceed-btn {
@@ -503,7 +485,7 @@
       background: #ffb800;
       color: white;
       border: none;
-      border-radius: 4px;
+      border-radius: 0.25rem;
       font-weight: 500;
       font-size: 1rem;
     }

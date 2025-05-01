@@ -1,4 +1,13 @@
 @charset "UTF-8";
+:root {
+  font-size: 16px;
+}
+@media (max-width: 768px) {
+  :root {
+    font-size: 14px;
+  }
+}
+
 * {
   padding: 0;
   margin: 0;
@@ -15,6 +24,8 @@
 
 body {
   font-family: "Poppins", sans-serif;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 input {
@@ -3576,29 +3587,15 @@ body.filter-open {
 @media screen and (max-width: 768px) {
   .order-summary {
     background: transparent;
-    padding: 0;
-    margin-bottom: 1rem;
-  }
-  .order-summary .summary-details {
-    background: white;
     padding: 1rem;
-    margin-bottom: 1rem;
-  }
-  .order-summary .coupon-section {
-    background: white;
-    padding: 0;
-    margin-bottom: 1rem;
+    margin-bottom: 4rem;
   }
   .order-summary .available-coupons {
-    background: white;
+    margin-bottom: 5rem;
   }
-  .order-summary .available-coupons .coupon-header {
-    padding: 1rem;
-    border-bottom: 1px solid #eee;
-  }
-  .order-summary .available-coupons .coupon-list.show {
-    padding: 1rem;
-    margin-bottom: 80px;
+  .order-summary .available-coupons .coupon-list {
+    max-height: none;
+    overflow: visible;
   }
 }
 
@@ -3686,6 +3683,7 @@ body.filter-open {
   right: 0;
   padding: 1rem;
   z-index: 100;
+  background: white;
 }
 .mobile-fixed-buttons .buy-buttons .proceed-btn {
   width: 100%;
@@ -3693,7 +3691,7 @@ body.filter-open {
   background: #ffb800;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 0.25rem;
   font-weight: 500;
   font-size: 1rem;
 }
