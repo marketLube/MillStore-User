@@ -484,6 +484,17 @@ function Cartpage() {
         cancelText="Keep"
         type="danger"
       />
+
+      <div className="mobile-fixed-buttons">
+        <div className="buy-buttons">
+          <button
+            className="proceed-btn"
+            onClick={() => setIsAddressModalOpen(true)}
+          >
+            Proceed
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

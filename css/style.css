@@ -1579,16 +1579,32 @@ ul {
   color: #666;
   margin-bottom: 0.25rem;
 }
+@media screen and (max-width: 768px) {
+  .product-card_content .category-name {
+    font-size: 0.75rem;
+  }
+}
 .product-card_content .title {
   font-size: 1rem;
   margin-bottom: 0.5rem;
   font-weight: 500;
+}
+@media screen and (max-width: 768px) {
+  .product-card_content .title {
+    font-size: 0.8rem;
+    margin-bottom: 0;
+  }
 }
 .product-card_content .price {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 0.5rem;
+}
+@media screen and (max-width: 768px) {
+  .product-card_content .price {
+    margin-bottom: 0;
+  }
 }
 .product-card_content .price .current-price {
   color: #ff6b00;
@@ -3252,6 +3268,7 @@ body.filter-open {
 @media screen and (max-width: 768px) {
   .cart-page {
     padding: 1rem;
+    padding-bottom: calc(70px + 1rem);
   }
 }
 .cart-page .breadcrumb {
@@ -3444,6 +3461,11 @@ body.filter-open {
   font-weight: 500;
   cursor: pointer;
 }
+@media screen and (max-width: 768px) {
+  .order-summary .proceed-btn {
+    display: none;
+  }
+}
 .order-summary .coupon-section {
   background: transparent;
   padding: 0;
@@ -3497,8 +3519,14 @@ body.filter-open {
   max-height: 300px;
   overflow-y: auto;
   padding-right: 0.5rem;
+  margin-bottom: 80px;
   scrollbar-width: thin;
   scrollbar-color: #ddd transparent;
+}
+@media screen and (max-width: 768px) {
+  .order-summary .available-coupons .coupon-list {
+    padding: 0;
+  }
 }
 .order-summary .available-coupons .coupon-list .coupon-item {
   padding-bottom: 1rem;
@@ -3679,13 +3707,9 @@ body.filter-open {
     display: flex;
     align-items: center;
   }
-  .order-summary .available-coupons .coupon-list {
-    padding: 1rem;
-  }
   .order-summary .available-coupons .coupon-list.show {
     padding: 1rem;
     border-top: none;
-    margin-bottom: 3rem;
   }
   .order-summary .available-coupons .coupon-list .coupon-item {
     margin-bottom: 0.75rem;
@@ -3703,6 +3727,27 @@ body.filter-open {
     z-index: 100;
   }
 }
+.mobile-fixed-buttons {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 1rem;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+.mobile-fixed-buttons .proceed-btn {
+  width: 100%;
+  padding: 0.875rem;
+  background: #ffb64a;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
 body.modal-open {
   overflow: hidden;
   height: 100vh;

@@ -5,6 +5,7 @@
   margin: 2rem 0;
   @media screen and (max-width: 768px) {
     padding: 1rem;
+    padding-bottom: calc(70px + 1rem);
   }
 
   .breadcrumb {
@@ -220,6 +221,9 @@
     border-radius: 4px;
     font-weight: 500;
     cursor: pointer;
+    @media screen and (max-width: 768px) {
+      display: none;
+    }
   }
 
   .coupon-section {
@@ -282,6 +286,12 @@
       max-height: 300px;
       overflow-y: auto;
       padding-right: 0.5rem;
+      margin-bottom: 80px;
+
+      @media screen and (max-width: 768px) {
+        // margin-bottom: 100px;
+        padding: 0;
+      }
 
       .coupon-item {
         padding-bottom: 1rem;
@@ -507,12 +517,12 @@
       }
 
       .coupon-list {
-        padding: 1rem;
+        // padding: 1rem;
 
         &.show {
           padding: 1rem;
           border-top: none;
-          margin-bottom: 3rem;
+          // margin-bottom: 3rem;
         }
 
         .coupon-item {
@@ -533,5 +543,28 @@
       padding: 1rem;
       z-index: 100;
     }
+  }
+}
+
+// Mobile fixed buttons
+.mobile-fixed-buttons {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 1rem;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+
+  .proceed-btn {
+    width: 100%;
+    padding: 0.875rem;
+    background: var.$color-primary;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 0.875rem;
   }
 }
