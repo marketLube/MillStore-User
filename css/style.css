@@ -3270,7 +3270,7 @@ body.filter-open {
 }
 @media screen and (max-width: 768px) {
   .cart-page {
-    padding: 1rem;
+    padding: 5rem;
     margin: 0;
     padding-bottom: 80px;
     background: #f8f8f8;
@@ -3622,7 +3622,7 @@ body.filter-open {
 
 @media (max-width: 768px) {
   .cart-page {
-    padding: 0;
+    padding: 1rem;
     margin: 0;
     background-color: #f8f8f8;
   }
