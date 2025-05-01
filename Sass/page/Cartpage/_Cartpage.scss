@@ -7,13 +7,6 @@
   min-height: 100vh;
   background: #fff;
 
-  // @media screen and (max-width: 768px) {
-  //   padding: 5rem;
-  //   margin: 0;
-  //   padding-bottom: 80px; // Space for fixed button
-  //   background: #f8f8f8;
-  // }
-
   .breadcrumb {
     margin-bottom: 1rem;
     color: #666;
@@ -21,18 +14,10 @@
     span:last-child {
       color: #666;
     }
-
-    @media (max-width: 768px) {
-      margin-bottom: 0;
-    }
   }
 
   .cart-header {
     margin-bottom: 2rem;
-
-    @media (max-width: 768px) {
-      margin-bottom: 1rem;
-    }
 
     &_span {
       color: var.$color-primary;
@@ -46,6 +31,10 @@
       @media (max-width: 768px) {
         font-size: 1rem;
       }
+    }
+
+    @media (max-width: 768px) {
+      margin-bottom: 1rem;
     }
   }
 }
@@ -68,10 +57,6 @@
   background: white;
   border-radius: 8px;
   padding: 1rem;
-
-  @media screen and (max-width: 768px) {
-    padding: 0;
-  }
 }
 
 .cart-item {
@@ -80,10 +65,6 @@
   gap: 1rem;
   padding: 1rem;
   border-bottom: 1px solid #eee;
-
-  @media screen and (max-width: 768px) {
-    padding: 1rem;
-  }
 
   &:last-child {
     border-bottom: none;
@@ -376,6 +357,39 @@
       scrollbar-color: #ddd transparent;
     }
   }
+  @media screen and (max-width: 768px) {
+    background: transparent;
+    padding: 0;
+    margin-bottom: 1rem;
+
+    .summary-details {
+      background: white;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .coupon-section {
+      background: white;
+      padding: 0;
+      margin-bottom: 1rem;
+    }
+
+    .available-coupons {
+      background: white;
+
+      .coupon-header {
+        padding: 1rem;
+        border-bottom: 1px solid #eee;
+      }
+
+      .coupon-list {
+        &.show {
+          padding: 1rem;
+          margin-bottom: 80px;
+        }
+      }
+    }
+  }
 }
 
 .empty-cart {
@@ -411,6 +425,7 @@
 
     .breadcrumb {
       margin-top: 1rem;
+      margin-bottom: 0;
       // padding: 0 1rem;
       font-size: 12px;
     }
@@ -428,6 +443,7 @@
   }
 
   .cart-items {
+    padding: 0;
     border-radius: 0;
     background: white;
     margin-bottom: 1rem;
@@ -435,8 +451,6 @@
 
   .cart-item {
     grid-template-columns: 60px 1fr auto;
-    // padding: 0.5rem;
-    // gap: 0.75rem;
 
     .item-image {
       width: 60px;
@@ -471,95 +485,6 @@
       }
     }
   }
-
-  .order-summary {
-    padding: 0;
-    margin: 0;
-    background: transparent;
-
-    h2 {
-      font-size: 1.1rem;
-      color: var.$color-primary;
-    }
-
-    .summary-details {
-      margin: 0;
-      border-radius: 0;
-      background: white;
-
-      .summary-row {
-        font-size: 0.9rem;
-
-        &.total {
-          // margin-bottom: 3rem; // Add space for fixed proceed button
-          font-weight: 500;
-        }
-      }
-    }
-
-    .coupon-section {
-      background: white;
-      padding: 1rem;
-      margin-bottom: 1rem;
-
-      h3 {
-        margin-bottom: 1rem;
-        padding: 1rem;
-      }
-
-      .coupon-input {
-        padding: 1rem;
-        gap: 0;
-
-        input {
-          height: 40px;
-        }
-
-        .apply-btn {
-          height: 40px;
-          white-space: nowrap;
-        }
-      }
-    }
-
-    .available-coupons {
-      background: white;
-      margin-bottom: 1rem;
-
-      .coupon-header {
-        padding: 0 1rem;
-        display: flex;
-        align-items: center;
-      }
-
-      .coupon-list {
-        // padding: 1rem;
-
-        &.show {
-          padding: 1rem;
-          border-top: none;
-          // margin-bottom: 3rem;
-        }
-
-        .coupon-item {
-          margin-bottom: 0.75rem;
-          padding: 0.75rem;
-        }
-      }
-    }
-
-    .proceed-btn {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      margin: 0;
-      border-radius: 0;
-      height: auto;
-      padding: 1rem;
-      z-index: 100;
-    }
-  }
 }
 
 // Mobile fixed buttons
@@ -581,42 +506,6 @@
       border-radius: 4px;
       font-weight: 500;
       font-size: 1rem;
-    }
-  }
-}
-
-.order-summary {
-  @media screen and (max-width: 768px) {
-    background: transparent;
-    padding: 0;
-    margin-bottom: 1rem;
-
-    .summary-details {
-      background: white;
-      padding: 1rem;
-      margin-bottom: 1rem;
-    }
-
-    .coupon-section {
-      background: white;
-      padding: 0;
-      margin-bottom: 1rem;
-    }
-
-    .available-coupons {
-      background: white;
-
-      .coupon-header {
-        padding: 1rem;
-        border-bottom: 1px solid #eee;
-      }
-
-      .coupon-list {
-        &.show {
-          padding: 1rem;
-          margin-bottom: 80px;
-        }
-      }
     }
   }
 }
