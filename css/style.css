@@ -3652,6 +3652,8 @@ body.filter-open {
   }
   .cart-item {
     grid-template-columns: 60px 1fr auto;
+    gap: 0;
+    padding: 0;
   }
   .cart-item .item-image {
     width: 60px;
