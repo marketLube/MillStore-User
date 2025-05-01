@@ -3264,6 +3264,7 @@ body.filter-open {
 .cart-page {
   padding: 0 10%;
   margin: 2rem 0;
+  overflow-x: hidden;
 }
 @media screen and (max-width: 768px) {
   .cart-page {
@@ -3326,6 +3327,11 @@ body.filter-open {
   border-radius: 8px;
   padding: 1rem;
 }
+@media screen and (max-width: 768px) {
+  .cart-items {
+    padding: 0;
+  }
+}
 
 .cart-item {
   display: grid;
@@ -3333,6 +3339,11 @@ body.filter-open {
   gap: 1rem;
   padding: 1rem;
   border-bottom: 1px solid #eee;
+}
+@media screen and (max-width: 768px) {
+  .cart-item {
+    padding: 0;
+  }
 }
 .cart-item:last-child {
   border-bottom: none;
