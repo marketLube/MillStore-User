@@ -217,10 +217,12 @@ function Cartpage() {
 
               <div className="item-details">
                 <h3 title={item?.product?.name}>
-                  {item?.product?.name.slice(0, 20)}
-                  {item?.product?.name.length > 20 && "..."}
+                  {item?.product?.name.slice(0, 10)}
+                  {item?.product?.name.length > 10 && "..."}
                 </h3>
-                <div className="product-id">#{item?.product?._id}</div>
+                {/* <div className="product-id" title={item?.product?._id}>
+                  #{item?.product?._id}
+                </div> */}
                 <div className="quantity-controls">
                   <button
                     onClick={() =>
