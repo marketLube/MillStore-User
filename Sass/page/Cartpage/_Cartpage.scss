@@ -82,7 +82,7 @@
   border-bottom: 1px solid #eee;
 
   @media screen and (max-width: 768px) {
-    padding: 0;
+    padding: 1rem;
   }
 
   &:last-child {
@@ -404,7 +404,7 @@
 }
 @media (max-width: 768px) {
   .cart-page {
-    padding: 1rem;
+    padding: 0.5rem;
     margin: 0;
     background-color: #f8f8f8;
     // padding-bottom: 3rem;
@@ -504,11 +504,12 @@
 
       h3 {
         margin-bottom: 1rem;
-        padding: 1rem 0;
+        padding: 1rem;
       }
 
       .coupon-input {
-        padding: 0;
+        padding: 1rem;
+        gap: 0;
 
         input {
           height: 40px;
@@ -592,7 +593,7 @@
 
     .summary-details {
       background: white;
-      padding: 0rem;
+      padding: 1rem;
       margin-bottom: 1rem;
     }
 
@@ -606,7 +607,7 @@
       background: white;
 
       .coupon-header {
-        padding: 1rem 0;
+        padding: 1rem;
         border-bottom: 1px solid #eee;
       }
 

@@ -3338,7 +3338,7 @@ body.filter-open {
 }
 @media screen and (max-width: 768px) {
   .cart-item {
-    padding: 0;
+    padding: 1rem;
   }
 }
 .cart-item:last-child {
@@ -3614,7 +3614,7 @@ body.filter-open {
 
 @media (max-width: 768px) {
   .cart-page {
-    padding: 1rem;
+    padding: 0.5rem;
     margin: 0;
     background-color: #f8f8f8;
   }
@@ -3690,10 +3690,11 @@ body.filter-open {
   }
   .order-summary .coupon-section h3 {
     margin-bottom: 1rem;
-    padding: 1rem 0;
+    padding: 1rem;
   }
   .order-summary .coupon-section .coupon-input {
-    padding: 0;
+    padding: 1rem;
+    gap: 0;
   }
   .order-summary .coupon-section .coupon-input input {
     height: 40px;
@@ -3758,7 +3759,7 @@ body.filter-open {
   }
   .order-summary .summary-details {
     background: white;
-    padding: 0rem;
+    padding: 1rem;
     margin-bottom: 1rem;
   }
   .order-summary .coupon-section {
@@ -3770,7 +3771,7 @@ body.filter-open {
     background: white;
   }
   .order-summary .available-coupons .coupon-header {
-    padding: 1rem 0;
+    padding: 1rem;
     border-bottom: 1px solid #eee;
   }
   .order-summary .available-coupons .coupon-list.show {
