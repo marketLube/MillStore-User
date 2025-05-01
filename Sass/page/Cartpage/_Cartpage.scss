@@ -450,7 +450,7 @@
   }
 
   .cart-item {
-    grid-template-columns: 60px 1fr auto;
+    grid-template-columns: auto 1fr auto;
 
     .item-image {
       width: 60px;

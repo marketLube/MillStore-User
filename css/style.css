@@ -3651,7 +3651,7 @@ body.filter-open {
     margin-bottom: 1rem;
   }
   .cart-item {
-    grid-template-columns: 60px 1fr auto;
+    grid-template-columns: auto 1fr auto;
   }
   .cart-item .item-image {
     width: 60px;
