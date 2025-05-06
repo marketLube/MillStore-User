@@ -71,7 +71,14 @@ function Carousel({
     <div className="carousel-container" style={{ maxHeight: maxHeight }}>
       <Slider {...settings}>
         {data?.map((item, index) => (
-          <div key={isBrand ? item.brand.bannerImage : item.image}>
+          <div
+            key={isBrand ? item.brand.bannerImage : item.image}
+            onClick={() => {
+              if (from === "homepage") {
+                navigate("/products");
+              }
+            }}
+          >
             <img
               src={isBrand ? item.brand.bannerImage : item.image}
               alt={item.alt}
@@ -80,7 +87,7 @@ function Carousel({
                 objectFit: from === "allproducts" ? "fill" : "cover",
               }}
             />
-            {from !== "allproducts" && (
+            {/* {from !== "allproducts" && (
               <div className="carousel-content">
                 <h1>{item?.heading || item?.title || ""}</h1>
 
@@ -95,7 +102,7 @@ function Carousel({
                   Shop Now
                 </span>
               </div>
-            )}
+            )} */}
           </div>
         ))}
       </Slider>

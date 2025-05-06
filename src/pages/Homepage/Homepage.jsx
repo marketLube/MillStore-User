@@ -21,6 +21,7 @@ function Homepage() {
       <Carousel
         data={allBanners?.filter((banner) => banner?.bannerFor === "hero")}
         isLoading={isLoading}
+        from="homepage"
       />
       <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
         <Category />
