@@ -29,8 +29,8 @@ function Card({ product }) {
       <div className="product-card_content">
         <span className="category-name">{category.name}</span>
         <h3 className="title">
-          {name.split("").length > 20
-            ? name.split("").slice(0, 20).join("") + "..."
+          {name.split("").length > 15
+            ? name.split("").slice(0, 15).join("") + "..."
             : name}
         </h3>
         <div className="price">

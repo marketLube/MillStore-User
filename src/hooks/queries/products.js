@@ -1,11 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { productService } from "../../api/services/productService";
 import apiClient from "../../api/client";
 
 export function useProducts(filters = {}) {
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: ["products", filters],
-    queryFn: () => getProducts(filters),
+    queryFn: ({ pageParam = 1 }) => getProducts({ ...filters, page: pageParam }),
+    getNextPageParam: (lastPage) => {
+      return lastPage?.data?.hasMore
+        ? lastPage.data.currentPage + 1
+        : undefined;
+    },
     retry: 1,
     retryDelay: 1000,
   });

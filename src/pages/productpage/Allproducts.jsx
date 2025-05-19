@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import {
   FiFilter,
   FiChevronDown,
@@ -65,6 +65,9 @@ function AllProductsContent() {
     data: response,
     isLoading,
     error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
   } = useProducts({
     categoryId: selectedFilters.categoryId,
     subcategoryId: selectedFilters.subcategoryId,
@@ -78,6 +81,25 @@ function AllProductsContent() {
     page: currentPage,
     limit: ITEMS_PER_PAGE,
   });
+
+  // Add intersection observer for infinite scroll
+  const observer = useRef();
+  const lastProductElementRef = useCallback(
+    (node) => {
+      if (isLoading) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasNextPage) {
+          fetchNextPage();
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [isLoading, hasNextPage, fetchNextPage]
+  );
+
+  console.log(response , "response");
+  
 
   const {
     data: categoriesData,
@@ -167,7 +189,8 @@ function AllProductsContent() {
     throw error || categoriesError;
   }
 
-  const products = response?.data?.products || [];
+  const products = response?.pages?.flatMap((page) => page.data.products) || [];
+  const totalProducts = response?.pages?.[0]?.data?.totalProducts || 0;
   const categories = categoriesData?.envelop?.data || [];
   const labels = labelsData?.envelop?.data || [];
 
@@ -435,12 +458,12 @@ function AllProductsContent() {
 
   return (
     <div className="product-page">
-      <Carousel
+      {/* <Carousel
         data={allBanners?.filter((banner) => banner?.bannerFor === "product")}
         maxHeight="25rem"
         isLoading={bannersLoading}
         from="allproducts"
-      />
+      /> */}
       <div className="product-section">
         <div className="breadcrumb">
           <span>Home</span> / <span>All Products</span>
@@ -449,7 +472,7 @@ function AllProductsContent() {
         <div className="product-header">
           <div className="header-left">
             <h1>
-              All Products <span>({response?.data?.totalProducts})</span>
+              All Products <span>({totalProducts})</span>
             </h1>
           </div>
           <div className="header-right">
@@ -741,23 +764,19 @@ function AllProductsContent() {
           ></div>
 
           <div className="products-container">
-            {/* Product Grid */}
             <div className="product-grid">
               {products.map((product, index) => (
-                <Card key={product._id} product={product} />
+                <div
+                  key={product._id}
+                  ref={index === products.length - 1 ? lastProductElementRef : null}
+                >
+                  <Card product={product} />
+                </div>
               ))}
             </div>
-
-            {/* Add Pagination */}
-            {response?.data?.totalProducts > ITEMS_PER_PAGE && (
-              <div className="pagination-wrapper">
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={Math.ceil(
-                    response?.data?.totalProducts / ITEMS_PER_PAGE
-                  )}
-                  onPageChange={handlePageChange}
-                />
+            {isFetchingNextPage && (
+              <div className="loading-more">
+                <LoadingSpinner />
               </div>
             )}
           </div>

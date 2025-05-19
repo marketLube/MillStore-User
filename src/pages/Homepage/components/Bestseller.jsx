@@ -16,6 +16,8 @@ function Bestseller() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const { mutate: addToCart, isPending: isAddingToCart } = useAddToCart();
   const [bestsellerProducts, setBestsellerProducts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
   const scrollContainerRef = useRef(null);
 
   // Local state to track which button is loading
@@ -31,6 +33,8 @@ function Bestseller() {
 
   const { data, isLoading, error } = useProducts({
     labelId: "6802300f5956390f15f60d8a",
+    limit: ITEMS_PER_PAGE,
+    page: currentPage,
   });
 
   useEffect(() => {
@@ -40,7 +44,8 @@ function Bestseller() {
   }, [data, currentIndex]);
 
   useEffect(() => {
-    setBestsellerProducts(data?.data?.products);
+    console.log(data , "data?.data?.products");
+    setBestsellerProducts(data?.pages?.flatMap((page) => page.data.products) || []);
   }, [data]);
 
   const handleNavigation = (direction) => {
@@ -73,6 +78,8 @@ function Bestseller() {
   //   });
   // };
 
+  console.log(bestsellerProducts , "bestsellerProducts");
+
   if (bestsellerProducts && bestsellerProducts?.length === 0) {
     return null;
   }
@@ -91,7 +98,7 @@ function Bestseller() {
       const currentScroll = container.scrollLeft;
       const targetScroll =
         direction === "left"
-          ? currentScroll - cardWidth - 24 // subtract gap
+          ? currentScroll - cardWidth - 24  // subtract gap
           : currentScroll + cardWidth + 24; // add gap
 
       container.scrollTo({
@@ -171,15 +178,15 @@ function Bestseller() {
           </div>
         </div>
       </div> */}
-      <div className="bestseller-products-wrapper" ref={scrollContainerRef}>
+      <div className="bestseller-products-wrapper" >
         <button
           className="scroll-button scroll-left"
           onClick={() => scroll("left")}
         >
           <FiArrowLeft />
         </button>
-        <div className="bestseller-products">
-          {data?.data?.products?.map((product, index) => (
+        <div className="bestseller-products" ref={scrollContainerRef}>
+          {bestsellerProducts?.map((product, index) => (
             <ProductCard key={index} product={product} />
           ))}
         </div>
