@@ -98,7 +98,7 @@ function AllProductsContent() {
     [isLoading, hasNextPage, fetchNextPage]
   );
 
-  console.log(response , "response");
+ 
   
 
   const {
@@ -454,7 +454,7 @@ function AllProductsContent() {
     }
   };
 
-  console.log(response?.data?.products, " ");
+
 
   return (
     <div className="product-page">

@@ -274,7 +274,7 @@ function Footer() {
         <div className="powered-by">
           <span>Powered by</span>
           <a
-            href="https://marketlube.com"
+            href="https://www.instagram.com/marketlube/"
             target="_blank"
             rel="noopener noreferrer"
           >

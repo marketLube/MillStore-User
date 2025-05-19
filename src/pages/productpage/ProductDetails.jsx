@@ -120,7 +120,7 @@ function ProductDetailsContent() {
     formData.append("productId", reviewData.productId);
     try {
       const response = await reviewService.createReview(formData);
-      console.log(response);
+        
       setIsRatingModalOpen(false);
       refetch();
       toast.success("Review submitted successfully");
@@ -151,7 +151,6 @@ function ProductDetailsContent() {
     window.open(whatsappUrl, "_blank");
   };
 
-  console.log(isLoggedIn, "askjgdjksagdk");
 
   return (
     <div className="product-details">
@@ -545,7 +544,7 @@ function ProductDetailsContent() {
           </div>
         </div>
         <div className="products-slider" ref={sliderRef}>
-          {response?.data?.products?.map((product) => (
+          {response?.pages?.flatMap((page) => page.data.products)?.map((product) => (
             <Card key={product._id} product={product} />
           ))}
         </div>
