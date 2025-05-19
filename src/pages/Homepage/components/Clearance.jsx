@@ -67,6 +67,9 @@ function Clearance() {
     });
   };
 
+  
+  if(products.length === 0) return 
+
   return (
     <div className="clearance-container">
       <div className="clearance-header">
