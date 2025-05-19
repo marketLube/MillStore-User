@@ -12,10 +12,9 @@ import { useNavigate } from "react-router-dom";
 function Clearance() {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
-  const [productslists, setProductslists] = useState([]);
   const scrollContainerRef = useRef(null);
   const {
-    data: response,
+    data,
     isLoading,
     error,
   } = useProducts({
@@ -23,14 +22,10 @@ function Clearance() {
   });
 
   useEffect(() => {
-    if (response?.data?.products) {
-      setProductslists(response.data.products);
-    }
-  }, [response]);
+      setProducts(data?.pages?.flatMap((page) => page.data.products) || []);
+  }, [data]);
 
-  useEffect(() => {
-    setProducts(productslists);
-  }, [productslists]);
+
 
   if (isLoading) return <LoadingSpinner />;
   if (error) return <div>Error: {error.message}</div>;

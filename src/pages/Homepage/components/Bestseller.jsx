@@ -44,7 +44,6 @@ function Bestseller() {
   }, [data, currentIndex]);
 
   useEffect(() => {
-    console.log(data , "data?.data?.products");
     setBestsellerProducts(data?.pages?.flatMap((page) => page.data.products) || []);
   }, [data]);
 

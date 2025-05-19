@@ -578,11 +578,13 @@ ul {
 @media only screen and (min-width: 576px) and (max-width: 767.98px) {
   .carousel-container {
     padding: 0;
+    height: auto;
   }
 }
 @media only screen and (max-width: 575.98px) {
   .carousel-container {
     padding: 0;
+    height: auto;
   }
 }
 .carousel-container .custom-dots {
@@ -604,10 +606,17 @@ ul {
   border-radius: 1px;
   transition: all 0.3s ease;
 }
+.carousel-container .carousel-image-wrapper {
+  width: 100%;
+  overflow: hidden;
+  background: #eee;
+  display: block;
+}
 .carousel-container .carousel-image {
   width: 100%;
   height: 100%;
-  object-fit: fill;
+  object-fit: cover;
+  display: block;
 }
 .carousel-container .slick-slider,
 .carousel-container .slick-list,
@@ -649,28 +658,18 @@ ul {
   top: 50%;
   left: 30%;
   transform: translate(-50%, -50%);
-  color: #fff !important;
+  color: #fff;
   width: 80%;
   max-width: 50rem;
   padding: 2rem;
   text-align: left;
 }
-@media (max-width: 1199px) {
+@media (max-width: 768px) {
   .carousel-container .carousel-content {
     left: 50%;
     width: 90%;
     text-align: center;
   }
-}
-.carousel-container .carousel-content::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -20px;
-  width: calc(100% + 40px);
-  height: 100%;
-  z-index: -1;
-  border-radius: 8px;
 }
 .carousel-container .carousel-content h1 {
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
@@ -707,12 +706,15 @@ ul {
     width: 90%;
   }
   .carousel-container .carousel-image {
-    height: calc(100vh - 4rem - 5rem);
+    height: 100%;
   }
   .carousel-container .carousel-content {
     left: 50%;
     width: 90%;
     text-align: center;
+  }
+  .carousel-container .carousel-content::before {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 0) 100%);
   }
   .carousel-container .carousel-content h1 {
     font-size: 32px;
@@ -723,6 +725,9 @@ ul {
   .carousel-container .carousel-content .carousel-button {
     padding: 10px 24px;
     font-size: 14px;
+  }
+  .carousel-container .custom-dots {
+    bottom: 0.5rem;
   }
 }
 
@@ -1025,14 +1030,14 @@ ul {
 }
 @media screen and (max-width: 768px) {
   .bestseller-container .bestseller-products-wrapper .bestseller-products .product-card {
-    flex: 0 0 calc((100% - 7.5rem) / 2);
-    min-width: calc((100% - 7.5rem) / 2);
+    flex: 0 0 calc((100% - 1rem) / 4);
+    min-width: calc((100% - 1rem) / 4);
   }
 }
 @media screen and (max-width: 576px) {
   .bestseller-container .bestseller-products-wrapper .bestseller-products .product-card {
-    flex: 0 0 calc((100% - 7.5rem) / 1);
-    min-width: calc((100% - 7.5rem) / 1);
+    flex: 0 0 calc((100% - 9rem) / 1);
+    min-width: calc((100% - 9rem) / 1);
   }
 }
 .bestseller-container .bestseller-products-wrapper .bestseller-products::-webkit-scrollbar {
@@ -5510,8 +5515,8 @@ input[required]::placeholder::after {
 }
 @media (max-width: 768px) {
   .container {
-    padding: 2rem 1rem;
-    margin: 0;
+    padding: 0 1rem;
+    margin-top: 2rem;
   }
 }
 
@@ -5545,20 +5550,22 @@ input[required]::placeholder::after {
 @media (max-width: 768px) {
   .categories {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 3rem 0.5rem;
   }
 }
 @media (max-width: 667px) {
   .categories {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 1rem 0.2rem;
   }
 }
-@media (max-width: 400px) {
+@media (max-width: 600px) {
   .categories {
-    gap: 2.5rem 0.2rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
   }
 }
 
@@ -5831,7 +5838,6 @@ input[required]::placeholder::after {
 .trending-collections {
   padding: 0 10%;
   margin-bottom: 2rem;
-  margin-top: 2rem;
 }
 @media (max-width: 768px) {
   .trending-collections {
