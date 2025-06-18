@@ -13,7 +13,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../redux/features/user/userSlice";
 import { useCategories } from "../hooks/queries/categories";
-import { useProducts } from "../hooks/queries/products";
+import { useProducts, useSearchProducts } from "../hooks/queries/products";
 import { setCategory } from "../redux/features/category/categorySlice";
 import { setCart } from "../redux/features/cart/cartSlice";
 
@@ -38,22 +38,17 @@ export default function Header() {
   } = useCategories();
 
   const { data: products, isLoading } = useProducts();
+  const { data: filteredProducts } = useSearchProducts(searchQuery);
+  console.log(filteredProducts);
+
 
   useEffect(() => {
     if (searchQuery) {
-      const filteredProducts = products?.data?.products.filter(
-        (product) =>
-          product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          product.category.name
-            .toLowerCase()
-            .includes(searchQuery.toLowerCase())
-      );
-      setSearchResults(filteredProducts);
+      setSearchResults(filteredProducts?.data?.products);
     } else {
       setSearchResults([]);
     }
-  }, [searchQuery, products]);
-
+  }, [filteredProducts]);
   const toggleSearch = () => {
     setIsSearchOpen(!isSearchOpen);
   };

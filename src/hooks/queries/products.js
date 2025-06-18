@@ -67,3 +67,22 @@ export const useProductById = (id) => {
   });
   return { data, isLoading, error, refetch };
 };
+
+export const useSearchProducts = (searchQuery) => {
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ["products", searchQuery],
+    queryFn: () => getProductsBySearch(searchQuery),
+  });
+  return { data, isLoading, error, refetch };
+};
+
+async function getProductsBySearch(searchQuery) {
+  try {
+    const url = `/product/search?keyword=${searchQuery}`;
+    const response = await apiClient.get(url);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
