@@ -23,7 +23,7 @@ function Homepage() {
         isLoading={isLoading}
         from="homepage"
       />
-      <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
         <Category />
         <Clearance />
         <TrendingCollection />
