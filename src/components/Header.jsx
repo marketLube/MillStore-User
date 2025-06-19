@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
-import { FiHeart, FiShoppingCart, FiUser, FiSearch, FiX } from "react-icons/fi";
+import { FiHeart, FiShoppingCart, FiUser, FiSearch, FiX, FiMenu } from "react-icons/fi";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 import { PiShoppingCart } from "react-icons/pi";
+import { Drawer } from "antd";
 
 import {
   MdOutlineLocationOn,
@@ -41,6 +42,7 @@ export default function Header() {
   const { data: filteredProducts } = useSearchProducts(searchQuery);
   console.log(filteredProducts);
 
+  const [isMobileCatOpen, setIsMobileCatOpen] = useState(false);
 
   useEffect(() => {
     if (searchQuery) {
@@ -93,6 +95,7 @@ export default function Header() {
 
   const handleCategoryClick = (category) => {
     dispatch(setCategory(category?._id || "all"));
+    setIsMobileCatOpen(false);
     navigate("/products", {
       state: {
         selectedCategory: {
@@ -329,6 +332,50 @@ export default function Header() {
           ))}
         </ul>
       )}
+      <button
+        className="mobile-cat-toggle"
+        onClick={() => setIsMobileCatOpen(true)}
+      >
+        <FiMenu size={28} />
+      </button>
+      <Drawer
+        title="Categories"
+        placement="bottom"
+        onClose={() => setIsMobileCatOpen(false)}
+        open={isMobileCatOpen}
+        height="auto"
+        styles={{
+          body: {
+            padding: '16px',
+            maxHeight: '60vh',
+          },
+          header: {
+            borderBottom: '1px solid #f0f0f0',
+            padding: '16px 24px',
+          },
+          content: {
+            borderRadius: '16px 16px 0 0',
+          }
+        }}
+      >
+        <div className="mobile-categories-grid">
+          <div 
+            className={`category-item ${activeCategory === "all" ? "active" : ""}`}
+            onClick={() => handleCategoryClick("all")}
+          >
+            All
+          </div>
+          {categories?.map((category) => (
+            <div
+              key={category?._id}
+              className={`category-item ${activeCategory === category?._id ? "active" : ""}`}
+              onClick={() => handleCategoryClick(category)}
+            >
+              {category?.name}
+            </div>
+          ))}
+        </div>
+      </Drawer>
     </>
   );
 }
