@@ -40,7 +40,7 @@ export default function Header() {
 
   const { data: products, isLoading } = useProducts();
   const { data: filteredProducts } = useSearchProducts(searchQuery);
-  console.log(filteredProducts);
+
 
   const [isMobileCatOpen, setIsMobileCatOpen] = useState(false);
 

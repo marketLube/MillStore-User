@@ -77,7 +77,6 @@ function Bestseller() {
   //   });
   // };
 
-  console.log(bestsellerProducts , "bestsellerProducts");
 
   if (bestsellerProducts && bestsellerProducts?.length === 0) {
     return null;

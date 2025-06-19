@@ -28,7 +28,6 @@ const RenderRazorpay = ({
   setDisplayRazorpay,
   onCancel,
 }) => {
-  console.log(address), "this is addresss";
   const navigate = useNavigate();
   const paymentId = useRef(null);
   const paymentMethod = useRef(null);

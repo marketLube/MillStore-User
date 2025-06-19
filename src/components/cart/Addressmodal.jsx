@@ -189,8 +189,6 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
   };
 
   const handleAddressSelection = () => {
-    console.log(selectedAddress, "selectedAddress");
-    console.log(formData, "formData");
 
     const { fullName, building, street, city, state, pincode } = formData;
 
