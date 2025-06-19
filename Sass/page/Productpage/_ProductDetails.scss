@@ -122,9 +122,10 @@
           height: 60px;
           border-radius: 4px;
           cursor: pointer;
-          object-fit: cover;
+          object-fit: contain;
           border: 2px solid transparent;
           transition: border-color 0.2s ease;
+          aspect-ratio: 1/1;
 
           &.selected {
             border-color: var.$color-primary;

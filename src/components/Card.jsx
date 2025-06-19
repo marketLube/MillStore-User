@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { FiHeart } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import { useAddToCart } from "../hooks/queries/cart";
+import ButtonLoadingSpinner from "./ButtonLoadingSpinners";
 
 function Card({ product }) {
   const navigate = useNavigate();
+  const { mutate: addToCart, isLoading: isAddingToCart } = useAddToCart();
+  const [loadingAction, setLoadingAction] = useState(null); // "cart" or "buy"
 
   if (!product) {
     return null;
@@ -18,7 +22,34 @@ function Card({ product }) {
     averageRating = 0,
     discount,
     _id,
+    variants = [],
   } = product;
+
+  const handleAddToCart = (type) => {
+    try {
+      const productToAdd = {
+        productId: _id,
+        variantId: variants[0]?._id || null,
+        quantity: 1,
+      };
+      setLoadingAction(type);
+      addToCart(productToAdd, {
+        onSuccess: () => {
+          if (type === "buy") {
+            navigate("/cart");
+          }
+        },
+        onSettled: () => {
+          setLoadingAction(null);
+        },
+        onError: (error) => {
+          console.log(error);
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="product-card" onClick={() => navigate(`/products/${_id}`)}>
@@ -44,6 +75,28 @@ function Card({ product }) {
             <span className="rating-number">{averageRating}</span>
           </div>
         )}
+        <div className="card-actions">
+          <button
+            className="add-to-cart-btn desktop-only"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleAddToCart("cart");
+            }}
+            disabled={loadingAction !== null}
+          >
+            {loadingAction === "cart" ? <ButtonLoadingSpinner /> : "Add to Cart"}
+          </button>
+          <button
+            className="buy-now-btn "
+            onClick={(e) => {
+              e.stopPropagation();
+              handleAddToCart("buy");
+            }}
+            disabled={loadingAction !== null}
+          >
+            {loadingAction === "buy" ? <ButtonLoadingSpinner /> : "Buy Now"}
+          </button>
+        </div>
       </div>
     </div>
   );

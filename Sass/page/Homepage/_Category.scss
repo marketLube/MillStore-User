@@ -22,6 +22,11 @@
   span {
     color: black;
   }
+
+  @media (max-width: 768px) {
+    margin-bottom: 3rem;
+    font-size: 1.5rem;
+  }
 }
 
 .categories {
@@ -121,4 +126,8 @@
   margin-top: 10px;
   font-weight: bold;
   color: #333;
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
 }
