@@ -242,6 +242,9 @@
       -webkit-overflow-scrolling: touch;
       scroll-behavior: smooth;
       scroll-snap-type: x mandatory;
+      @media screen and (max-width: 768px) {
+        gap: 0.5rem;
+      }
 
       .product-card {
         flex: 0 0 calc((100% - 7.5rem) / 6);
@@ -264,8 +267,12 @@
         }
 
         @media screen and (max-width: 576px) {
-          flex: 0 0 calc((100% - 9rem) / 1);
-          min-width: calc((100% - 9rem) / 1);
+          // flex: 0 0 calc((100% - 9rem) / 1);
+          // min-width: calc((100% - 9rem) / 1);
+          flex: 0 0 calc(50% - 0.5rem);
+          min-width: calc(35% - 0.5rem);
+          margin-right: 0;
+       
         }
       }
 
