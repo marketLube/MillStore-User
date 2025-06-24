@@ -21,6 +21,7 @@ import {
   useGetCoupons,
   useRemoveCoupon,
 } from "../../hooks/queries/coupon";
+import cartService from "../../api/services/cartService";
 
 function Cartpage() {
   const [couponCode, setCouponCode] = useState("");
@@ -169,6 +170,19 @@ function Cartpage() {
     setSelectedCoupon(null);
     setCouponCode("");
     removeCoupon();
+  };
+
+
+  const handleCheckAvailableStock = async () => {
+    //we have to check if the stock is available for the items in the cart
+    try {
+      const response = await cartService.checkStock();
+      if (response.success) {
+        setIsAddressModalOpen(true);
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to check stock");
+    }
   };
 
   if (!cartData?.data?.formattedCart?.items?.length) {
@@ -330,7 +344,7 @@ function Cartpage() {
 
             <button
               className="proceed-btn"
-              onClick={() => setIsAddressModalOpen(true)}
+              onClick={() => handleCheckAvailableStock()}
             >
               Proceed
             </button>

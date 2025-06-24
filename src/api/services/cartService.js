@@ -40,6 +40,11 @@ const cartService = {
     const response = await apiClient.delete("/cart");
     return response.data;
   },
+
+  checkStock: async () => {
+    const response = await apiClient.get("/cart/check-stock");
+    return response.data;
+  },
 };
 
 export default cartService;
