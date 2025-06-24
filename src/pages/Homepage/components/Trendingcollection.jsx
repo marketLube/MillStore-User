@@ -22,7 +22,6 @@ function TrendingCollection() {
   };
 
   const { allCategoryBanners, isLoading, error } = useCategoryBanners();
-  console.log(allCategoryBanners);
   return (
     <div className="trending-collections">
       <div className="trending-content">
@@ -32,16 +31,16 @@ function TrendingCollection() {
       </div>
       <div className="collections-grid">
         {allCategoryBanners?.map((collection, index) => (
-          <div className="collection-item" key={index}>
+          <div className="collection-item" key={index} onClick={() => handleCategoryClick(collection?.category)}>
             <img src={collection?.image} alt={`Collection ${index + 1}`} />
-            <div className="offer-tag">Up to {collection?.percentage}% OFF</div>
-            <div className="collection-name">{collection?.category?.name}</div>
-            <button
+            {/* <div className="offer-tag">Up to {collection?.percentage}% OFF</div>
+            <div className="collection-name">{collection?.category?.name}</div> */}
+            {/* <button
               className="shop-now-btn"
               onClick={() => handleCategoryClick(collection?.category)}
             >
               Shop Now <FaArrowRight />
-            </button>
+            </button> */}
           </div>
         ))}
       </div>

@@ -6240,6 +6240,7 @@ input[required]::placeholder::after {
   overflow: hidden;
   text-align: center;
   height: 13rem;
+  cursor: pointer;
 }
 @media (max-width: 768px) {
   .trending-collections .collection-item {
