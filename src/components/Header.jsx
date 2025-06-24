@@ -17,11 +17,15 @@ import { useCategories } from "../hooks/queries/categories";
 import { useProducts, useSearchProducts } from "../hooks/queries/products";
 import { setCategory } from "../redux/features/category/categorySlice";
 import { setCart } from "../redux/features/cart/cartSlice";
+import { useCart } from "../hooks/queries/cart";
 
 export default function Header() {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart.cart);
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  
+  // Fetch cart data to keep it in sync
+  const { data: cartData } = useCart();
   const user = useSelector((state) => state.user.user);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
