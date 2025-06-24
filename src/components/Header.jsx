@@ -44,6 +44,20 @@ export default function Header() {
 
   const [isMobileCatOpen, setIsMobileCatOpen] = useState(false);
 
+  // Prevent body scroll when drawer is open
+  useEffect(() => {
+    if (isMobileCatOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    // Cleanup function to restore scroll when component unmounts
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMobileCatOpen]);
+
   useEffect(() => {
     if (searchQuery) {
       setSearchResults(filteredProducts?.data?.products);
