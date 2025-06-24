@@ -126,15 +126,25 @@ export default function Header() {
   return (
     <>
       <header className="header">
-        <Link to="/">
-          <div className="header-logo">
-            <img
-              src={"/logo/footerLogo.svg"}
-              alt="logo"
-              className="header-logo-img"
-            />
-          </div>
-        </Link>
+        <div className="header-left">
+          {/* Mobile hamburger menu */}
+          <button
+            className="mobile-hamburger"
+            onClick={() => setIsMobileCatOpen(true)}
+          >
+            <FiMenu size={24} />
+          </button>
+
+          <Link to="/">
+            <div className="header-logo">
+              <img
+                src={"/logo/footerLogo.svg"}
+                alt="logo"
+                className="header-logo-img"
+              />
+            </div>
+          </Link>
+        </div>
 
         {/* Desktop Search */}
         <div className="header-search desktop-search">
@@ -181,7 +191,7 @@ export default function Header() {
             <FiHeart className="icon" />
           </div> */}
           <div
-            className="header-actions-item user-menu-container"
+            className="header-actions-item user-menu-container desktop-only"
             ref={userMenuRef}
           >
             <div className="user-menu-item" onClick={toggleUserMenu}>
@@ -259,7 +269,7 @@ export default function Header() {
 
             <div className="cart-icon-item">
               <PiShoppingCart className="icon" />
-              <div className="cart-icon-item-text">
+              <div className="cart-icon-item-text desktop-only">
                 <strong>Cart</strong>
                 <span className="cart-badge">
                   {isLoggedIn && cart?.items?.length
@@ -269,6 +279,10 @@ export default function Header() {
                     : "00.00"}
                 </span>
               </div>
+              {/* Mobile cart dot indicator */}
+              {isLoggedIn && cart?.items?.length > 0 && (
+                <span className="mobile-cart-dot"></span>
+              )}
             </div>
           </div>
         </div>
@@ -332,48 +346,96 @@ export default function Header() {
           ))}
         </ul>
       )}
-      <button
-        className="mobile-cat-toggle"
-        onClick={() => setIsMobileCatOpen(true)}
-      >
-        <FiMenu size={28} />
-      </button>
       <Drawer
         title="Categories"
-        placement="bottom"
+        placement="left"
         onClose={() => setIsMobileCatOpen(false)}
         open={isMobileCatOpen}
-        height="auto"
+        width="280px"
         styles={{
           body: {
             padding: '16px',
-            maxHeight: '60vh',
           },
           header: {
             borderBottom: '1px solid #f0f0f0',
             padding: '16px 24px',
-          },
-          content: {
-            borderRadius: '16px 16px 0 0',
           }
         }}
       >
-        <div className="mobile-categories-grid">
-          <div 
-            className={`category-item ${activeCategory === "all" ? "active" : ""}`}
-            onClick={() => handleCategoryClick("all")}
-          >
-            All
+        <div className="mobile-drawer-content">
+          {/* Account Section */}
+          <div className="mobile-account-section">
+            {isLoggedIn ? (
+              <div className="mobile-user-info" onClick={() => {navigate("/profile?tab=personal-info")
+                setIsMobileCatOpen(false)
+              }}>
+                <div className="mobile-user-avatar">
+                  <img src="/images/user/profilepicture.jpg" alt="User" />
+                </div>
+                <div className="mobile-user-details">
+                  <h4>{user?.username}</h4>
+                  <p>{user?.email}</p>
+                </div>
+              </div>
+            ) : (
+              <div className="mobile-login-prompt">
+                <FiUser className="login-icon" />
+                <div>
+                  <h4>Welcome!</h4>
+                  <p>Please login to your account</p>
+                </div>
+                <button 
+                  className="mobile-login-btn"
+                  onClick={() => {
+                    setIsMobileCatOpen(false);
+                    navigate("/login");
+                  }}
+                >
+                  Login
+                </button>
+              </div>
+            )}
           </div>
-          {categories?.map((category) => (
-            <div
-              key={category?._id}
-              className={`category-item ${activeCategory === category?._id ? "active" : ""}`}
-              onClick={() => handleCategoryClick(category)}
-            >
-              {category?.name}
+
+          {/* Categories Section */}
+          <div className="mobile-categories-section">
+            <h3>Categories</h3>
+            <div className="mobile-categories-list">
+              <div 
+                className={`category-list-item ${activeCategory === "all" ? "active" : ""}`}
+                onClick={() => handleCategoryClick("all")}
+              >
+                All
+              </div>
+              {categories?.map((category) => (
+                <div
+                  key={category?._id}
+                  className={`category-list-item ${activeCategory === category?._id ? "active" : ""}`}
+                  onClick={() => handleCategoryClick(category)}
+                >
+                  {category?.name}
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
+
+
+
+          {/* Logout Button at Bottom */}
+          {isLoggedIn && (
+            <div className="mobile-logout-section">
+              <div
+                className="mobile-logout-link"
+                onClick={() => {
+                  setIsMobileCatOpen(false);
+                  handleMenuItemClick("logout");
+                }}
+              >
+                <BiLogOut className="logout-icon" />
+                <span>Logout</span>
+              </div>
+            </div>
+          )}
         </div>
       </Drawer>
     </>
