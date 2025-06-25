@@ -195,9 +195,9 @@ function Bestseller() {
           <FiArrowRight />
         </button>
       </div>
-      {/* <Link to="/products" className="view-all mobile-view-all">
+      <Link to="/products" className="view-all mobile-view-all">
         View All <ViewAllIcon />
-      </Link> */}
+      </Link>
     </div>
   );
 }

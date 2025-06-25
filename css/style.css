@@ -1322,6 +1322,8 @@ ul {
   display: none;
   justify-content: center;
   margin-top: 1.5rem;
+  align-items: center;
+  justify-content: center;
 }
 @media screen and (max-width: 768px) {
   .bestseller-container {
@@ -1749,6 +1751,8 @@ ul {
   }
   .trending-container .mobile-view-all {
     display: flex;
+    justify-content: center;
+    align-items: center;
   }
   .trending-container .trending-products {
     gap: 1rem;
