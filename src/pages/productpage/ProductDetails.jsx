@@ -316,24 +316,38 @@ function ProductDetailsContent() {
                 % off
               </span>
             </div>
+            
+            {/* Stock Status */}
+            <div className="stock-status">
+              {(selectedVariant ? selectedVariant?.stock : product?.stock) <= 0 ? (
+                <span className="out-of-stock">⚠️ Out of Stock</span>
+              ) : (
+                <span className="in-stock">
+                  ✅ In Stock ({selectedVariant ? selectedVariant?.stock : product?.stock} available)
+                </span>
+              )}
+            </div>
+
             <div className="buy-buttons">
               <button
                 className="buy-now"
                 onClick={() => handleAddToCart("buy")}
-                disabled={loadingAction !== null}
+                disabled={
+                  loadingAction !== null || 
+                  (selectedVariant ? selectedVariant?.stock : product?.stock) <= 0
+                }
               >
                 {loadingAction === "buy" ? <ButtonLoadingSpinner /> : "Buy Now"}
               </button>
               <button
                 className="add-cart"
                 onClick={() => handleAddToCart("cart")}
-                disabled={loadingAction !== null}
+                disabled={
+                  loadingAction !== null || 
+                  (selectedVariant ? selectedVariant?.stock : product?.stock) <= 0
+                }
               >
-                {loadingAction === "cart" ? (
-                  <ButtonLoadingSpinner />
-                ) : (
-                  "Add To Cart"
-                )}
+                {loadingAction === "cart" ? <ButtonLoadingSpinner /> : "Add To Cart"}
               </button>
             </div>
           </div>
@@ -350,17 +364,19 @@ function ProductDetailsContent() {
           </div> */}
 
           <div className="section reviews">
-            <div className="reviews-header">
-              <h3>Ratings & Reviews</h3>
-              {isLoggedIn && (
-                <button
-                  className="rate-btn"
-                  onClick={() => setIsRatingModalOpen(true)}
-                >
-                  Rate Product
-                </button>
-              )}
-            </div>
+            {product?.totalRatings > 0 && (
+              <div className="reviews-header">
+                <h3>Ratings & Reviews</h3>
+                {isLoggedIn && (
+                  <button
+                    className="rate-btn"
+                    onClick={() => setIsRatingModalOpen(true)}
+                  >
+                    Rate Product
+                  </button>
+                )}
+              </div>
+            )}
 
             <div className="rating-container">
               {product?.totalRatings > 0 && (
@@ -554,12 +570,22 @@ function ProductDetailsContent() {
         <div className="buy-buttons">
           <button
             className="add-cart"
-            onClick={() => handleAddToCart("add")}
-            disabled={loadingAction !== null}
+            onClick={() => handleAddToCart("cart")}
+            disabled={
+              loadingAction !== null || 
+              (selectedVariant ? selectedVariant?.stock : product?.stock) <= 0
+            }
           >
-            {loadingAction === "add" ? <ButtonLoadingSpinner /> : "Add To Cart"}
+            {loadingAction === "cart" ? <ButtonLoadingSpinner /> : "Add To Cart"}
           </button>
-          <button className="buy-now" onClick={() => handleAddToCart("buy")}>
+          <button 
+            className="buy-now" 
+            onClick={() => handleAddToCart("buy")}
+            disabled={
+              loadingAction !== null || 
+              (selectedVariant ? selectedVariant?.stock : product?.stock) <= 0
+            }
+          >
             {loadingAction === "buy" ? <ButtonLoadingSpinner /> : "Buy Now"}
           </button>
         </div>

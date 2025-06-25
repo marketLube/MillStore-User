@@ -23,7 +23,10 @@ function Card({ product }) {
     discount,
     _id,
     variants = [],
+    stock,
   } = product;
+
+  const isOutOfStock = stock === 0;
 
   const handleAddToCart = (type) => {
     try {
@@ -52,10 +55,10 @@ function Card({ product }) {
   };
 
   return (
-    <div className="product-card" onClick={() => navigate(`/products/${_id}`)}>
+    <div className={`product-card ${isOutOfStock ? 'out-of-stock' : ''}`} onClick={() => navigate(`/products/${_id}`)}>
       <div className="product-card_image">
         {discount && <span className="discount-tag">{discount}</span>}
-        <img src={mainImage} alt={name} />
+        <img src={mainImage} alt={name} className={isOutOfStock ? 'faded' : ''} />
       </div>
       <div className="product-card_content">
         <span className="category-name">{category.name}</span>
@@ -64,10 +67,20 @@ function Card({ product }) {
             ? name.split("").slice(0, 15).join("") + "..."
             : name}
         </h3>
-        <div className="price">
+        <div className="price-container">
           <span className="current-price">₹{offerPrice}</span>
           <span className="original-price">₹{price}</span>
         </div>
+        
+        {/* Fixed height container for stock status */}
+        <div className="stock-status-container">
+          {isOutOfStock && (
+            <div className="stock-status">
+              Out of Stock
+            </div>
+          )}
+        </div>
+
         {averageRating !== null && averageRating !== undefined && (
           <div className="rating">
             {"★".repeat(Math.floor(averageRating))}
@@ -82,17 +95,17 @@ function Card({ product }) {
               e.stopPropagation();
               handleAddToCart("cart");
             }}
-            disabled={loadingAction !== null}
+            disabled={loadingAction !== null || isOutOfStock}
           >
             {loadingAction === "cart" ? <ButtonLoadingSpinner /> : "Add to Cart"}
           </button>
           <button
-            className="buy-now-btn "
+            className="buy-now-btn"
             onClick={(e) => {
               e.stopPropagation();
               handleAddToCart("buy");
             }}
-            disabled={loadingAction !== null}
+            disabled={loadingAction !== null || isOutOfStock}
           >
             {loadingAction === "buy" ? <ButtonLoadingSpinner /> : "Buy Now"}
           </button>

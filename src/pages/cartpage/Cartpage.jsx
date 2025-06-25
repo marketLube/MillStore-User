@@ -231,12 +231,15 @@ function Cartpage() {
 
               <div className="item-details">
                 <h3 title={item?.product?.name}>
-                  {item?.product?.name.slice(0, 10)}
-                  {item?.product?.name.length > 10 && "..."}
+                  {item?.product?.name.slice(0, 30)}
+                  {item?.product?.name.length > 50 && "..."}
                 </h3>
                 <div className="product-id" title={item?.product?._id}>
-                  #{item?.product?._id.slice(0, 10)}
-                  {item?.product?._id.length > 10 && "..."}
+                  #{item?.product?._id.slice(0, 50)}
+                  {item?.product?._id.length > 50 && "..."}
+                </div>
+                <div className="stock-status" style={{ color:"red" }}>
+                  {item?.product?.stock ==0 && "Out of Stock"}
                 </div>
                 <div className="quantity-controls">
                   <button

@@ -1809,9 +1809,18 @@ ul {
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 .product-card:hover {
   transform: translateY(-5px);
+}
+.product-card.out-of-stock {
+  opacity: 0.8;
+}
+.product-card.out-of-stock:hover {
+  transform: none;
 }
 .product-card_image {
   position: relative;
@@ -1852,6 +1861,7 @@ ul {
   height: 100%;
   object-fit: contain;
   display: block;
+  transition: opacity 0.3s ease;
 }
 @media screen and (max-width: 768px) {
   .product-card_image img {
@@ -1859,6 +1869,24 @@ ul {
     height: 100%;
     margin: 0 auto;
   }
+}
+.product-card_image img.faded {
+  opacity: 0.4;
+  filter: grayscale(50%);
+}
+.product-card_image .out-of-stock-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 0, 0, 0.9);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  z-index: 2;
+  pointer-events: none;
 }
 .product-card_image .discount-tag {
   position: absolute;
@@ -1908,6 +1936,9 @@ ul {
 }
 .product-card_content {
   padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 .product-card_content .category-name {
   font-size: 0.875rem;
@@ -1930,25 +1961,35 @@ ul {
     margin-bottom: 0;
   }
 }
-.product-card_content .price {
+.product-card_content .price-container {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin-bottom: 0.5rem;
 }
 @media screen and (max-width: 768px) {
-  .product-card_content .price {
+  .product-card_content .price-container {
     margin-bottom: 0;
   }
 }
-.product-card_content .price .current-price {
+.product-card_content .price-container .current-price {
   color: #ff6b00;
   font-weight: 600;
 }
-.product-card_content .price .original-price {
+.product-card_content .price-container .original-price {
   color: #666;
   text-decoration: line-through;
   font-size: 0.875rem;
+}
+.product-card_content .stock-status-container {
+  height: 20px;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+.product-card_content .stock-status-container .stock-status {
+  color: #ff4444;
+  font-size: 0.75rem;
+  font-weight: 500;
 }
 .product-card_content .rating {
   color: #ffc107;
@@ -1956,6 +1997,7 @@ ul {
   display: flex;
   align-items: center;
   gap: 0.25rem;
+  margin-bottom: auto;
 }
 .product-card_content .rating .rating-number {
   color: #666;
@@ -1976,18 +2018,37 @@ ul {
   font-weight: 500;
   cursor: pointer;
   font-size: 0.95rem;
-  transition: background 0.2s;
+  transition: all 0.2s;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.card-actions .add-to-cart-btn:disabled,
+.card-actions .buy-now-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #ccc !important;
+  color: #666 !important;
+  border-color: #ccc !important;
 }
 .card-actions .add-to-cart-btn {
   background: #ffb64a;
   color: #fff;
   font-size: 0.8rem;
 }
+.card-actions .add-to-cart-btn:hover:not(:disabled) {
+  background: #ff9f1a;
+}
 .card-actions .buy-now-btn {
   background: #fff;
   color: #ffb64a;
   border: 1px solid #ffb64a;
   font-size: 0.8rem;
+}
+.card-actions .buy-now-btn:hover:not(:disabled) {
+  background: #ffb64a;
+  color: #fff;
 }
 .card-actions .desktop-only {
   display: inline-block;
@@ -3121,6 +3182,33 @@ body.filter-open {
     flex-wrap: wrap;
   }
 }
+.product-details .product-container .price .stock-status {
+  margin-bottom: 1rem;
+}
+.product-details .product-container .price .stock-status .in-stock {
+  color: #28a745;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.product-details .product-container .price .stock-status .out-of-stock {
+  color: #dc3545;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+@media (max-width: 768px) {
+  .product-details .product-container .price .stock-status {
+    margin-bottom: 0.75rem;
+  }
+  .product-details .product-container .price .stock-status .in-stock, .product-details .product-container .price .stock-status .out-of-stock {
+    font-size: 0.813rem;
+  }
+}
 .product-details .product-container .price .buy-buttons {
   display: flex;
   gap: 1rem;
@@ -3137,16 +3225,33 @@ body.filter-open {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+.product-details .product-container .price .buy-buttons button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: #f5f5f5;
+  color: #999;
+  border-color: #ddd;
 }
 .product-details .product-container .price .buy-buttons .buy-now {
   background: #ffb64a;
   color: white;
   border: none;
 }
+.product-details .product-container .price .buy-buttons .buy-now:disabled {
+  background: #f5f5f5;
+  color: #999;
+}
 .product-details .product-container .price .buy-buttons .add-cart {
   background: white;
   border: 1px solid #ffb64a;
   color: #ffb64a;
+}
+.product-details .product-container .price .buy-buttons .add-cart:disabled {
+  background: #f5f5f5;
+  color: #999;
+  border-color: #ddd;
 }
 @media (max-width: 768px) {
   .product-details .product-container .price .buy-buttons {
@@ -3524,16 +3629,37 @@ body.filter-open {
     border-radius: 4px;
     font-weight: 500;
     font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .mobile-fixed-buttons .buy-buttons button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: #f5f5f5;
+    color: #999;
+    border-color: #ddd;
   }
   .mobile-fixed-buttons .buy-buttons .buy-now {
     background: #ffb64a;
     color: white;
     border: none;
   }
+  .mobile-fixed-buttons .buy-buttons .buy-now:disabled {
+    background: #f5f5f5;
+    color: #999;
+  }
   .mobile-fixed-buttons .buy-buttons .add-cart {
     background: white;
     border: 1px solid #ffb64a;
     color: #ffb64a;
+  }
+  .mobile-fixed-buttons .buy-buttons .add-cart:disabled {
+    background: #f5f5f5;
+    color: #999;
+    border-color: #ddd;
   }
 }
 .active-filters {
