@@ -359,10 +359,11 @@ function Cartpage() {
               <div className="coupon-input">
                 <input
                   type="text"
-                  placeholder="Enter coupon code..."
+                  placeholder="Select coupon code"  
                   value={couponCode}
                   onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                   disabled={couponDetails}
+                  readOnly
                 />
                 {couponDetails && Object.keys(couponDetails)?.length > 0 ? (
                   <button className="apply-btn" onClick={handleRemoveCoupon}>
