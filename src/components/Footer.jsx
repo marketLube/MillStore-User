@@ -11,12 +11,19 @@ import { FaPhoneAlt } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { MdLocationPin } from "react-icons/md";
 import { toast } from "sonner";
+import { useLabels } from "../hooks/queries/labels";
 function Footer() {
   const { data } = useCategories();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const { mutate: subscribe, isPending } = useSubscribe();
+  const {
+    data: labelsData,
+    isLoading: labelsLoading,
+    error: labelsError,
+  } = useLabels();
+  const labels = labelsData?.envelop?.data || [];
 
   const [values, setValues] = useState({
     name: "",
@@ -73,45 +80,34 @@ function Footer() {
     }
     setValues((prev) => ({ ...prev, name: name.trim() }));
 
-    const response = subscribe(values);
-    if (response) {
-      setValues({
-        name: "",
-        email: "",
-        phone: "",
-      });
-    }
-  };
-
-  const handleBestSellers = () => {
-    navigate("/products", {
-      state: {
-        selectedCategory: {
-          id: "6802300f5956390f15f60d8a",
-          name: "Best Sellers",
-        },
+    subscribe(values, {
+      onSuccess: (response) => {
+        console.log("Subscription response:", response);
+        toast.success("Subscribed successfully");
+        setValues({
+          name: "",
+          email: "",
+          phone: "",
+        });
+      },
+      onError: (error) => {
+        console.error("Subscription error:", error);
+        toast.error(error?.response?.data?.message || error.message);
       },
     });
   };
 
-  const handleTrending = () => {
-    navigate("/products", {
-      state: {
-        selectedCategory: { id: "6802300f5956390f15f60d8a", name: "Trending" },
+ const handleLabelClick = (label) => {
+  navigate("/products", {
+    state: {
+      selectedLabel: {
+        id: label._id,
+        name: label.name,
       },
-    });
-  };
+    },
+  });
+ };
 
-  const handleClearanceSale = () => {
-    navigate("/products", {
-      state: {
-        selectedCategory: {
-          id: "6802300f5956390f15f60d8a",
-          name: "Clearance Sale",
-        },
-      },
-    });
-  };
 
   return (
     <footer className="footer">
@@ -151,6 +147,7 @@ function Footer() {
               type="number"
               placeholder="Phone number"
               value={values.phone}
+              onWheel={(e) => e.target.blur()}
               onChange={(e) => setValues({ ...values, phone: e.target.value })}
               required
             />
@@ -191,15 +188,11 @@ function Footer() {
           <div className="footer-section">
             <h4>Highlights</h4>
             <ul>
-              <li>
-                <a onClick={() => handleBestSellers()}>Best Sellers</a>
+             {labels.map((label) => (
+              <li key={label._id}>
+                <a onClick={() => handleLabelClick(label)}>{label.name}</a>
               </li>
-              <li>
-                <a onClick={() => handleTrending()}>Trending</a>
-              </li>
-              <li>
-                <a onClick={() => handleClearanceSale()}>Clearance sale</a>
-              </li>
+             ))}
             </ul>
           </div>
 

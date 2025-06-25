@@ -154,10 +154,6 @@ function AllProductsContent() {
     const categoryFromHeader = location.state?.selectedCategory;
     const labelFromHomePage = location.state?.selectedLabel;
 
-    console.log("Location State:", {
-      categoryFromHeader,
-      labelFromHomePage,
-    });
 
     if (categoryFromHeader) {
       setSelectedFilters((prev) => ({
@@ -226,7 +222,7 @@ function AllProductsContent() {
     categoryName = "",
     subcategoryName = ""
   ) => {
-    console.log(categoryId, activeCategory);
+    
     dispatch(setCategory(categoryId));
 
     setSelectedFilters((prev) => ({
