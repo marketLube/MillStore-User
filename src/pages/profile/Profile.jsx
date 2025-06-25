@@ -32,7 +32,6 @@ const Profile = () => {
   const updatedUser = async () => {
     const response = await userService.getAuthUser();
     dispatch(setUser(response.user));
-    console.log(response.user);
   };
 
   const handleSubmit = async (e) => {
@@ -63,7 +62,6 @@ const Profile = () => {
         username: formData.name,
         phonenumber: formData.phone,
       });
-      console.log(user);
       toast.success("Profile updated successfully");
       dispatch(setUser(user));
       // Handle form submission

@@ -26,7 +26,6 @@ function Trending() {
     if (response?.data?.products) {
       setTrendingProducts(response?.data?.products);
     }
-    console.log(response);
   }, [response]);
 
   useEffect(() => {

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useDispatch } from "react-redux";
 import { setUser, setIsLoggedIn } from "../../redux/features/user/userSlice";
+import { handleRedirectAfterLogin } from "../../utils/redirectUtils";
 export const useLogin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -14,7 +15,8 @@ export const useLogin = () => {
       dispatch(setUser(data.user));
       dispatch(setIsLoggedIn(true));
 
-      navigate("/");
+      // Handle redirect after login using utility function
+      handleRedirectAfterLogin(navigate);
     },
     onError: (error) => {
       toast.error(error.response?.data?.message || "Failed to login");
@@ -48,7 +50,9 @@ export const useSignup = () => {
       dispatch(setUser(data.user));
       dispatch(setIsLoggedIn(true));
       toast.success("Signup successful");
-      navigate("/");
+      
+      // Handle redirect after signup using utility function
+      handleRedirectAfterLogin(navigate);
     },
     onError: (error) => {
       // toast.error(error.response?.data?.message || "Failed to signup");

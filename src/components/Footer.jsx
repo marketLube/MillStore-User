@@ -82,7 +82,6 @@ function Footer() {
 
     subscribe(values, {
       onSuccess: (response) => {
-        console.log("Subscription response:", response);
         toast.success("Subscribed successfully");
         setValues({
           name: "",

@@ -2,15 +2,20 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import cartService from "../../api/services/cartService";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { storeRedirectPath } from "../../utils/redirectUtils";
 import { useDispatch } from "react-redux";
 import { setCart } from "../../redux/features/cart/cartSlice";
 // Get cart items
 export const useCart = () => {
   const dispatch = useDispatch();
+  const token = localStorage.getItem("user-auth-token");
+  
   const { data, isLoading, error } = useQuery({
     queryKey: ["cart"],
     queryFn: cartService.getCart,
+    enabled: !!token, // Only run query if token exists
   });
+  
   dispatch(setCart(data?.data?.formattedCart));
   return { data, isLoading, error };
 };
@@ -30,6 +35,9 @@ export const useAddToCart = () => {
     onError: (error) => {
       if (error.status === 401) {
         toast.error("Please login to add item to cart");
+        // Store current path before redirecting to login
+        const redirectPath = window.location.pathname + window.location.search;
+        storeRedirectPath(redirectPath);
         navigate("/login");
       } else {
         toast.error(

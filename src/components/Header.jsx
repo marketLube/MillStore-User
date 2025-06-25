@@ -18,6 +18,7 @@ import { useProducts, useSearchProducts } from "../hooks/queries/products";
 import { setCategory } from "../redux/features/category/categorySlice";
 import { setCart } from "../redux/features/cart/cartSlice";
 import { useCart } from "../hooks/queries/cart";
+import { storeRedirectPath } from "../utils/redirectUtils";
 
 export default function Header() {
   const dispatch = useDispatch();
@@ -91,6 +92,12 @@ export default function Header() {
     setIsUserMenuOpen(false);
     if (item === "logout") {
       localStorage.removeItem("user-auth-token");
+      // Clear stored redirect path using utility (with error handling)
+      try {
+        localStorage.removeItem("redirectAfterLogin");
+      } catch (error) {
+        console.error("Error clearing redirect path on logout:", error);
+      }
       dispatch(logout());
       dispatch(setCart([]));
       navigate("/login");
@@ -139,6 +146,20 @@ export default function Header() {
     setIsSearchOpen(false);
     setSearchQuery("");
     setSearchResults([]);
+  };
+
+  const handleCartNavigation = () => {
+    const token = localStorage.getItem("user-auth-token");
+    console.log("Cart navigation - token check:", { token, isLoggedIn });
+    
+    if (!token || token === "undefined" || token === null || token === "") {
+      console.log("No token found, storing redirect path for cart");
+      // Store redirect path before navigation using utility function
+      storeRedirectPath("/cart");
+      navigate("/login");
+    } else {
+      navigate("/cart");
+    }
   };
 
   return (
@@ -276,7 +297,7 @@ export default function Header() {
           </div>
           <div
             className="header-actions-item"
-            onClick={() => navigate("/cart")}
+            onClick={handleCartNavigation}
           >
             {/* <div className="cart-icon">
                 <FiShoppingCart className="icon" />
