@@ -153,6 +153,7 @@ const AddressModal = ({ isOpen, onClose, mode = "cart" }) => {
                   ? selectedAddress
                   : formData,
               paymentMethod,
+              amount: orderDetails.amount,
             });
 
             if (response && response.data.success) {
