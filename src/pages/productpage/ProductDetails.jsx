@@ -360,7 +360,6 @@ function ProductDetailsContent() {
           </div> */}
 
           <div className="section reviews">
-            {product?.totalRatings > 0 && (
               <div className="reviews-header">
                 <h3>Ratings & Reviews</h3>
                 {isLoggedIn && (
@@ -372,7 +371,6 @@ function ProductDetailsContent() {
                   </button>
                 )}
               </div>
-            )}
 
             <div className="rating-container">
               {product?.totalRatings > 0 && (
