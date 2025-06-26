@@ -117,9 +117,7 @@ const OrderHistory = () => {
                         <div className="total-col" data-label="Total Amount">
                           <div className="total-amount">
                             ₹{" "}
-                            {order.couponApplied
-                              ? order.couponApplied.finalAmount
-                              : order?.totalAmount}
+                            {order?.totalAmount}
                           </div>
                         </div>
 
