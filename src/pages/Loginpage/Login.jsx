@@ -50,7 +50,7 @@ const Login = () => {
             />
           </div>
 
-          <div className="form-group">
+          {/* <div className="form-group">
             <input
               type="password"
               name="password"
@@ -59,25 +59,25 @@ const Login = () => {
               placeholder="Password"
               required
             />
-          </div>
+          </div> */}
 
           <button type="submit" className="login-button" disabled={isLoading}>
-            {isLoading ? "Logging in..." : "Continue"}
+            {isLoading ? "Sending OTP..." : "Continue"}
           </button>
 
-          <div className="terms-text">
+          {/* <div className="terms-text">
             By continuing, you agree to our{" "}
             <Link to="/terms">Terms of Service</Link> &{" "}
             <Link to="/privacy">Privacy Policy</Link>
-          </div>
+          </div> */}
         </form>
 
-        <div className="create-account">
+        {/* <div className="create-account">
           <div className="separator">Don't have an account?</div>
           <Link to="/signup" className="create-account-button">
             Create An Account
           </Link>
-        </div>
+        </div> */}
       </div>
     </div>
   );

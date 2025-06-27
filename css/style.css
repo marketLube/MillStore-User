@@ -6491,4 +6491,178 @@ input[required]::placeholder::after {
   background: #555;
 }
 
+.verification-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem 1rem;
+  background-color: #f9fafb;
+  height: calc(100vh - 4rem - 2.5rem);
+}
+.verification-container .verification-card {
+  position: relative;
+  background-color: white;
+  padding: 2rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
+  width: 100%;
+  max-width: 28rem;
+  border-radius: 1rem;
+}
+.verification-container .verification-card .verification-content {
+  width: 100%;
+}
+.verification-container .verification-card .verification-content .verification-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.verification-container .verification-card .verification-content .verification-header h2 {
+  font-weight: 600;
+  font-size: 1.75rem;
+  margin-bottom: 0.75rem;
+  color: #1f2937;
+}
+.verification-container .verification-card .verification-content .verification-header p {
+  font-size: 0.875rem;
+  color: #6b7280;
+  max-width: 90%;
+}
+.verification-container .verification-card .verification-content .verification-header .error-message {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+.verification-container .verification-card .verification-content .form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+.verification-container .verification-card .verification-content .form-container .otp-section .otp-inputs {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 0 auto;
+}
+.verification-container .verification-card .verification-content .form-container .otp-section .otp-inputs .otp-input-container {
+  width: 3.5rem;
+  height: 3.5rem;
+}
+.verification-container .verification-card .verification-content .form-container .otp-section .otp-inputs .otp-input-container .otp-input {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0.25rem;
+  outline: none;
+  border-radius: 0.5rem;
+  border: 2px solid #e5e7eb;
+  font-size: 1.25rem;
+  font-weight: 600;
+  background-color: white;
+  transition: all 0.3s ease;
+}
+.verification-container .verification-card .verification-content .form-container .otp-section .otp-inputs .otp-input-container .otp-input:focus {
+  background-color: #f9fafb;
+  border-color: #ffb64a;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+.verification-container .verification-card .verification-content .form-container .otp-section .otp-inputs .otp-input-container .otp-input.error {
+  border-color: #ef4444;
+  animation: shake 0.5s;
+}
+.verification-container .verification-card .verification-content .form-container .submit-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.verification-container .verification-card .verification-content .form-container .submit-section .submit-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.875rem;
+  background-color: #ffb64a;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.verification-container .verification-card .verification-content .form-container .submit-section .submit-button:hover {
+  background-color: #ffb64a;
+  opacity: 0.9;
+}
+.verification-container .verification-card .verification-content .form-container .submit-section .resend-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.75rem;
+  background-color: transparent;
+  color: #ffb64a;
+  border: 2px solid #ffb64a;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.verification-container .verification-card .verification-content .form-container .submit-section .resend-button:hover {
+  background-color: #f0f9ff;
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+@media screen and (max-width: 480px) {
+  .verification-container {
+    padding: 1rem;
+  }
+  .verification-container .verification-card {
+    padding: 1.5rem 1rem;
+  }
+  .verification-container .verification-card .verification-content .verification-header h2 {
+    font-size: 1.5rem;
+  }
+  .verification-container .verification-card .verification-content .form-container {
+    gap: 1.5rem;
+  }
+  .verification-container .verification-card .verification-content .form-container .otp-section .otp-inputs {
+    gap: 0.5rem;
+  }
+  .verification-container .verification-card .verification-content .form-container .otp-section .otp-inputs .otp-input-container {
+    width: 3rem;
+    height: 3rem;
+  }
+  .verification-container .verification-card .verification-content .form-container .otp-section .otp-inputs .otp-input-container .otp-input {
+    font-size: 1.125rem;
+  }
+  .verification-container .verification-card .verification-content .form-container .submit-section {
+    gap: 0.5rem;
+  }
+  .verification-container .verification-card .verification-content .form-container .submit-section .submit-button,
+  .verification-container .verification-card .verification-content .form-container .submit-section .resend-button {
+    padding: 0.75rem;
+  }
+}
+
 /*# sourceMappingURL=style.css.map */

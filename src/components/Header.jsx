@@ -252,8 +252,8 @@ export default function Header() {
                     <img src="/images/user/profilepicture.jpg" alt="User" />
                   </div>
                   <div className="user-info">
-                    <h4>{user?.username}</h4>
-                    <p>{user?.email}</p>
+                    <h4>{user?.username || "Profile"}</h4>
+                    <p>{user?.email?.slice(0, 20) + "..."}</p>
                   </div>
                   <IoIosArrowForward className="arrow-icon" />
                 </Link>

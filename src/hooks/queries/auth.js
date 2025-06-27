@@ -7,16 +7,10 @@ import { setUser, setIsLoggedIn } from "../../redux/features/user/userSlice";
 import { handleRedirectAfterLogin } from "../../utils/redirectUtils";
 export const useLogin = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   return useMutation({
     mutationFn: ({ email, password }) => authService.login(email, password),
     onSuccess: (data) => {
-      localStorage.setItem("user-auth-token", data.token);
-      dispatch(setUser(data.user));
-      dispatch(setIsLoggedIn(true));
-
-      // Handle redirect after login using utility function
-      handleRedirectAfterLogin(navigate);
+     navigate("/otp" , {state: {email: data?.content?.email}})
     },
     onError: (error) => {
       toast.error(error.response?.data?.message || "Failed to login");
@@ -57,6 +51,37 @@ export const useSignup = () => {
     onError: (error) => {
       // toast.error(error.response?.data?.message || "Failed to signup");
       return error.response?.data?.message;
+    },
+  });
+};
+
+export const useVerifyOtp = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  return useMutation({
+    mutationFn: ({email, otp}) => authService.verifyOtp(email, otp),
+    onError: (error) => {
+      toast.error(error.response?.data?.message || "Failed to verify OTP");
+    },
+    onSuccess: (data) => {
+      localStorage.setItem("user-auth-token", data.token);
+      dispatch(setUser(data.content?.user));
+      dispatch(setIsLoggedIn(true));
+      toast.success("Login successful");
+      handleRedirectAfterLogin(navigate);
+    },
+  });
+};
+
+
+export const useResendOtp = () => {
+  return useMutation({
+    mutationFn: (email) => authService.resendOtp(email),
+    onSuccess: (data) => {
+      toast.success("OTP resent successfully");
+    },
+    onError: (error) => {
+      toast.error(error.response?.data?.message || "Failed to resend OTP");
     },
   });
 };

@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { storeRedirectPath } from "../../utils/redirectUtils";
 import { useDispatch } from "react-redux";
 import { setCart } from "../../redux/features/cart/cartSlice";
+import { useEffect } from "react";
+
 // Get cart items
 export const useCart = () => {
   const dispatch = useDispatch();
@@ -16,7 +18,13 @@ export const useCart = () => {
     enabled: !!token, // Only run query if token exists
   });
   
-  dispatch(setCart(data?.data?.formattedCart));
+  // Use useEffect to dispatch cart data only when it's available
+  useEffect(() => {
+    if (data?.data?.formattedCart) {
+      dispatch(setCart(data.data.formattedCart));
+    }
+  }, [data, dispatch]);
+
   return { data, isLoading, error };
 };
 

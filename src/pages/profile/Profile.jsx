@@ -41,21 +41,23 @@ const Profile = () => {
       toast.error("Name is required");
       return;
     }
-    if (formData.phone.trim() === "") {
-      toast.error("Phone number is required");
-      return;
-    }
-    if (!/^\d{10}$/.test(formData.phone)) {
+    // if (formData.phone.trim() === "") {
+    //   toast.error("Phone number is required");
+    //   return;
+    // }
+    if (formData.phone && !/^\d{10}$/.test(formData.phone)) {
       toast.error("Invalid phone number");
       return;
+    } else {
+      formData.phone = formData.phone || user?.phonenumber;
     }
-    if (
-      formData.name.trim() === user?.username &&
-      formData.phone.trim() === user?.phonenumber
-    ) {
-      toast.error("No changes made");
-      return;
-    }
+    // if (
+    //   formData.name.trim() === user?.username &&
+    //   formData.phone.trim() === user?.phonenumber
+    // ) {
+    //   toast.error("No changes made");
+    //   return;
+    // }
     try {
       e.preventDefault();
       const user = await userService.updateUser({
