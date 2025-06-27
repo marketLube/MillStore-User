@@ -35,14 +35,14 @@ const router = createBrowserRouter([
     element: <Userlayout />,
     errorElement: <ErrorFallback error={error} />,
     children: [
-      {
-        path: "/signup",
-        element: (
-          <WithErrorBoundary>
-            <Signup />
-          </WithErrorBoundary>
-        ),
-      },
+      // {
+      //   path: "/signup",
+      //   element: (
+      //     <WithErrorBoundary>
+      //       <Signup />
+      //     </WithErrorBoundary>
+      //   ),
+      // },
       {
         path: "/login",
         element: (
