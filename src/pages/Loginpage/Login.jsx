@@ -45,7 +45,7 @@ const Login = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="Enter email address or phone number"
+              placeholder="Enter email address"
               required
             />
           </div>
