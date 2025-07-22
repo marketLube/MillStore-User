@@ -12,6 +12,11 @@ import Signup from "../pages/Signuppage/Signup";
 import ProtectedRoute from "../components/route/ProtectedRoute";
 import PaymentSuccess from "../pages/payment/PaymentSuccess";
 import { Verification } from "../pages/OTP/Verification";
+import About from "../pages/About/About";
+import PrivacyPolicy from "../pages/About/PrivacyPolicy";
+import Terms from "../pages/About/Terms";
+import RefundPolicy from "../pages/About/RefundPolicy";
+import Contact from "../pages/About/Contact";
 const error = new Error("Page Not Found", { cause: 404 });
 
 // Create a wrapper component for ErrorBoundary
@@ -106,6 +111,46 @@ const router = createBrowserRouter([
       {
         path: "/payment-success",
         element: <PaymentSuccess />,
+      },
+      {
+        path: "/about",
+        element: (
+          <WithErrorBoundary>
+            <About />
+          </WithErrorBoundary>
+        ),
+      },
+      {
+        path: "/privacy-policy",
+        element: (
+          <WithErrorBoundary>
+            <PrivacyPolicy />
+          </WithErrorBoundary>
+        ),
+      },
+      {
+        path: "/terms",
+        element: (
+          <WithErrorBoundary>
+            <Terms />
+          </WithErrorBoundary>
+        ),
+      },
+      {
+        path: "/refund-policy",
+        element: (
+          <WithErrorBoundary>
+            <RefundPolicy />
+          </WithErrorBoundary>
+        ),
+      },
+      {
+        path: "/contact",
+        element: (
+          <WithErrorBoundary>
+            <Contact />
+          </WithErrorBoundary>
+        ),
       },
     ],
   },

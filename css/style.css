@@ -2198,30 +2198,19 @@ ul {
 }
 .footer .footer-main .footer-links-group {
   display: grid;
-  grid-template-columns: auto auto auto;
-  gap: 5rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3rem;
 }
-@media (max-width: 992px) {
+@media (max-width: 1200px) {
   .footer .footer-main .footer-links-group {
     grid-template-columns: 1fr 1fr;
-    gap: 0rem;
+    gap: 2rem;
   }
 }
 @media (max-width: 768px) {
   .footer .footer-main .footer-links-group {
-    grid-template-columns: 1fr 1fr;
-    gap: 0rem;
-  }
-}
-@media (max-width: 575px) {
-  .footer .footer-main .footer-links-group {
     grid-template-columns: 1fr;
-    gap: 0rem;
-  }
-}
-@media (max-width: 1650px) {
-  .footer .footer-main .footer-links-group {
-    gap: 2rem;
+    gap: 1.5rem;
   }
 }
 .footer .footer-main .footer-section h4 {
@@ -6662,6 +6651,114 @@ input[required]::placeholder::after {
   .verification-container .verification-card .verification-content .form-container .submit-section .submit-button,
   .verification-container .verification-card .verification-content .form-container .submit-section .resend-button {
     padding: 0.75rem;
+  }
+}
+.about-page,
+.privacy-policy-page,
+.terms-page,
+.refund-policy-page,
+.contact-page {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 12px;
+  font-family: "Inter", Arial, sans-serif;
+}
+
+.about-page h1,
+.privacy-policy-page h1,
+.terms-page h1,
+.refund-policy-page h1,
+.contact-page h1 {
+  font-size: 2.2rem;
+  margin-bottom: 1rem;
+  color: #1a202c;
+}
+
+.about-page p,
+.privacy-policy-page p,
+.terms-page p,
+.refund-policy-page p,
+.contact-page p,
+.privacy-policy-page ul,
+.refund-policy-page ul {
+  font-size: 1.08rem;
+  color: #444;
+  margin-bottom: 1rem;
+  line-height: 1.7;
+}
+
+.privacy-policy-page h2,
+.terms-page h2,
+.refund-policy-page h2 {
+  font-size: 1.3rem;
+  margin-top: 1.5rem;
+  color: #2d3748;
+}
+
+.refund-policy-page ul,
+.privacy-policy-page ul {
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin-top: 1.5rem;
+}
+
+.contact-form label {
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+}
+
+.contact-form input,
+.contact-form textarea {
+  padding: 0.7rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: #f9f9f9;
+  resize: none;
+}
+
+.contact-form textarea {
+  min-height: 100px;
+}
+
+.contact-form button {
+  background: #1a202c;
+  color: #fff;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.contact-form button:hover {
+  background: #2d3748;
+}
+
+@media (max-width: 600px) {
+  .about-page,
+  .privacy-policy-page,
+  .terms-page,
+  .refund-policy-page,
+  .contact-page {
+    padding: 1rem;
+    border-radius: 8px;
+  }
+  .about-page h1,
+  .privacy-policy-page h1,
+  .terms-page h1,
+  .refund-policy-page h1,
+  .contact-page h1 {
+    font-size: 1.5rem;
   }
 }
 

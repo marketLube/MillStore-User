@@ -4,7 +4,7 @@ import Logo from "../../public/logo/footerLogo.svg";
 import { useCategories } from "../hooks/queries/categories";
 import { setCategory } from "../redux/features/category/categorySlice";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useSubscribe } from "../hooks/queries/user";
 import ButtonLoadingSpinner from "./ButtonLoadingSpinners";
 import { FaPhoneAlt } from "react-icons/fa";
@@ -96,17 +96,20 @@ function Footer() {
     });
   };
 
- const handleLabelClick = (label) => {
-  navigate("/products", {
-    state: {
-      selectedLabel: {
-        id: label._id,
-        name: label.name,
+  const handleLabelClick = (label) => {
+    navigate("/products", {
+      state: {
+        selectedLabel: {
+          id: label._id,
+          name: label.name,
+        },
       },
-    },
-  });
- };
+    });
+  };
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <footer className="footer">
@@ -187,11 +190,63 @@ function Footer() {
           <div className="footer-section">
             <h4>Highlights</h4>
             <ul>
-             {labels.map((label) => (
-              <li key={label._id}>
-                <a onClick={() => handleLabelClick(label)}>{label.name}</a>
+              {labels.map((label) => (
+                <li key={label._id}>
+                  <a onClick={() => handleLabelClick(label)}>{label.name}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Info */}
+          <div className="footer-section">
+            <h4>Info</h4>
+            <ul>
+              <li>
+                <Link
+                  to="/about"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => scrollToTop()}
+                >
+                  About
+                </Link>
               </li>
-             ))}
+              <li>
+                <Link
+                  style={{ cursor: "pointer" }}
+                  to="/privacy-policy"
+                  onClick={() => scrollToTop()}
+                >
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link
+                  style={{ cursor: "pointer" }}
+                  to="/terms"
+                  onClick={() => scrollToTop()}
+                >
+                  Terms & Conditions
+                </Link>
+              </li>
+              <li>
+                <Link
+                  style={{ cursor: "pointer" }}
+                  to="/refund-policy"
+                  onClick={() => scrollToTop()}
+                >
+                  Refund Policy
+                </Link>
+              </li>
+              <li>
+                <Link
+                  style={{ cursor: "pointer" }}
+                  to="/contact"
+                  onClick={() => scrollToTop()}
+                >
+                  Contact
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -200,7 +255,7 @@ function Footer() {
             <h4>Contact</h4>
             <ul>
               <li className="address">
-                <MdLocationPin className="contact-icon" /> Tradelines Millstore
+                Tradelines Millstore
                 <br />
                 <span>Delta Tower</span>
                 <br />
@@ -217,6 +272,7 @@ function Footer() {
                 <a
                   href="mailto:tradelinesmillstore1990@gmail.com"
                   className="footer-email"
+                  style={{ display: "flex", alignItems: "center" }}
                 >
                   <MdEmail className="contact-icon" />
                   tradelinesmillstore1990@gmail.com
@@ -250,12 +306,7 @@ function Footer() {
           >
             <FaInstagram />
           </span>
-          <span className="moboNone"></span>
-          <span className="moboNone"></span>
-          <span className="moboNone"></span>
-          <span className="moboNone"></span>
-          <span className="moboNone"></span>
-          <span className="moboNone"></span>
+
           {/* <span>
             <FaYoutube />
           </span> */}
