@@ -5,6 +5,14 @@ import { useDispatch } from "react-redux";
 import { setCategory } from "../../../redux/features/category/categorySlice";
 import { useNavigate } from "react-router-dom";
 
+// URL-safe slug generator for category names (must match Header.jsx)
+const slugify = (text) =>
+  String(text || "")
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-]/g, "");
+
 function Category() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -22,7 +30,8 @@ function Category() {
     //     },
     //   },
     // });
-    navigate(`/category/${category?._id}`);
+    const slug = slugify(category?.name);
+    navigate(`/category/${slug}`);
   };
 
   return (

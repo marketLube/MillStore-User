@@ -12,6 +12,15 @@ import { MdEmail } from "react-icons/md";
 import { MdLocationPin } from "react-icons/md";
 import { toast } from "sonner";
 import { useLabels } from "../hooks/queries/labels";
+
+// URL-safe slug generator for category names (must match Header.jsx)
+const slugify = (text) =>
+  String(text || "")
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-]/g, "");
+
 function Footer() {
   const { data } = useCategories();
   const dispatch = useDispatch();
@@ -46,7 +55,8 @@ function Footer() {
 
     // Navigate to the category route so params drive the UI state
     dispatch(setCategory(category._id));
-    navigate(`/category/${category._id}`);
+    const slug = slugify(category?.name);
+    navigate(`/category/${slug}`);
     // navigate("/products", {
     //   state: {
     //     selectedCategory: {

@@ -27,6 +27,14 @@ import { setCart } from "../redux/features/cart/cartSlice";
 import { useCart } from "../hooks/queries/cart";
 import { storeRedirectPath } from "../utils/redirectUtils";
 
+// URL-safe slug generator for category names
+const slugify = (text) =>
+  String(text || "")
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-") // spaces to hyphens
+    .replace(/[^a-z0-9-]/g, ""); // remove unsafe chars
+
 export default function Header() {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart.cart);
@@ -134,9 +142,10 @@ export default function Header() {
       return;
     }
 
-    // Navigate to the category route so params drive the UI state
-    dispatch(setCategory(category._id));
-    navigate(`/category/${category._id}`);
+    // Navigate to the category route with slug so params drive the UI state
+    dispatch(setCategory(category?._id));
+    const slug = slugify(category?.name);
+    navigate(`/category/${slug}`);
   };
 
   const handleProductClick = (productId) => {

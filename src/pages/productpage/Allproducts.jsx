@@ -23,6 +23,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCategory } from "../../redux/features/category/categorySlice";
 import { useParams } from "react-router-dom";
 
+// URL-safe slug generator for category names (must match Header.jsx)
+const slugify = (text) =>
+  String(text || "")
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-]/g, "");
+
 // Separate the content into a new component
 function AllProductsContent() {
   const activeCategory = useSelector((state) => state.category.category);
@@ -173,13 +181,16 @@ function AllProductsContent() {
   useEffect(() => {
     const labelFromHomePage = location.state?.selectedLabel;
 
-    // When param `id` exists, sync filters and names from it
+    // When param `id` exists, sync filters and names from it using slug match
     if (id) {
-      dispatch(setCategory(id));
-      const matchedCategory = categories.find((cat) => cat._id === id);
+      const matchedCategory = categories.find(
+        (cat) => slugify(cat.name) === id
+      );
+
+      dispatch(setCategory(matchedCategory?._id));
       setSelectedFilters((prev) => ({
         ...prev,
-        categoryId: id,
+        categoryId: matchedCategory?._id,
       }));
       // setSelectedNames((prev) => ({
       //   ...prev,
@@ -261,7 +272,9 @@ function AllProductsContent() {
       navigate("/products");
     } else {
       dispatch(setCategory(categoryId));
-      navigate(`/category/${categoryId}`);
+      // navigate using slug from name if available
+      const slug = slugify(categoryName);
+      if (slug) navigate(`/category/${slug}`);
     }
 
     setSelectedFilters((prev) => ({
