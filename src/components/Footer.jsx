@@ -38,15 +38,23 @@ function Footer() {
   }, [data]);
 
   const handleCategoryClick = (category) => {
-    dispatch(setCategory(category?._id || "all"));
-    navigate("/products", {
-      state: {
-        selectedCategory: {
-          id: category._id,
-          name: category.name,
-        },
-      },
-    });
+    if (category === "all" || !category?._id) {
+      dispatch(setCategory("all"));
+      navigate("/products");
+      return;
+    }
+
+    // Navigate to the category route so params drive the UI state
+    dispatch(setCategory(category._id));
+    navigate(`/category/${category._id}`);
+    // navigate("/products", {
+    //   state: {
+    //     selectedCategory: {
+    //       id: category._id,
+    //       name: category.name,
+    //     },
+    //   },
+    // });
   };
 
   const handleSubmit = (e) => {

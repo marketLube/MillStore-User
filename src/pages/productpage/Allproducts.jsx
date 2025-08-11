@@ -16,15 +16,19 @@ import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "../../components/error/ErrorFallback";
 import { useLabels } from "../../hooks/queries/labels";
 import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Pagination from "../../components/Pagination/Pagination";
 import { useBanners } from "../../hooks/queries/Banner";
 import { useDispatch, useSelector } from "react-redux";
 import { setCategory } from "../../redux/features/category/categorySlice";
+import { useParams } from "react-router-dom";
 
 // Separate the content into a new component
 function AllProductsContent() {
   const activeCategory = useSelector((state) => state.category.category);
+  const { id } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [openSections, setOpenSections] = useState({
@@ -68,6 +72,7 @@ function AllProductsContent() {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    isFetching,
   } = useProducts({
     categoryId: selectedFilters.categoryId,
     subcategoryId: selectedFilters.subcategoryId,
@@ -98,9 +103,6 @@ function AllProductsContent() {
     [isLoading, hasNextPage, fetchNextPage]
   );
 
- 
-  
-
   const {
     data: categoriesData,
     isLoading: categoriesLoading,
@@ -118,6 +120,24 @@ function AllProductsContent() {
     isLoading: bannersLoading,
     error: bannersError,
   } = useBanners();
+
+  const products = response?.pages?.flatMap((page) => page.data.products) || [];
+  const totalProducts = response?.pages?.[0]?.data?.totalProducts || 0;
+  const categories = categoriesData?.envelop?.data || [];
+  const labels = labelsData?.envelop?.data || [];
+
+  const selectedCategory = useSelector((state) => state.category.category);
+
+  const [selectedCategoryName, setSelectedCategoryName] = useState(null);
+
+  useEffect(() => {
+    if (selectedCategory) {
+      const category = categories.find(
+        (category) => category._id === selectedCategory
+      );
+      setSelectedCategoryName(category?.name || "All Products");
+    }
+  }, [selectedCategory]);
 
   const debouncedUpdateFilters = useCallback(
     debounce((newRange) => {
@@ -151,20 +171,33 @@ function AllProductsContent() {
   }, []);
 
   useEffect(() => {
-    const categoryFromHeader = location.state?.selectedCategory;
     const labelFromHomePage = location.state?.selectedLabel;
 
-
-    if (categoryFromHeader) {
+    // When param `id` exists, sync filters and names from it
+    if (id) {
+      dispatch(setCategory(id));
+      const matchedCategory = categories.find((cat) => cat._id === id);
       setSelectedFilters((prev) => ({
         ...prev,
-        categoryId: categoryFromHeader.id,
+        categoryId: id,
+      }));
+      // setSelectedNames((prev) => ({
+      //   ...prev,
+      //   categoryName: matchedCategory?.name || "",
+      // }));
+    } else {
+      // No param means "All" products; clear category selection
+      dispatch(setCategory("all"));
+      setSelectedFilters((prev) => ({
+        ...prev,
+        categoryId: null,
+        subcategoryId: null,
       }));
       setSelectedNames((prev) => ({
         ...prev,
-        categoryName: categoryFromHeader.name,
+        categoryName: "",
+        subcategoryName: "",
       }));
-      window.history.replaceState({}, document.title);
     }
 
     if (labelFromHomePage) {
@@ -177,18 +210,18 @@ function AllProductsContent() {
         labelName: labelFromHomePage.name,
       }));
     }
-  }, [location.state]);
+  }, [id, categories, location.state]);
 
-  if (isLoading || categoriesLoading || labelsLoading)
+  if (
+    isLoading ||
+    categoriesLoading ||
+    labelsLoading ||
+    (isFetching && !isFetchingNextPage)
+  )
     return <LoadingSpinner />;
   if (error || categoriesError) {
     throw error || categoriesError;
   }
-
-  const products = response?.pages?.flatMap((page) => page.data.products) || [];
-  const totalProducts = response?.pages?.[0]?.data?.totalProducts || 0;
-  const categories = categoriesData?.envelop?.data || [];
-  const labels = labelsData?.envelop?.data || [];
 
   const toggleFilter = () => {
     setIsFilterOpen(!isFilterOpen);
@@ -222,8 +255,14 @@ function AllProductsContent() {
     categoryName = "",
     subcategoryName = ""
   ) => {
-    
-    dispatch(setCategory(categoryId));
+    // When clearing category, navigate to the generic products route
+    if (!categoryId) {
+      dispatch(setCategory("all"));
+      navigate("/products");
+    } else {
+      dispatch(setCategory(categoryId));
+      navigate(`/category/${categoryId}`);
+    }
 
     setSelectedFilters((prev) => ({
       ...prev,
@@ -232,7 +271,7 @@ function AllProductsContent() {
     }));
 
     setSelectedNames({
-      categoryName: categoryName,
+      // categoryName: categoryName,
       subcategoryName: subcategoryName,
     });
 
@@ -450,8 +489,6 @@ function AllProductsContent() {
     }
   };
 
-
-
   return (
     <div className="product-page">
       {/* <Carousel
@@ -462,7 +499,7 @@ function AllProductsContent() {
       /> */}
       <div className="product-section">
         <div className="breadcrumb">
-          <span>Home</span> / <span>All Products</span>
+          <span>Home</span> / <span>{selectedCategoryName}</span>
         </div>
 
         <div className="product-header">
@@ -508,7 +545,8 @@ function AllProductsContent() {
                   labelName: "",
                 });
                 setPriceRange({ min: 0, max: Infinity });
-                dispatch(setCategory(null));
+                dispatch(setCategory("all"));
+                navigate("/products");
               }}
             >
               Clear All
@@ -764,7 +802,9 @@ function AllProductsContent() {
               {products.map((product, index) => (
                 <div
                   key={product._id}
-                  ref={index === products.length - 1 ? lastProductElementRef : null}
+                  ref={
+                    index === products.length - 1 ? lastProductElementRef : null
+                  }
                 >
                   <Card product={product} />
                 </div>

@@ -152,6 +152,14 @@ const router = createBrowserRouter([
           </WithErrorBoundary>
         ),
       },
+      {
+        path: "/category/:id",
+        element: (
+          <WithErrorBoundary>
+            <AllProducts />
+          </WithErrorBoundary>
+        ),
+      },
     ],
   },
 ]);

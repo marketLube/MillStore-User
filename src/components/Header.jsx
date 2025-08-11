@@ -1,5 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
-import { FiHeart, FiShoppingCart, FiUser, FiSearch, FiX, FiMenu } from "react-icons/fi";
+import {
+  FiHeart,
+  FiShoppingCart,
+  FiUser,
+  FiSearch,
+  FiX,
+  FiMenu,
+} from "react-icons/fi";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 import { PiShoppingCart } from "react-icons/pi";
 import { Drawer } from "antd";
@@ -24,7 +31,7 @@ export default function Header() {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart.cart);
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
-  
+
   // Fetch cart data to keep it in sync
   const { data: cartData } = useCart();
   const user = useSelector((state) => state.user.user);
@@ -46,20 +53,19 @@ export default function Header() {
   const { data: products, isLoading } = useProducts();
   const { data: filteredProducts } = useSearchProducts(searchQuery);
 
-
   const [isMobileCatOpen, setIsMobileCatOpen] = useState(false);
 
   // Prevent body scroll when drawer is open
   useEffect(() => {
     if (isMobileCatOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     }
 
     // Cleanup function to restore scroll when component unmounts
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     };
   }, [isMobileCatOpen]);
 
@@ -119,16 +125,18 @@ export default function Header() {
   const categories = data?.envelop?.data || [];
 
   const handleCategoryClick = (category) => {
-    dispatch(setCategory(category?._id || "all"));
     setIsMobileCatOpen(false);
-    navigate("/products", {
-      state: {
-        selectedCategory: {
-          id: category._id,
-          name: category.name,
-        },
-      },
-    });
+
+    // When "All" is selected, go to the generic products route
+    if (category === "all" || !category?._id) {
+      dispatch(setCategory("all"));
+      navigate("/products");
+      return;
+    }
+
+    // Navigate to the category route so params drive the UI state
+    dispatch(setCategory(category._id));
+    navigate(`/category/${category._id}`);
   };
 
   const handleProductClick = (productId) => {
@@ -151,7 +159,7 @@ export default function Header() {
   const handleCartNavigation = () => {
     const token = localStorage.getItem("user-auth-token");
     console.log("Cart navigation - token check:", { token, isLoggedIn });
-    
+
     if (!token || token === "undefined" || token === null || token === "") {
       console.log("No token found, storing redirect path for cart");
       // Store redirect path before navigation using utility function
@@ -295,10 +303,7 @@ export default function Header() {
               </div>
             )}
           </div>
-          <div
-            className="header-actions-item"
-            onClick={handleCartNavigation}
-          >
+          <div className="header-actions-item" onClick={handleCartNavigation}>
             {/* <div className="cart-icon">
                 <FiShoppingCart className="icon" />
                 {isLoggedIn && cart?.items?.length > 0 && (
@@ -393,21 +398,25 @@ export default function Header() {
         width="280px"
         styles={{
           body: {
-            padding: '16px',
+            padding: "16px",
           },
           header: {
-            borderBottom: '1px solid #f0f0f0',
-            padding: '16px 24px',
-          }
+            borderBottom: "1px solid #f0f0f0",
+            padding: "16px 24px",
+          },
         }}
       >
         <div className="mobile-drawer-content">
           {/* Account Section */}
           <div className="mobile-account-section">
             {isLoggedIn ? (
-              <div className="mobile-user-info" onClick={() => {navigate("/profile?tab=personal-info")
-                setIsMobileCatOpen(false)
-              }}>
+              <div
+                className="mobile-user-info"
+                onClick={() => {
+                  navigate("/profile?tab=personal-info");
+                  setIsMobileCatOpen(false);
+                }}
+              >
                 <div className="mobile-user-avatar">
                   <img src="/images/user/profilepicture.jpg" alt="User" />
                 </div>
@@ -423,7 +432,7 @@ export default function Header() {
                   <h4>Welcome!</h4>
                   <p>Please login to your account</p>
                 </div>
-                <button 
+                <button
                   className="mobile-login-btn"
                   onClick={() => {
                     setIsMobileCatOpen(false);
@@ -440,8 +449,10 @@ export default function Header() {
           <div className="mobile-categories-section">
             <h3>Categories</h3>
             <div className="mobile-categories-list">
-              <div 
-                className={`category-list-item ${activeCategory === "all" ? "active" : ""}`}
+              <div
+                className={`category-list-item ${
+                  activeCategory === "all" ? "active" : ""
+                }`}
                 onClick={() => handleCategoryClick("all")}
               >
                 All
@@ -449,7 +460,9 @@ export default function Header() {
               {categories?.map((category) => (
                 <div
                   key={category?._id}
-                  className={`category-list-item ${activeCategory === category?._id ? "active" : ""}`}
+                  className={`category-list-item ${
+                    activeCategory === category?._id ? "active" : ""
+                  }`}
                   onClick={() => handleCategoryClick(category)}
                 >
                   {category?.name}
@@ -457,8 +470,6 @@ export default function Header() {
               ))}
             </div>
           </div>
-
-
 
           {/* Logout Button at Bottom */}
           {isLoggedIn && (

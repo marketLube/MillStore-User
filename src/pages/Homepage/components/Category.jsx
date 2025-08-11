@@ -14,14 +14,15 @@ function Category() {
 
   const handleCategoryClick = (category) => {
     dispatch(setCategory(category?._id));
-    navigate("/products", {
-      state: {
-        selectedCategory: {
-          id: category._id,
-          name: category.name,
-        },
-      },
-    });
+    // navigate("/products", {
+    //   state: {
+    //     selectedCategory: {
+    //       id: category._id,
+    //       name: category.name,
+    //     },
+    //   },
+    // });
+    navigate(`/category/${category?._id}`);
   };
 
   return (
