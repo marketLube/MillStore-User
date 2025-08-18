@@ -41,7 +41,7 @@ const Login = () => {
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <input
-              type="text"
+              type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
