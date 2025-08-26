@@ -3,6 +3,7 @@ import { FiCopy } from "react-icons/fi";
 import { useGetOrderHistory } from "../../hooks/queries/order";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import OrderStatus from "./OrderStatus";
+import { toast } from "sonner";
 
 const OrderHistory = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -20,6 +21,11 @@ const OrderHistory = () => {
 
   const handleOrderStatusClose = () => {
     setIsOrderStatusOpen(false);
+  };
+
+  const formatOrderId = (objectId) => {
+    if (!objectId) return "N/A";
+    return objectId.slice(-6).toUpperCase();
   };
 
   // Filter orders based on the search query
@@ -116,15 +122,29 @@ const OrderHistory = () => {
 
                         <div className="total-col" data-label="Total Amount">
                           <div className="total-amount">
-                            ₹{" "}
-                            {order?.totalAmount}
+                            ₹ {order?.totalAmount}
                           </div>
                         </div>
 
                         <div className="order-id-col" data-label="Order ID">
-                          <span className="order-id">
-                            {order?._id}&nbsp;&nbsp;
-                          </span>
+                          <div className="order-id-container">
+                            <span
+                              className="order-id"
+                              title={`Full ID: ${order?._id}`}
+                            >
+                              {formatOrderId(order?._id)}
+                            </span>
+                            <button
+                              className="copy-id-btn"
+                              onClick={() => {
+                                navigator.clipboard.writeText(order?._id);
+                                toast.success("Order ID copied to clipboard!");
+                              }}
+                              title="Copy full ID"
+                            >
+                              <FiCopy size={14} />
+                            </button>
+                          </div>
                         </div>
 
                         <div className="status-col">
