@@ -5220,7 +5220,12 @@ body.modal-open {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 5rem;
+  padding: 10rem;
+}
+@media (max-width: 1400px) {
+  .login-container {
+    padding: 5rem;
+  }
 }
 .login-container .login-card {
   background: white;
@@ -5259,6 +5264,20 @@ body.modal-open {
   outline: none;
   border-color: #666;
 }
+.login-container .login-card .password-input {
+  position: relative;
+}
+.login-container .login-card .password-input input {
+  padding-right: 35px;
+}
+.login-container .login-card .password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #666;
+}
 .login-container .login-card .login-button {
   width: 100%;
   padding: 12px;
@@ -5286,6 +5305,111 @@ body.modal-open {
 }
 .login-container .login-card .terms-text a:hover {
   text-decoration: underline;
+}
+.login-container .login-card .divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 24px 0;
+}
+.login-container .login-card .divider::before, .login-container .login-card .divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid #ddd;
+}
+.login-container .login-card .divider span {
+  background: #fff;
+  padding: 0 6px;
+  color: #666;
+  font-size: 14px;
+  z-index: 1;
+}
+.login-container .login-card .google-login-button {
+  width: 100%;
+  padding: 12px;
+  background-color: white;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition: all 0.2s ease;
+}
+.login-container .login-card .google-login-button:hover {
+  background-color: #f8f9fa;
+  border-color: #ccc;
+}
+.login-container .login-card .google-login-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.login-container .login-card .google-login-button .loading-spinner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.login-container .login-card .google-login-button .loading-spinner .spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ddd;
+  border-top: 2px solid #ffb64a;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.login-container .login-card .facebook-login-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #1877f2;
+  color: white;
+  border: 1px solid #1877f2;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition: all 0.2s ease;
+}
+.login-container .login-card .facebook-login-button:hover {
+  background-color: #166fe5;
+  border-color: #166fe5;
+}
+.login-container .login-card .facebook-login-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.login-container .login-card .facebook-login-button svg path {
+  fill: white;
+}
+.login-container .login-card .facebook-login-button .loading-spinner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.login-container .login-card .facebook-login-button .loading-spinner .spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 }
 .login-container .login-card .create-account {
   text-align: center;
@@ -5321,6 +5445,12 @@ body.modal-open {
   }
   .login-container .login-card {
     padding: 24px;
+  }
+  .login-container .password-input input {
+    padding-right: 25px;
+  }
+  .login-container .password-toggle {
+    right: 10px;
   }
 }
 .signup-container {

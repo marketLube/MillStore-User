@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useLogin } from "../../hooks/queries/auth";
+import GoogleLoginButton from "../../components/GoogleLoginButton";
+import { storeRedirectPath } from "../../utils/redirectUtils";
+// import FacebookLoginButton from "../../components/FacebookLoginButton";
 
 const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const location = useLocation();
 
   const { mutate: loginMutation, isPending: isLoading } = useLogin();
 
@@ -15,7 +19,25 @@ const Login = () => {
       top: 0,
       behavior: "smooth",
     });
-  }, []);
+
+    // Store redirect path if it comes from state or if no redirect path is already stored
+    const storedRedirectPath = localStorage.getItem("redirectAfterLogin");
+
+    if (location.state?.from && !storedRedirectPath) {
+      storeRedirectPath(location.state.from);
+    } else if (document.referrer && !storedRedirectPath) {
+      // If user came from another page within the same domain, store that as redirect path
+      const referrerUrl = new URL(document.referrer);
+      const currentUrl = new URL(window.location.href);
+
+      if (
+        referrerUrl.origin === currentUrl.origin &&
+        referrerUrl.pathname !== "/login"
+      ) {
+        storeRedirectPath(referrerUrl.pathname + referrerUrl.search);
+      }
+    }
+  }, [location]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -41,7 +63,7 @@ const Login = () => {
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <input
-              type="email"
+              type="text"
               name="email"
               value={formData.email}
               onChange={handleChange}
@@ -50,34 +72,23 @@ const Login = () => {
             />
           </div>
 
-          {/* <div className="form-group">
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Password"
-              required
-            />
-          </div> */}
-
           <button type="submit" className="login-button" disabled={isLoading}>
             {isLoading ? "Sending OTP..." : "Continue"}
           </button>
 
-          {/* <div className="terms-text">
+          <div className="terms-text">
             By continuing, you agree to our{" "}
             <Link to="/terms">Terms of Service</Link> &{" "}
             <Link to="/privacy">Privacy Policy</Link>
-          </div> */}
+          </div>
         </form>
 
-        {/* <div className="create-account">
-          <div className="separator">Don't have an account?</div>
-          <Link to="/signup" className="create-account-button">
-            Create An Account
-          </Link>
-        </div> */}
+        <div className="divider">
+          <span>or</span>
+        </div>
+
+        <GoogleLoginButton className="google-login-btn" />
+        {/* <FacebookLoginButton className="facebook-login-btn" /> */}
       </div>
     </div>
   );
