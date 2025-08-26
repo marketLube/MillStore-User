@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useLogin } from "../../hooks/queries/auth";
 import GoogleLoginButton from "../../components/GoogleLoginButton";
 import { storeRedirectPath } from "../../utils/redirectUtils";
-// import FacebookLoginButton from "../../components/FacebookLoginButton";
+import FacebookLoginButton from "../../components/FacebookLoginButton";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -88,7 +88,7 @@ const Login = () => {
         </div>
 
         <GoogleLoginButton className="google-login-btn" />
-        {/* <FacebookLoginButton className="facebook-login-btn" /> */}
+        <FacebookLoginButton className="facebook-login-btn" />
       </div>
     </div>
   );
