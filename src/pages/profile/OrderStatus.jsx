@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { FiCopy } from "react-icons/fi";
 import { useUpdateOrderStatus } from "../../hooks/queries/order";
 import ConfirmationModal from "../../components/confirmationModal";
+import { toast } from "sonner";
 
 const OrderStatus = ({ isOpen, onClose, order }) => {
   if (!isOpen) return null;
@@ -8,6 +10,11 @@ const OrderStatus = ({ isOpen, onClose, order }) => {
   const [orderId, setOrderId] = useState(null);
 
   const { mutate: updateOrderStatus } = useUpdateOrderStatus();
+
+  const formatOrderId = (objectId) => {
+    if (!objectId) return "N/A";
+    return objectId.slice(-6).toUpperCase();
+  };
 
   const handleCancelOrder = (orderId) => {
     console.log(`Cancel entire order with ID: ${orderId}`);
@@ -51,7 +58,37 @@ const OrderStatus = ({ isOpen, onClose, order }) => {
           }}
         >
           <div className="order-info">
-            <p>Order #{order._id}</p>
+            <div
+              className="order-id-container"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                marginBottom: "8px",
+              }}
+            >
+              <span>Order : {formatOrderId(order._id)}</span>
+              <button
+                className="copy-id-btn"
+                onClick={() => {
+                  navigator.clipboard.writeText(order._id);
+                  toast.success("Order ID copied to clipboard!");
+                }}
+                title="Copy full ID"
+                style={{
+                  background: "none",
+                  border: "1px solid #ddd",
+                  borderRadius: "4px",
+                  padding: "4px 6px",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <FiCopy size={14} />
+              </button>
+            </div>
             <p>Placed on: {new Date(order.createdAt).toLocaleDateString()}</p>
             <p>
               Estimated Delivery on{" "}
