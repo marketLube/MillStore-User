@@ -91,17 +91,14 @@ function ProductDetailsContent() {
         variantId: selectedVariant?._id || null,
         quantity: 1,
         from: location.pathname,
-        productSnapshot: {
+        productData: {
           _id: product._id,
           name: product.name,
-          mainImage: product.images?.[0] || product.mainImage,
-          offerPrice: selectedVariant
-            ? selectedVariant.offerPrice
-            : product.offerPrice,
-          price: selectedVariant ? selectedVariant.price : product.price,
+          mainImage: product?.images?.[0] || product?.mainImage,
+          offerPrice: product.offerPrice,
           stock: product.stock,
         },
-        variantSnapshot: selectedVariant || null,
+        variantData: selectedVariant || null
       };
 
       setLoadingAction(type);
@@ -131,7 +128,7 @@ function ProductDetailsContent() {
     formData.append("productId", reviewData.productId);
     try {
       const response = await reviewService.createReview(formData);
-
+        
       setIsRatingModalOpen(false);
       refetch();
       toast.success("Review submitted successfully");
@@ -161,6 +158,7 @@ function ProductDetailsContent() {
     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, "_blank");
   };
+
 
   return (
     <div className="product-details">
@@ -326,11 +324,12 @@ function ProductDetailsContent() {
                 % off
               </span>
             </div>
-
+            
             {/* Stock Status */}
             <div className="stock-status">
-              {(selectedVariant ? selectedVariant?.stock : product?.stock) <=
-                0 && <span className="out-of-stock">⚠️ Out of Stock</span>}
+              {(selectedVariant ? selectedVariant?.stock : product?.stock) <= 0 && (
+                <span className="out-of-stock">⚠️ Out of Stock</span>
+              ) }
             </div>
 
             <div className="buy-buttons">
@@ -338,9 +337,8 @@ function ProductDetailsContent() {
                 className="buy-now"
                 onClick={() => handleAddToCart("buy")}
                 disabled={
-                  loadingAction !== null ||
-                  (selectedVariant ? selectedVariant?.stock : product?.stock) <=
-                    0
+                  loadingAction !== null || 
+                  (selectedVariant ? selectedVariant?.stock : product?.stock) <= 0
                 }
               >
                 {loadingAction === "buy" ? <ButtonLoadingSpinner /> : "Buy Now"}
@@ -349,16 +347,11 @@ function ProductDetailsContent() {
                 className="add-cart"
                 onClick={() => handleAddToCart("cart")}
                 disabled={
-                  loadingAction !== null ||
-                  (selectedVariant ? selectedVariant?.stock : product?.stock) <=
-                    0
+                  loadingAction !== null || 
+                  (selectedVariant ? selectedVariant?.stock : product?.stock) <= 0
                 }
               >
-                {loadingAction === "cart" ? (
-                  <ButtonLoadingSpinner />
-                ) : (
-                  "Add To Cart"
-                )}
+                {loadingAction === "cart" ? <ButtonLoadingSpinner /> : "Add To Cart"}
               </button>
             </div>
           </div>
@@ -375,17 +368,17 @@ function ProductDetailsContent() {
           </div> */}
 
           <div className="section reviews">
-            <div className="reviews-header">
-              <h3>Ratings & Reviews</h3>
-              {isLoggedIn && (
-                <button
-                  className="rate-btn"
-                  onClick={() => setIsRatingModalOpen(true)}
-                >
-                  Rate Product
-                </button>
-              )}
-            </div>
+              <div className="reviews-header">
+                <h3>Ratings & Reviews</h3>
+                {isLoggedIn && (
+                  <button
+                    className="rate-btn"
+                    onClick={() => setIsRatingModalOpen(true)}
+                  >
+                    Rate Product
+                  </button>
+                )}
+              </div>
 
             <div className="rating-container">
               {product?.totalRatings > 0 && (
@@ -569,11 +562,9 @@ function ProductDetailsContent() {
           </div>
         </div>
         <div className="products-slider" ref={sliderRef}>
-          {response?.pages
-            ?.flatMap((page) => page.data.products)
-            ?.map((product) => (
-              <Card key={product._id} product={product} />
-            ))}
+          {response?.pages?.flatMap((page) => page.data.products)?.map((product) => (
+            <Card key={product._id} product={product} />
+          ))}
         </div>
       </div>
 
@@ -583,21 +574,17 @@ function ProductDetailsContent() {
             className="add-cart"
             onClick={() => handleAddToCart("cart")}
             disabled={
-              loadingAction !== null ||
+              loadingAction !== null || 
               (selectedVariant ? selectedVariant?.stock : product?.stock) <= 0
             }
           >
-            {loadingAction === "cart" ? (
-              <ButtonLoadingSpinner />
-            ) : (
-              "Add To Cart"
-            )}
+            {loadingAction === "cart" ? <ButtonLoadingSpinner /> : "Add To Cart"}
           </button>
-          <button
-            className="buy-now"
+          <button 
+            className="buy-now" 
             onClick={() => handleAddToCart("buy")}
             disabled={
-              loadingAction !== null ||
+              loadingAction !== null || 
               (selectedVariant ? selectedVariant?.stock : product?.stock) <= 0
             }
           >

@@ -22,6 +22,7 @@ import {
   useRemoveCoupon,
 } from "../../hooks/queries/coupon";
 import cartService from "../../api/services/cartService";
+import { storeRedirectPath } from "../../utils/redirectUtils";
 
 function Cartpage() {
   const [couponCode, setCouponCode] = useState("");
@@ -44,7 +45,6 @@ function Cartpage() {
   const { mutate: updateQuantity, isPending: isUpdating } =
     useUpdateCartQuantity();
   const { mutate: removeFromCart, isPending: isRemoving } = useRemoveFromCart();
-  const token = localStorage.getItem("user-auth-token");
   const { mutate: applyCoupon, isPending: isApplyingCoupon } = useApplyCoupon();
   const { mutate: removeCoupon, isPending: isRemovingCoupon } =
     useRemoveCoupon();
@@ -56,11 +56,8 @@ function Cartpage() {
   } = useGetCoupons();
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+    setIsMobile(window.innerWidth < 768);
+  }, [window.innerWidth]);
 
   useEffect(() => {
     window.scrollTo({
@@ -68,7 +65,7 @@ function Cartpage() {
       behavior: "smooth",
     });
   }, []);
-  console.log(token, "sdadasewqeqweqw");
+
   useEffect(() => {
     if (cartData?.data?.couponDetails) {
       setSelectedCoupon(cartData.data.couponDetails);
@@ -88,18 +85,18 @@ function Cartpage() {
           0
       );
     }
-    if (token && couponsData) {
+    if (couponsData) {
       setAvailableCoupons(couponsData.coupons || []);
-    } else {
-      setAvailableCoupons([]);
     }
-  }, [cartData, couponsData, token]);
+  }, [cartData, couponsData]);
 
   if (
     isLoading ||
+    isCouponsLoading ||
     isRemoving ||
     isUpdating ||
-    (token && (isCouponsLoading || isApplyingCoupon || isRemovingCoupon))
+    isApplyingCoupon ||
+    isRemovingCoupon
   )
     return <LoadingSpinner />;
 
@@ -176,12 +173,13 @@ function Cartpage() {
     removeCoupon();
   };
 
+
   const handleCheckAvailableStock = async () => {
     const token = localStorage.getItem("user-auth-token");
     if (!token) {
-      try {
-        localStorage.setItem("redirectAfterLogin", "/cart");
-      } catch {}
+      // ask login before proceeding from cart for guests
+      const redirectPath = window.location.pathname + window.location.search;
+      storeRedirectPath(redirectPath);
       navigate("/login");
       return;
     }
@@ -248,8 +246,8 @@ function Cartpage() {
                   #{item?.product?._id.slice(0, 50)}
                   {item?.product?._id.length > 50 && "..."}
                 </div>
-                <div className="stock-status" style={{ color: "red" }}>
-                  {item?.product?.stock == 0 && "Out of Stock"}
+                <div className="stock-status" style={{ color:"red" }}>
+                  {item?.product?.stock ==0 && "Out of Stock"}
                 </div>
                 <div className="quantity-controls">
                   <button
@@ -363,13 +361,13 @@ function Cartpage() {
             </button>
           </div>
 
-          {token && availableCoupons.length > 0 && (
+          {availableCoupons.length > 0 && (
             <div className="coupon-section">
               <h3>Apply Coupons & Save</h3>
               <div className="coupon-input">
                 <input
                   type="text"
-                  placeholder="Select coupon code"
+                  placeholder="Select coupon code"  
                   value={couponCode}
                   onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                   disabled={couponDetails}
@@ -392,7 +390,7 @@ function Cartpage() {
             </div>
           )}
 
-          {token && availableCoupons.length > 0 && (
+          {availableCoupons.length > 0 && (
             <div className="available-coupons">
               <div
                 className="coupon-header"
@@ -500,25 +498,21 @@ function Cartpage() {
         </div>
       </div>
 
-      {isAddressModalOpen && (
-        <AddressModal
-          isOpen={isAddressModalOpen}
-          onClose={() => setIsAddressModalOpen(false)}
-        />
-      )}
+      <AddressModal
+        isOpen={isAddressModalOpen}
+        onClose={() => setIsAddressModalOpen(false)}
+      />
 
-      {showConfirmModal && (
-        <ConfirmationModal
-          isOpen={showConfirmModal}
-          onClose={() => setShowConfirmModal(false)}
-          onConfirm={confirmRemoveItem}
-          title="Remove Item"
-          message="Are you sure you want to remove this item from your cart?"
-          confirmText="Remove"
-          cancelText="Keep"
-          type="danger"
-        />
-      )}
+      <ConfirmationModal
+        isOpen={showConfirmModal}
+        onClose={() => setShowConfirmModal(false)}
+        onConfirm={confirmRemoveItem}
+        title="Remove Item"
+        message="Are you sure you want to remove this item from your cart?"
+        confirmText="Remove"
+        cancelText="Keep"
+        type="danger"
+      />
 
       <div className="mobile-fixed-buttons">
         <div className="buy-buttons">

@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { useDispatch } from "react-redux";
 import { setUser, setIsLoggedIn } from "../../redux/features/user/userSlice";
 import { handleRedirectAfterLogin } from "../../utils/redirectUtils";
+import { mergeGuestCartToServer } from "./cart";
 export const useLogin = () => {
   const navigate = useNavigate();
   return useMutation({
@@ -63,11 +64,15 @@ export const useVerifyOtp = () => {
     onError: (error) => {
       toast.error(error.response?.data?.message || "Failed to verify OTP");
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       localStorage.setItem("user-auth-token", data.token);
       dispatch(setUser(data.content?.user));
       dispatch(setIsLoggedIn(true));
       toast.success("Login successful");
+      
+      // Merge guest cart to server cart
+      await mergeGuestCartToServer();
+      
       handleRedirectAfterLogin(navigate);
     },
   });

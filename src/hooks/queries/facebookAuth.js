@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { useDispatch } from "react-redux";
 import { setUser, setIsLoggedIn } from "../../redux/features/user/userSlice";
 import { handleRedirectAfterLogin } from "../../utils/redirectUtils";
+import { mergeGuestCartToServer } from "./cart";
 
 export const useFacebookLogin = (onSuccess, onError) => {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ export const useFacebookLogin = (onSuccess, onError) => {
       });
       return facebookAuthService.facebookLogin(accessToken, userInfo);
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       console.log("Facebook login successful, received data:", data);
       // Store token
       localStorage.setItem("user-auth-token", data.token);
@@ -30,6 +31,9 @@ export const useFacebookLogin = (onSuccess, onError) => {
 
       // Show success message
       toast.success("Facebook login successful");
+
+      // Merge guest cart to server cart
+      await mergeGuestCartToServer();
 
       // Handle redirect
       handleRedirectAfterLogin(navigate);

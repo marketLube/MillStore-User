@@ -5,48 +5,76 @@ import { useNavigate } from "react-router-dom";
 import { storeRedirectPath } from "../../utils/redirectUtils";
 import { useDispatch } from "react-redux";
 import { setCart } from "../../redux/features/cart/cartSlice";
-import { useEffect, useMemo } from "react";
-// LocalStorage guest cart helpers
+import { useEffect } from "react";
+
+// Guest cart helpers
 const GUEST_CART_KEY = "guest-cart";
 
-const readGuestCart = () => {
+const readGuestCartItems = () => {
   try {
     const raw = localStorage.getItem(GUEST_CART_KEY);
-    if (!raw) return { items: [], subTotal: 0, totalPrice: 0 };
-    const parsed = JSON.parse(raw);
-    return {
-      items: Array.isArray(parsed?.items) ? parsed.items : [],
-      subTotal: Number(parsed?.subTotal) || 0,
-      totalPrice: Number(parsed?.totalPrice) || 0,
-    };
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
   } catch {
-    return { items: [], subTotal: 0, totalPrice: 0 };
+    return [];
   }
 };
 
-const writeGuestCart = (cart) => {
-  const safe = {
-    items: cart.items || [],
-    subTotal: Number(cart.subTotal) || 0,
-    totalPrice: Number(cart.totalPrice) || 0,
-  };
-  localStorage.setItem(GUEST_CART_KEY, JSON.stringify(safe));
-  return safe;
+const writeGuestCartItems = (items) => {
+  localStorage.setItem(GUEST_CART_KEY, JSON.stringify(items));
+  // Hint react-query to refetch
+  window.dispatchEvent(new CustomEvent("guest-cart-updated"));
 };
 
-const buildCartDataEnvelope = (guestCart) => {
-  const formattedCart = {
-    items: guestCart.items,
-    subTotal: guestCart.subTotal,
-    totalPrice: guestCart.totalPrice,
-  };
+// Merge guest cart into server cart after login
+export const mergeGuestCartToServer = async () => {
+  const token = localStorage.getItem("user-auth-token");
+  if (!token) return;
+  
+  const guestItems = readGuestCartItems();
+  if (guestItems.length === 0) return;
+  
+  try {
+    // Add each guest item to server cart
+    for (const item of guestItems) {
+      await cartService.addToCart(
+        item.product._id,
+        item.variant?._id || null,
+        item.quantity
+      );
+    }
+    // Clear guest cart after successful merge
+    writeGuestCartItems([]);
+    console.log("Guest cart merged to server successfully");
+  } catch (error) {
+    console.error("Failed to merge guest cart:", error);
+  }
+};
+
+const buildFormattedCartFromGuest = (items) => {
+  const normalizedItems = items.map((it) => ({
+    product: it.product,
+    variant: it.variant || null,
+    quantity: it.quantity || 1,
+    offerPrice: it.offerPrice,
+  }));
+  const subTotal = normalizedItems.reduce(
+    (sum, it) => sum + (Number(it.offerPrice) || 0) * (it.quantity || 1),
+    0
+  );
+  const totalPrice = subTotal;
   return {
     data: {
-      formattedCart,
+      formattedCart: {
+        items: normalizedItems,
+        subTotal,
+        totalPrice,
+      },
       couponDetails: null,
-      finalAmount: formattedCart.totalPrice,
       deliveryCharges: 0,
+      finalAmount: totalPrice,
     },
+    success: true,
   };
 };
 
@@ -57,150 +85,121 @@ export const useCart = () => {
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["cart"],
-    queryFn: cartService.getCart,
-    enabled: !!token, // Only run query if token exists
+    queryFn: async () => {
+      if (token) {
+        return await cartService.getCart();
+      }
+      const guestItems = readGuestCartItems();
+      return buildFormattedCartFromGuest(guestItems);
+    },
   });
 
-  // Use useEffect to dispatch cart data only when it's available
   useEffect(() => {
-    if (token) {
-      if (data?.data?.formattedCart) {
-        dispatch(setCart(data.data.formattedCart));
-      }
-    } else {
-      const guest = readGuestCart();
-      const envelope = buildCartDataEnvelope(guest);
-      dispatch(setCart(envelope.data.formattedCart));
+    if (data?.data?.formattedCart) {
+      dispatch(setCart(data.data.formattedCart));
     }
   }, [data, dispatch]);
 
-  if (!token) {
-    // Build a synthetic response for guest carts with stable identity
-    const guest = readGuestCart();
-    const envelope = useMemo(
-      () => buildCartDataEnvelope(guest),
-      [JSON.stringify(guest)]
-    );
-    return { data: envelope, isLoading: false, error: null };
-  }
+  // Keep guest cart reactive across tabs and local changes
+  useEffect(() => {
+    if (!token) {
+      const onStorage = (e) => {
+        if (e.key === GUEST_CART_KEY) {
+          dispatch(setCart(buildFormattedCartFromGuest(readGuestCartItems()).data.formattedCart));
+        }
+      };
+      const onCustom = () => {
+        dispatch(setCart(buildFormattedCartFromGuest(readGuestCartItems()).data.formattedCart));
+      };
+      window.addEventListener("storage", onStorage);
+      window.addEventListener("guest-cart-updated", onCustom);
+      return () => {
+        window.removeEventListener("storage", onStorage);
+        window.removeEventListener("guest-cart-updated", onCustom);
+      };
+    }
+  }, [dispatch, token]);
 
-  return { data, isLoading, error };
+  return { data, isLoading: !!token ? isLoading : false, error: token ? error : null };
 };
 
 // Add to cart mutation
 export const useAddToCart = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const dispatch = useDispatch();
-
-  const token = localStorage.getItem("user-auth-token");
 
   const { mutate, isLoading } = useMutation({
-    mutationFn: ({ productId, variantId, quantity }) =>
-      cartService.addToCart(productId, variantId, quantity),
+    mutationFn: async ({ productId, variantId, quantity, productData, variantData }) => {
+      const token = localStorage.getItem("user-auth-token");
+      if (token) {
+        return await cartService.addToCart(productId, variantId, quantity);
+      }
+      // Guest mode: write to localStorage
+      const items = readGuestCartItems();
+      const index = items.findIndex(
+        (it) => it.product?._id === productId && (it.variant?._id || null) === (variantId || null)
+      );
+      if (index >= 0) {
+        items[index].quantity = (items[index].quantity || 1) + (quantity || 1);
+      } else {
+        const offerPrice = variantData?.offerPrice ?? productData?.offerPrice ?? 0;
+        const product = productData
+          ? {
+              _id: productData._id,
+              name: productData.name,
+              mainImage: productData.mainImage,
+              stock: productData.stock,
+            }
+          : { _id: productId };
+        const variant = variantId
+          ? {
+              _id: variantId,
+              offerPrice: variantData?.offerPrice ?? offerPrice,
+            }
+          : null;
+        items.push({ product, variant, quantity: quantity || 1, offerPrice });
+      }
+      writeGuestCartItems(items);
+      return { success: true };
+    },
     onSuccess: () => {
       queryClient.invalidateQueries(["cart"]);
       toast.success("Item added to cart");
     },
     onError: (error) => {
-      if (error.status === 401) {
-        toast.error("Please login to add item to cart");
-        // Store current path before redirecting to login
-        const redirectPath = window.location.pathname + window.location.search;
-        storeRedirectPath(redirectPath);
-        navigate("/login");
-      } else {
-        toast.error(
-          error.response?.data?.message || "Failed to add item to cart"
-        );
-      }
+      toast.error(error?.response?.data?.message || "Failed to add item to cart");
     },
   });
 
-  const guestAdd = ({
-    productId,
-    variantId,
-    quantity,
-    productSnapshot,
-    variantSnapshot,
-  }) => {
-    const guest = readGuestCart();
-    const items = [...guest.items];
-    const idx = items.findIndex(
-      (it) =>
-        it?.product?._id === productId &&
-        (it?.variant?._id || null) === (variantId || null)
-    );
-
-    const unitOfferPrice =
-      variantSnapshot?.offerPrice ?? productSnapshot?.offerPrice ?? 0;
-    const unitStock = variantSnapshot?.stock ?? productSnapshot?.stock ?? 0;
-
-    if (idx >= 0) {
-      const existing = items[idx];
-      const newQty = Math.min(
-        (existing.quantity || 1) + (quantity || 1),
-        unitStock || 9999
-      );
-      items[idx] = {
-        ...existing,
-        quantity: newQty,
-      };
-    } else {
-      items.push({
-        product: productSnapshot,
-        variant: variantId ? variantSnapshot : null,
-        quantity: quantity || 1,
-        offerPrice: unitOfferPrice,
-      });
-    }
-
-    const totalPrice = items.reduce(
-      (sum, it) => sum + Number(it.offerPrice || 0) * Number(it.quantity || 0),
-      0
-    );
-    const updated = writeGuestCart({ items, subTotal: totalPrice, totalPrice });
-    dispatch(
-      setCart({
-        items: updated.items,
-        subTotal: updated.subTotal,
-        totalPrice: updated.totalPrice,
-      })
-    );
-    toast.success("Item added to cart");
-  };
-
-  return {
-    mutate: (payload, options) => {
-      const tokenPresent = localStorage.getItem("user-auth-token");
-      if (!tokenPresent) {
-        try {
-          guestAdd(payload);
-          options?.onSuccess && options.onSuccess();
-        } catch (e) {
-          toast.error("Failed to add item to cart");
-          options?.onError && options.onError(e);
-        } finally {
-          options?.onSettled && options.onSettled();
-        }
-        return;
-      }
-      return mutate(payload, options);
-    },
-    isLoading,
-  };
+  return { mutate, isLoading };
 };
 
 // Update quantity mutation
 export const useUpdateCartQuantity = () => {
   const queryClient = useQueryClient();
-  const dispatch = useDispatch();
 
-  const token = localStorage.getItem("user-auth-token");
-
-  const authMutation = useMutation({
-    mutationFn: ({ productId, variantId, action }) =>
-      cartService.updateQuantity(productId, variantId, action),
+  return useMutation({
+    mutationFn: async ({ productId, variantId, action }) => {
+      const token = localStorage.getItem("user-auth-token");
+      if (token) {
+        return await cartService.updateQuantity(productId, variantId, action);
+      }
+      const items = readGuestCartItems();
+      const index = items.findIndex(
+        (it) => it.product?._id === productId && (it.variant?._id || null) === (variantId || null)
+      );
+      if (index >= 0) {
+        const delta = action === "increment" ? 1 : -1;
+        const nextQty = (items[index].quantity || 1) + delta;
+        if (nextQty <= 0) {
+          items.splice(index, 1);
+        } else {
+          items[index].quantity = nextQty;
+        }
+        writeGuestCartItems(items);
+      }
+      return { success: true };
+    },
     onSuccess: () => {
       queryClient.invalidateQueries(["cart"]);
     },
@@ -208,63 +207,24 @@ export const useUpdateCartQuantity = () => {
       toast.error(error.response?.data?.message || "Failed to update cart");
     },
   });
-
-  const guestUpdate = ({ productId, variantId, action }) => {
-    const guest = readGuestCart();
-    let items = [...guest.items];
-    const idx = items.findIndex(
-      (it) =>
-        it?.product?._id === productId &&
-        (it?.variant?._id || null) === (variantId || null)
-    );
-    if (idx < 0) return;
-    const current = items[idx];
-    const unitStock = current?.variant?.stock ?? current?.product?.stock ?? 0;
-    const nextQty =
-      action === "increment"
-        ? Math.min((current.quantity || 1) + 1, unitStock || 9999)
-        : (current.quantity || 1) - 1;
-    if (nextQty <= 0) {
-      items = items.filter((_, i) => i !== idx);
-    } else {
-      items[idx] = { ...current, quantity: nextQty };
-    }
-    const totalPrice = items.reduce(
-      (sum, it) => sum + Number(it.offerPrice || 0) * Number(it.quantity || 0),
-      0
-    );
-    const updated = writeGuestCart({ items, subTotal: totalPrice, totalPrice });
-    dispatch(setCart(updated));
-  };
-
-  return {
-    mutate: (payload, options) => {
-      const tokenPresent = localStorage.getItem("user-auth-token");
-      if (!tokenPresent) {
-        try {
-          guestUpdate(payload);
-          options?.onSuccess && options.onSuccess();
-        } catch (e) {
-          options?.onError && options.onError(e);
-        } finally {
-          options?.onSettled && options.onSettled();
-        }
-        return;
-      }
-      return authMutation.mutate(payload, options);
-    },
-    isPending: authMutation.isPending,
-  };
 };
 
 // Remove from cart mutation
 export const useRemoveFromCart = () => {
   const queryClient = useQueryClient();
-  const dispatch = useDispatch();
 
-  const authMutation = useMutation({
-    mutationFn: ({ productId, variantId }) =>
-      cartService.removeFromCart(productId, variantId),
+  return useMutation({
+    mutationFn: async ({ productId, variantId }) => {
+      const token = localStorage.getItem("user-auth-token");
+      if (token) {
+        return await cartService.removeFromCart(productId, variantId);
+      }
+      const items = readGuestCartItems().filter(
+        (it) => !(it.product?._id === productId && (it.variant?._id || null) === (variantId || null))
+      );
+      writeGuestCartItems(items);
+      return { success: true };
+    },
     onSuccess: () => {
       queryClient.invalidateQueries(["cart"]);
       toast.success("Item removed from cart");
@@ -275,43 +235,6 @@ export const useRemoveFromCart = () => {
       );
     },
   });
-
-  const guestRemove = ({ productId, variantId }) => {
-    const guest = readGuestCart();
-    const items = guest.items.filter(
-      (it) =>
-        !(
-          it?.product?._id === productId &&
-          (it?.variant?._id || null) === (variantId || null)
-        )
-    );
-    const totalPrice = items.reduce(
-      (sum, it) => sum + Number(it.offerPrice || 0) * Number(it.quantity || 0),
-      0
-    );
-    const updated = writeGuestCart({ items, subTotal: totalPrice, totalPrice });
-    dispatch(setCart(updated));
-    toast.success("Item removed from cart");
-  };
-
-  return {
-    mutate: (payload, options) => {
-      const tokenPresent = localStorage.getItem("user-auth-token");
-      if (!tokenPresent) {
-        try {
-          guestRemove(payload);
-          options?.onSuccess && options.onSuccess();
-        } catch (e) {
-          options?.onError && options.onError(e);
-        } finally {
-          options?.onSettled && options.onSettled();
-        }
-        return;
-      }
-      return authMutation.mutate(payload, options);
-    },
-    isPending: authMutation.isPending,
-  };
 };
 
 // Clear cart mutation
@@ -319,7 +242,14 @@ export const useClearCart = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: cartService.clearCart,
+    mutationFn: async () => {
+      const token = localStorage.getItem("user-auth-token");
+      if (token) {
+        return await cartService.clearCart();
+      }
+      writeGuestCartItems([]);
+      return { success: true };
+    },
     onSuccess: () => {
       queryClient.invalidateQueries(["cart"]);
       toast.success("Cart cleared");

@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { useDispatch } from "react-redux";
 import { setUser, setIsLoggedIn } from "../../redux/features/user/userSlice";
 import { handleRedirectAfterLogin } from "../../utils/redirectUtils";
+import { mergeGuestCartToServer } from "./cart";
 
 export const useGoogleLogin = (onSuccess, onError) => {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ export const useGoogleLogin = (onSuccess, onError) => {
   return useMutation({
     mutationFn: ({ accessToken, userInfo }) =>
       googleAuthService.googleLogin(accessToken, userInfo),
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       // Store token
       localStorage.setItem("user-auth-token", data.token);
 
@@ -23,6 +24,9 @@ export const useGoogleLogin = (onSuccess, onError) => {
 
       // Show success message
       toast.success("Google login successful");
+
+      // Merge guest cart to server cart
+      await mergeGuestCartToServer();
 
       // Handle redirect
       handleRedirectAfterLogin(navigate);

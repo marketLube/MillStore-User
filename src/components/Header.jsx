@@ -17,7 +17,7 @@ import {
   MdOutlineHeadphones,
 } from "react-icons/md";
 import { BiLogOut } from "react-icons/bi";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../redux/features/user/userSlice";
 import { useCategories } from "../hooks/queries/categories";
@@ -39,7 +39,6 @@ export default function Header() {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart.cart);
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
-  const location = useLocation();
 
   // Fetch cart data to keep it in sync
   const { data: cartData } = useCart();
@@ -78,23 +77,13 @@ export default function Header() {
     };
   }, [isMobileCatOpen]);
 
-  // Close any open overlays/menus on route change to prevent blocking the UI
-  useEffect(() => {
-    setIsSearchOpen(false);
-    setIsUserMenuOpen(false);
-    setIsMobileCatOpen(false);
-    setSearchQuery("");
-    setSearchResults([]);
-  }, [location]);
-
   useEffect(() => {
     if (searchQuery) {
-      const productsArray = filteredProducts?.data?.products;
-      setSearchResults(Array.isArray(productsArray) ? productsArray : []);
+      setSearchResults(filteredProducts?.data?.products);
     } else {
       setSearchResults([]);
     }
-  }, [filteredProducts, searchQuery]);
+  }, [filteredProducts]);
   const toggleSearch = () => {
     setIsSearchOpen(!isSearchOpen);
   };
@@ -218,9 +207,9 @@ export default function Header() {
               <FiSearch className="search-icon" />
             </button>
           </div>
-          {Array.isArray(searchResults) && searchResults?.length > 0 && (
+          {searchResults?.length > 0 && (
             <div className="search-results">
-              {searchResults.map((product) => (
+              {searchResults?.map((product) => (
                 <div
                   key={product?._id}
                   className="search-result-item"
@@ -313,7 +302,7 @@ export default function Header() {
               </div>
             )}
           </div>
-          <div className="header-actions-item" onClick={handleCartNavigation}>
+          <div className="header-actions-item" onClick={handleCartNavigation} style={{ cursor: "pointer" }}>
             {/* <div className="cart-icon">
                 <FiShoppingCart className="icon" />
                 {isLoggedIn && cart?.items?.length > 0 && (
@@ -326,13 +315,15 @@ export default function Header() {
               <div className="cart-icon-item-text desktop-only">
                 <strong>Cart</strong>
                 <span className="cart-badge">
-                  {Array.isArray(cart?.items) && cart?.items?.length > 0
-                    ? String(cart?.items?.length).padStart(2, "0")
+                  {cart?.items?.length
+                    ? cart.items.length < 10
+                      ? cart.items.length.toString().padStart(2, "0")
+                      : cart.items.length
                     : "00"}
                 </span>
               </div>
               {/* Mobile cart dot indicator */}
-              {Array.isArray(cart?.items) && cart?.items?.length > 0 && (
+              {cart?.items?.length > 0 && (
                 <span className="mobile-cart-dot"></span>
               )}
             </div>
@@ -355,9 +346,9 @@ export default function Header() {
               <FiX className="icon" />
             </button>
           </div>
-          {Array.isArray(searchResults) && searchResults?.length > 0 && (
+          {searchResults?.length > 0 && (
             <div className="mobile-search-results">
-              {searchResults.map((product) => (
+              {searchResults?.map((product) => (
                 <div
                   key={product?._id}
                   className="search-result-item mobile-result-item"

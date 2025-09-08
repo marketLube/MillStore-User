@@ -4,13 +4,18 @@ import Lottie from "lottie-react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCart } from "../../redux/features/cart/cartSlice";
+import { useClearCart } from "../../hooks/queries/cart";
 const PaymentSuccess = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { mutate: clearCart } = useClearCart();
+  
   useEffect(() => {
+    // Clear both server cart and Redux state
+    clearCart();
     dispatch(setCart([]));
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
+  }, [dispatch, clearCart]);
   return (
     <div className="payment-success-container">
       <div className="payment-success-icon">

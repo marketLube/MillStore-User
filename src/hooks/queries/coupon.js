@@ -3,7 +3,12 @@ import { couponService } from "../../api/services/couponService";
 import { toast } from "sonner";
 
 export const useGetCoupons = () => {
-  return useQuery({ queryKey: ["coupons"], queryFn: couponService.getCoupons });
+  const token = localStorage.getItem("user-auth-token");
+  return useQuery({
+    queryKey: ["coupons"],
+    queryFn: couponService.getCoupons,
+    enabled: !!token, // only fetch when logged in
+  });
 };
 
 export const useApplyCoupon = () => {

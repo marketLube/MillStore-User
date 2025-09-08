@@ -36,21 +36,17 @@ apiClient.interceptors.response.use(
       );
     }
     if (error.response.status === 401) {
-      console.log(
-        "401 error in API interceptor - storing redirect path before removing token"
-      );
+      console.log("401 error in API interceptor - storing redirect path before removing token");
       const currentPath = window.location.pathname + window.location.search;
-      const protectedPaths = ["/profile", "/checkout", "/orders"];
-      const isProtectedRoute = protectedPaths.some((path) =>
-        currentPath.startsWith(path)
-      );
-
+      const protectedPaths = ["/profile", "/checkout", "/orders"]; // cart is public for guests
+      const isProtectedRoute = protectedPaths.some(path => currentPath.startsWith(path));
+      
       if (isProtectedRoute) {
         storeRedirectPath(currentPath);
       }
-
+      
       localStorage.removeItem("user-auth-token");
-
+      
       // Navigate to login if on a protected route
       if (isProtectedRoute) {
         window.location.href = "/login";
