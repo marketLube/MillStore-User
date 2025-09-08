@@ -44,6 +44,7 @@ function Cartpage() {
   const { mutate: updateQuantity, isPending: isUpdating } =
     useUpdateCartQuantity();
   const { mutate: removeFromCart, isPending: isRemoving } = useRemoveFromCart();
+  const token = localStorage.getItem("user-auth-token");
   const { mutate: applyCoupon, isPending: isApplyingCoupon } = useApplyCoupon();
   const { mutate: removeCoupon, isPending: isRemovingCoupon } =
     useRemoveCoupon();
@@ -55,8 +56,11 @@ function Cartpage() {
   } = useGetCoupons();
 
   useEffect(() => {
-    setIsMobile(window.innerWidth < 768);
-  }, [window.innerWidth]);
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     window.scrollTo({
@@ -64,7 +68,7 @@ function Cartpage() {
       behavior: "smooth",
     });
   }, []);
-
+  console.log(token, "sdadasewqeqweqw");
   useEffect(() => {
     if (cartData?.data?.couponDetails) {
       setSelectedCoupon(cartData.data.couponDetails);
@@ -84,18 +88,18 @@ function Cartpage() {
           0
       );
     }
-    if (couponsData) {
+    if (token && couponsData) {
       setAvailableCoupons(couponsData.coupons || []);
+    } else {
+      setAvailableCoupons([]);
     }
-  }, [cartData, couponsData]);
+  }, [cartData, couponsData, token]);
 
   if (
     isLoading ||
-    isCouponsLoading ||
     isRemoving ||
     isUpdating ||
-    isApplyingCoupon ||
-    isRemovingCoupon
+    (token && (isCouponsLoading || isApplyingCoupon || isRemovingCoupon))
   )
     return <LoadingSpinner />;
 
@@ -172,9 +176,15 @@ function Cartpage() {
     removeCoupon();
   };
 
-
   const handleCheckAvailableStock = async () => {
-    //we have to check if the stock is available for the items in the cart
+    const token = localStorage.getItem("user-auth-token");
+    if (!token) {
+      try {
+        localStorage.setItem("redirectAfterLogin", "/cart");
+      } catch {}
+      navigate("/login");
+      return;
+    }
     try {
       const response = await cartService.checkStock();
       if (response.success) {
@@ -238,8 +248,8 @@ function Cartpage() {
                   #{item?.product?._id.slice(0, 50)}
                   {item?.product?._id.length > 50 && "..."}
                 </div>
-                <div className="stock-status" style={{ color:"red" }}>
-                  {item?.product?.stock ==0 && "Out of Stock"}
+                <div className="stock-status" style={{ color: "red" }}>
+                  {item?.product?.stock == 0 && "Out of Stock"}
                 </div>
                 <div className="quantity-controls">
                   <button
@@ -353,13 +363,13 @@ function Cartpage() {
             </button>
           </div>
 
-          {availableCoupons.length > 0 && (
+          {token && availableCoupons.length > 0 && (
             <div className="coupon-section">
               <h3>Apply Coupons & Save</h3>
               <div className="coupon-input">
                 <input
                   type="text"
-                  placeholder="Select coupon code"  
+                  placeholder="Select coupon code"
                   value={couponCode}
                   onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                   disabled={couponDetails}
@@ -382,7 +392,7 @@ function Cartpage() {
             </div>
           )}
 
-          {availableCoupons.length > 0 && (
+          {token && availableCoupons.length > 0 && (
             <div className="available-coupons">
               <div
                 className="coupon-header"
@@ -490,27 +500,31 @@ function Cartpage() {
         </div>
       </div>
 
-      <AddressModal
-        isOpen={isAddressModalOpen}
-        onClose={() => setIsAddressModalOpen(false)}
-      />
+      {isAddressModalOpen && (
+        <AddressModal
+          isOpen={isAddressModalOpen}
+          onClose={() => setIsAddressModalOpen(false)}
+        />
+      )}
 
-      <ConfirmationModal
-        isOpen={showConfirmModal}
-        onClose={() => setShowConfirmModal(false)}
-        onConfirm={confirmRemoveItem}
-        title="Remove Item"
-        message="Are you sure you want to remove this item from your cart?"
-        confirmText="Remove"
-        cancelText="Keep"
-        type="danger"
-      />
+      {showConfirmModal && (
+        <ConfirmationModal
+          isOpen={showConfirmModal}
+          onClose={() => setShowConfirmModal(false)}
+          onConfirm={confirmRemoveItem}
+          title="Remove Item"
+          message="Are you sure you want to remove this item from your cart?"
+          confirmText="Remove"
+          cancelText="Keep"
+          type="danger"
+        />
+      )}
 
       <div className="mobile-fixed-buttons">
         <div className="buy-buttons">
           <button
             className="proceed-btn"
-            onClick={() => setIsAddressModalOpen(true)}
+            onClick={() => handleCheckAvailableStock()}
           >
             Proceed
           </button>

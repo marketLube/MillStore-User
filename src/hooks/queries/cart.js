@@ -5,25 +5,84 @@ import { useNavigate } from "react-router-dom";
 import { storeRedirectPath } from "../../utils/redirectUtils";
 import { useDispatch } from "react-redux";
 import { setCart } from "../../redux/features/cart/cartSlice";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
+// LocalStorage guest cart helpers
+const GUEST_CART_KEY = "guest-cart";
+
+const readGuestCart = () => {
+  try {
+    const raw = localStorage.getItem(GUEST_CART_KEY);
+    if (!raw) return { items: [], subTotal: 0, totalPrice: 0 };
+    const parsed = JSON.parse(raw);
+    return {
+      items: Array.isArray(parsed?.items) ? parsed.items : [],
+      subTotal: Number(parsed?.subTotal) || 0,
+      totalPrice: Number(parsed?.totalPrice) || 0,
+    };
+  } catch {
+    return { items: [], subTotal: 0, totalPrice: 0 };
+  }
+};
+
+const writeGuestCart = (cart) => {
+  const safe = {
+    items: cart.items || [],
+    subTotal: Number(cart.subTotal) || 0,
+    totalPrice: Number(cart.totalPrice) || 0,
+  };
+  localStorage.setItem(GUEST_CART_KEY, JSON.stringify(safe));
+  return safe;
+};
+
+const buildCartDataEnvelope = (guestCart) => {
+  const formattedCart = {
+    items: guestCart.items,
+    subTotal: guestCart.subTotal,
+    totalPrice: guestCart.totalPrice,
+  };
+  return {
+    data: {
+      formattedCart,
+      couponDetails: null,
+      finalAmount: formattedCart.totalPrice,
+      deliveryCharges: 0,
+    },
+  };
+};
 
 // Get cart items
 export const useCart = () => {
   const dispatch = useDispatch();
   const token = localStorage.getItem("user-auth-token");
-  
+
   const { data, isLoading, error } = useQuery({
     queryKey: ["cart"],
     queryFn: cartService.getCart,
     enabled: !!token, // Only run query if token exists
   });
-  
+
   // Use useEffect to dispatch cart data only when it's available
   useEffect(() => {
-    if (data?.data?.formattedCart) {
-      dispatch(setCart(data.data.formattedCart));
+    if (token) {
+      if (data?.data?.formattedCart) {
+        dispatch(setCart(data.data.formattedCart));
+      }
+    } else {
+      const guest = readGuestCart();
+      const envelope = buildCartDataEnvelope(guest);
+      dispatch(setCart(envelope.data.formattedCart));
     }
   }, [data, dispatch]);
+
+  if (!token) {
+    // Build a synthetic response for guest carts with stable identity
+    const guest = readGuestCart();
+    const envelope = useMemo(
+      () => buildCartDataEnvelope(guest),
+      [JSON.stringify(guest)]
+    );
+    return { data: envelope, isLoading: false, error: null };
+  }
 
   return { data, isLoading, error };
 };
@@ -32,6 +91,9 @@ export const useCart = () => {
 export const useAddToCart = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const dispatch = useDispatch();
+
+  const token = localStorage.getItem("user-auth-token");
 
   const { mutate, isLoading } = useMutation({
     mutationFn: ({ productId, variantId, quantity }) =>
@@ -55,14 +117,88 @@ export const useAddToCart = () => {
     },
   });
 
-  return { mutate, isLoading };
+  const guestAdd = ({
+    productId,
+    variantId,
+    quantity,
+    productSnapshot,
+    variantSnapshot,
+  }) => {
+    const guest = readGuestCart();
+    const items = [...guest.items];
+    const idx = items.findIndex(
+      (it) =>
+        it?.product?._id === productId &&
+        (it?.variant?._id || null) === (variantId || null)
+    );
+
+    const unitOfferPrice =
+      variantSnapshot?.offerPrice ?? productSnapshot?.offerPrice ?? 0;
+    const unitStock = variantSnapshot?.stock ?? productSnapshot?.stock ?? 0;
+
+    if (idx >= 0) {
+      const existing = items[idx];
+      const newQty = Math.min(
+        (existing.quantity || 1) + (quantity || 1),
+        unitStock || 9999
+      );
+      items[idx] = {
+        ...existing,
+        quantity: newQty,
+      };
+    } else {
+      items.push({
+        product: productSnapshot,
+        variant: variantId ? variantSnapshot : null,
+        quantity: quantity || 1,
+        offerPrice: unitOfferPrice,
+      });
+    }
+
+    const totalPrice = items.reduce(
+      (sum, it) => sum + Number(it.offerPrice || 0) * Number(it.quantity || 0),
+      0
+    );
+    const updated = writeGuestCart({ items, subTotal: totalPrice, totalPrice });
+    dispatch(
+      setCart({
+        items: updated.items,
+        subTotal: updated.subTotal,
+        totalPrice: updated.totalPrice,
+      })
+    );
+    toast.success("Item added to cart");
+  };
+
+  return {
+    mutate: (payload, options) => {
+      const tokenPresent = localStorage.getItem("user-auth-token");
+      if (!tokenPresent) {
+        try {
+          guestAdd(payload);
+          options?.onSuccess && options.onSuccess();
+        } catch (e) {
+          toast.error("Failed to add item to cart");
+          options?.onError && options.onError(e);
+        } finally {
+          options?.onSettled && options.onSettled();
+        }
+        return;
+      }
+      return mutate(payload, options);
+    },
+    isLoading,
+  };
 };
 
 // Update quantity mutation
 export const useUpdateCartQuantity = () => {
   const queryClient = useQueryClient();
+  const dispatch = useDispatch();
 
-  return useMutation({
+  const token = localStorage.getItem("user-auth-token");
+
+  const authMutation = useMutation({
     mutationFn: ({ productId, variantId, action }) =>
       cartService.updateQuantity(productId, variantId, action),
     onSuccess: () => {
@@ -72,13 +208,61 @@ export const useUpdateCartQuantity = () => {
       toast.error(error.response?.data?.message || "Failed to update cart");
     },
   });
+
+  const guestUpdate = ({ productId, variantId, action }) => {
+    const guest = readGuestCart();
+    let items = [...guest.items];
+    const idx = items.findIndex(
+      (it) =>
+        it?.product?._id === productId &&
+        (it?.variant?._id || null) === (variantId || null)
+    );
+    if (idx < 0) return;
+    const current = items[idx];
+    const unitStock = current?.variant?.stock ?? current?.product?.stock ?? 0;
+    const nextQty =
+      action === "increment"
+        ? Math.min((current.quantity || 1) + 1, unitStock || 9999)
+        : (current.quantity || 1) - 1;
+    if (nextQty <= 0) {
+      items = items.filter((_, i) => i !== idx);
+    } else {
+      items[idx] = { ...current, quantity: nextQty };
+    }
+    const totalPrice = items.reduce(
+      (sum, it) => sum + Number(it.offerPrice || 0) * Number(it.quantity || 0),
+      0
+    );
+    const updated = writeGuestCart({ items, subTotal: totalPrice, totalPrice });
+    dispatch(setCart(updated));
+  };
+
+  return {
+    mutate: (payload, options) => {
+      const tokenPresent = localStorage.getItem("user-auth-token");
+      if (!tokenPresent) {
+        try {
+          guestUpdate(payload);
+          options?.onSuccess && options.onSuccess();
+        } catch (e) {
+          options?.onError && options.onError(e);
+        } finally {
+          options?.onSettled && options.onSettled();
+        }
+        return;
+      }
+      return authMutation.mutate(payload, options);
+    },
+    isPending: authMutation.isPending,
+  };
 };
 
 // Remove from cart mutation
 export const useRemoveFromCart = () => {
   const queryClient = useQueryClient();
+  const dispatch = useDispatch();
 
-  return useMutation({
+  const authMutation = useMutation({
     mutationFn: ({ productId, variantId }) =>
       cartService.removeFromCart(productId, variantId),
     onSuccess: () => {
@@ -91,6 +275,43 @@ export const useRemoveFromCart = () => {
       );
     },
   });
+
+  const guestRemove = ({ productId, variantId }) => {
+    const guest = readGuestCart();
+    const items = guest.items.filter(
+      (it) =>
+        !(
+          it?.product?._id === productId &&
+          (it?.variant?._id || null) === (variantId || null)
+        )
+    );
+    const totalPrice = items.reduce(
+      (sum, it) => sum + Number(it.offerPrice || 0) * Number(it.quantity || 0),
+      0
+    );
+    const updated = writeGuestCart({ items, subTotal: totalPrice, totalPrice });
+    dispatch(setCart(updated));
+    toast.success("Item removed from cart");
+  };
+
+  return {
+    mutate: (payload, options) => {
+      const tokenPresent = localStorage.getItem("user-auth-token");
+      if (!tokenPresent) {
+        try {
+          guestRemove(payload);
+          options?.onSuccess && options.onSuccess();
+        } catch (e) {
+          options?.onError && options.onError(e);
+        } finally {
+          options?.onSettled && options.onSettled();
+        }
+        return;
+      }
+      return authMutation.mutate(payload, options);
+    },
+    isPending: authMutation.isPending,
+  };
 };
 
 // Clear cart mutation

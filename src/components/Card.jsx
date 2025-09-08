@@ -34,6 +34,15 @@ function Card({ product }) {
         productId: _id,
         variantId: variants[0]?._id || null,
         quantity: 1,
+        productSnapshot: {
+          _id,
+          name,
+          mainImage,
+          offerPrice,
+          price,
+          stock,
+        },
+        variantSnapshot: variants[0],
       };
       setLoadingAction(type);
       addToCart(productToAdd, {
@@ -55,28 +64,29 @@ function Card({ product }) {
   };
 
   return (
-    <div className={`product-card ${isOutOfStock ? 'out-of-stock' : ''}`} onClick={() => navigate(`/products/${_id}`)}>
+    <div
+      className={`product-card ${isOutOfStock ? "out-of-stock" : ""}`}
+      onClick={() => navigate(`/products/${_id}`)}
+    >
       <div className="product-card_image">
         {discount && <span className="discount-tag">{discount}</span>}
-        <img src={mainImage} alt={name} className={isOutOfStock ? 'faded' : ''} />
+        <img
+          src={mainImage}
+          alt={name}
+          className={isOutOfStock ? "faded" : ""}
+        />
       </div>
       <div className="product-card_content">
         <span className="category-name">{category.name}</span>
-        <h3 className="title">
-          {name}
-        </h3>
+        <h3 className="title">{name}</h3>
         <div className="price-container">
           <span className="current-price">₹{offerPrice}</span>
           <span className="original-price">₹{price}</span>
         </div>
-        
+
         {/* Fixed height container for stock status */}
         <div className="stock-status-container">
-          {isOutOfStock && (
-            <div className="stock-status">
-              Out of Stock
-            </div>
-          )}
+          {isOutOfStock && <div className="stock-status">Out of Stock</div>}
         </div>
 
         {averageRating !== null && averageRating !== undefined && (
@@ -95,7 +105,11 @@ function Card({ product }) {
             }}
             disabled={loadingAction !== null || isOutOfStock}
           >
-            {loadingAction === "cart" ? <ButtonLoadingSpinner /> : "Add to Cart"}
+            {loadingAction === "cart" ? (
+              <ButtonLoadingSpinner />
+            ) : (
+              "Add to Cart"
+            )}
           </button>
           <button
             className="buy-now-btn"

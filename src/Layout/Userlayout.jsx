@@ -24,6 +24,12 @@ function Userlayout() {
     return () => window.removeEventListener("resize", checkFooterVisibility);
   }, [location]);
 
+  // Ensure no lingering scroll locks or modal classes remain on route change
+  // useEffect(() => {
+  //   document.body.classList.remove("modal-open");
+  //   document.body.style.overflow = "unset";
+  // }, [location]);
+
   return (
     <div>
       <Header />

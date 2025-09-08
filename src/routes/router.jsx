@@ -102,9 +102,7 @@ const router = createBrowserRouter([
         path: "/cart",
         element: (
           <WithErrorBoundary>
-            <ProtectedRoute>
-              <Cartpage />
-            </ProtectedRoute>
+            <Cartpage />
           </WithErrorBoundary>
         ),
       },
