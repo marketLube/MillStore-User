@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import WhatsAppButton from "../components/WhatsAppButton";
 import { Outlet, useLocation } from "react-router-dom";
 
 function Userlayout() {
@@ -29,6 +30,7 @@ function Userlayout() {
       <Header />
       <Outlet />
       {showFooter && <Footer />}
+      <WhatsAppButton />
     </div>
   );
 }
